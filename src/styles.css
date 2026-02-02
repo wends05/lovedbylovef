@@ -1,0 +1,278 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@400;600;700;800&display=swap");
+@import "@fontsource-variable/inter";
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
+body {
+  @apply m-0;
+  font-family: "Outfit", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+/* Soft Pink Dream Theme - Inspired by LoveFaith aesthetic */
+:root {
+  /* Core colors - Soft romantic pink palette */
+
+  /* Soft pink gradient base for cards */
+  --card: oklch(0.97 0.02 20);
+  --card-foreground: oklch(0.25 0.08 350);
+
+  /* Vibrant magenta/pink - the "LOVEFAITH" text color */
+  --primary: oklch(0.55 0.22 350);
+  --primary-foreground: oklch(0.97 0.01 20);
+
+  /* Soft rose/lighter pink */
+  --secondary: oklch(0.92 0.04 15);
+  --secondary-foreground: oklch(0.45 0.12 350);
+
+  /* Muted warm pink tones */
+  --muted: oklch(0.94 0.03 25);
+  --muted-foreground: oklch(0.55 0.08 350);
+
+  /* Accent - sparkle pink */
+  --accent: oklch(0.88 0.06 20);
+  --accent-foreground: oklch(0.35 0.15 350);
+
+  /* Destructive - deeper rose */
+  --destructive: oklch(0.55 0.2 25);
+  --destructive-foreground: oklch(0.97 0.01 20);
+
+  /* Borders and inputs - soft pink tint */
+  --border: oklch(0.9 0.04 20);
+  --input: oklch(0.9 0.04 20);
+  --ring: oklch(0.65 0.18 350);
+
+  /* Chart colors - pink gradient family */
+  --chart-1: oklch(0.55 0.22 350);
+  --chart-2: oklch(0.65 0.18 355);
+  --chart-3: oklch(0.75 0.14 10);
+  --chart-4: oklch(0.85 0.1 20);
+  --chart-5: oklch(0.92 0.06 25);
+
+  --radius: 0.75rem;
+
+  /* Popover - soft pink */
+  --popover: oklch(0.97 0.02 20);
+  --popover-foreground: oklch(0.25 0.08 350);
+
+  /* Sidebar - light pink tint */
+  --sidebar: oklch(0.96 0.025 22);
+  --sidebar-foreground: oklch(0.25 0.08 350);
+  --sidebar-primary: oklch(0.55 0.22 350);
+  --sidebar-primary-foreground: oklch(0.97 0.01 20);
+  --sidebar-accent: oklch(0.92 0.04 15);
+  --sidebar-accent-foreground: oklch(0.45 0.12 350);
+  --sidebar-border: oklch(0.9 0.04 20);
+  --sidebar-ring: oklch(0.65 0.18 350);
+
+  /* Background - soft peach to pink gradient base */
+  --background: oklch(0.96 0.03 45);
+  --foreground: oklch(0.25 0.08 350);
+}
+
+@theme inline {
+  --font-display: "Sora", sans-serif;
+  --font-body: "Outfit", sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Soft Pink Dream custom colors */
+  --color-magenta: oklch(0.55 0.22 350);
+  --color-magenta-light: oklch(0.65 0.18 355);
+  --color-magenta-dark: oklch(0.45 0.24 345);
+  --color-rose: oklch(0.75 0.12 10);
+  --color-rose-light: oklch(0.85 0.08 15);
+  --color-pink-soft: oklch(0.88 0.06 20);
+  --color-peach: oklch(0.92 0.05 45);
+  --color-cream-pink: oklch(0.96 0.03 30);
+  --color-sparkle: oklch(0.97 0.02 20);
+  --color-plum: oklch(0.35 0.15 340);
+  --font-sans: "Outfit", sans-serif;
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    @apply font-sans bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+
+  form {
+    @apply space-y-5;
+  }
+}
+
+.dark {
+  /* Deep plum/magenta dark theme */
+  --background: oklch(0.18 0.08 340);
+  --foreground: oklch(0.95 0.02 20);
+  --card: oklch(0.22 0.1 345);
+  --card-foreground: oklch(0.95 0.02 20);
+  --popover: oklch(0.22 0.1 345);
+  --popover-foreground: oklch(0.95 0.02 20);
+  --primary: oklch(0.75 0.16 355);
+  --primary-foreground: oklch(0.15 0.05 340);
+  --secondary: oklch(0.28 0.08 345);
+  --secondary-foreground: oklch(0.95 0.02 20);
+  --muted: oklch(0.3 0.06 340);
+  --muted-foreground: oklch(0.7 0.1 350);
+  --accent: oklch(0.35 0.1 10);
+  --accent-foreground: oklch(0.95 0.02 20);
+  --destructive: oklch(0.5 0.18 25);
+  --border: oklch(0.3 0.08 340);
+  --input: oklch(0.25 0.06 345);
+  --ring: oklch(0.75 0.16 355);
+  --chart-1: oklch(0.75 0.16 355);
+  --chart-2: oklch(0.65 0.14 10);
+  --chart-3: oklch(0.55 0.12 15);
+  --chart-4: oklch(0.45 0.1 20);
+  --chart-5: oklch(0.35 0.08 25);
+  --sidebar: oklch(0.2 0.09 342);
+  --sidebar-foreground: oklch(0.95 0.02 20);
+  --sidebar-primary: oklch(0.75 0.16 355);
+  --sidebar-primary-foreground: oklch(0.15 0.05 340);
+  --sidebar-accent: oklch(0.28 0.08 345);
+  --sidebar-accent-foreground: oklch(0.95 0.02 20);
+  --sidebar-border: oklch(0.3 0.08 340);
+  --sidebar-ring: oklch(0.75 0.16 355);
+}
+
+/* Soft Pink Dream gradient backgrounds */
+.bg-gradient-soft-pink {
+  background: linear-gradient(
+    135deg,
+    oklch(0.96 0.03 45) 0%,
+    oklch(0.94 0.04 30) 50%,
+    oklch(0.92 0.05 20) 100%
+  );
+}
+
+.bg-gradient-peach-pink {
+  background: linear-gradient(
+    180deg,
+    oklch(0.95 0.04 40) 0%,
+    oklch(0.9 0.05 25) 100%
+  );
+}
+
+.bg-gradient-radial-pink {
+  background: radial-gradient(
+    ellipse at top,
+    oklch(0.93 0.04 35),
+    oklch(0.96 0.03 45)
+  );
+}
+
+/* Sparkle animation */
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* Gentle float animation */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Glow effect for primary elements */
+.glow-pink {
+  box-shadow:
+    0 0 20px oklch(0.65 0.18 355 / 0.4),
+    0 0 40px oklch(0.75 0.12 10 / 0.2);
+}
+
+/* Text gradient for headings */
+.text-gradient-magenta {
+  background: linear-gradient(
+    135deg,
+    oklch(0.55 0.22 350) 0%,
+    oklch(0.65 0.18 355) 50%,
+    oklch(0.75 0.14 10) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glassmorphism card effect */
+.glass-pink {
+  background: oklch(0.97 0.02 20 / 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid oklch(0.9 0.04 20 / 0.5);
+}
