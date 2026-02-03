@@ -1,33 +1,37 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { DollarSign, Package, TrendingUp, Users } from "lucide-react";
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { adminDashboardOptions } from "../options";
 
 export default function AdminDashboard() {
-	// Mock data - replace with actual data fetching
+	const { data } = useSuspenseQuery(
+		adminDashboardOptions.getAdminDashboardData,
+	);
+
 	const stats = [
 		{
-			title: "Total Orders",
-			value: "24",
+			title: "Pending Orders",
+			value: data?.pendingOrders ?? 0,
+			description: "Orders awaiting processing",
 			icon: Package,
-			description: "All time orders",
 		},
 		{
-			title: "Pending Orders",
-			value: "5",
+			title: "Total Orders",
+			value: data?.totalOrders ?? 0,
+			description: "All orders placed",
 			icon: TrendingUp,
-			description: "Awaiting processing",
 		},
 		{
 			title: "Total Users",
-			value: "12",
-			icon: Users,
+			value: data?.totalUsers ?? 0,
 			description: "Registered users",
+			icon: Users,
 		},
 		{
-			title: "Revenue",
-			value: "$1,240",
+			title: "Total Revenue",
+			value: `₱${data?.totalRevenue.toFixed(2) ?? "0.00"}`,
+			description: "Revenue from delivered orders",
 			icon: DollarSign,
-			description: "Total revenue",
 		},
 	];
 
