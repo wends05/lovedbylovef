@@ -23,13 +23,6 @@
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "@tailwindcss/vite": "^4.1.18",
-    "@tanstack/ai": "latest",
-    "@tanstack/ai-anthropic": "latest",
-    "@tanstack/ai-client": "latest",
-    "@tanstack/ai-gemini": "latest",
-    "@tanstack/ai-ollama": "latest",
-    "@tanstack/ai-openai": "latest",
-    "@tanstack/ai-react": "latest",
     "@tanstack/react-devtools": "^0.7.11",
     "@tanstack/react-form": "^1.28.0",
     "@tanstack/react-query": "^5.90.20",
@@ -46,6 +39,7 @@
     "better-auth": "^1.4.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "lucide-react": "^0.563.0",
     "marked": "^15.0.12",
@@ -55,9 +49,10 @@
     "prisma": "^7.3.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-dropzone": "^14.4.0",
+    "react-medium-image-zoom": "^5.4.0",
     "shadcn": "^3.8.2",
     "sonner": "^2.0.7",
-    "streamdown": "^1.6.11",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18",
     "tailwindcss-animate": "^1.0.7",
@@ -80,7 +75,6 @@
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
-    "vitest": "^3.2.4",
-    "web-vitals": "^5.1.0"
+    "vitest": "^3.2.4"
   }
 }
