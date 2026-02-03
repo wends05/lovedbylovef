@@ -1,12 +1,15 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Heart, Package } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { dashboardOptions } from "../options";
 
 export default function HomePage() {
+	const { data } = useSuspenseQuery(dashboardOptions.getDashboardData);
 	const { data: session } = authClient.useSession();
 	const userName = session?.user?.name || "there";
 
 	return (
-		<div>
+		<div className="w-full">
 			<h1 className="text-3xl font-bold text-foreground mb-2 font-display">
 				Welcome back, {userName}!
 			</h1>
@@ -14,7 +17,7 @@ export default function HomePage() {
 				Here's what's happening with your crochet orders.
 			</p>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 				{/* Stats Card */}
 				<div className="bg-card rounded-lg border border-border p-6">
 					<div className="flex items-center gap-4">
@@ -23,7 +26,23 @@ export default function HomePage() {
 						</div>
 						<div>
 							<p className="text-sm text-muted-foreground">Total Orders</p>
-							<p className="text-2xl font-bold text-foreground">0</p>
+							<p className="text-2xl font-bold text-foreground">
+								{data?.totalOrders ?? 0}
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div className="bg-card rounded-lg border border-border p-6">
+					<div className="flex items-center gap-4">
+						<div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+							<Package className="w-6 h-6 text-primary" />
+						</div>
+						<div>
+							<p className="text-sm text-muted-foreground">Total Requests</p>
+							<p className="text-2xl font-bold text-foreground">
+								{data?.totalRequests ?? 0}
+							</p>
 						</div>
 					</div>
 				</div>
@@ -39,7 +58,7 @@ export default function HomePage() {
 								Handmade with Love
 							</h2>
 							<p className="text-sm text-muted-foreground">
-								Welcome to your Love by Lovef dashboard! Here you can track your
+								Welcome to your lovedbylovef dashboard! Here you can track your
 								orders and manage your account. We're excited to create
 								something beautiful just for you.
 							</p>

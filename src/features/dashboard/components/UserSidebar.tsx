@@ -1,7 +1,11 @@
-"use client";
-
 import { Link, useRouter } from "@tanstack/react-router";
-import { Home, LogOut, Package, PlusCircle } from "lucide-react";
+import {
+	Home,
+	LogOut,
+	MessageCircleMore,
+	Package,
+	PlusIcon,
+} from "lucide-react";
 
 import {
 	Sidebar,
@@ -42,15 +46,20 @@ export function UserSidebar() {
 			href: "/dashboard",
 		},
 		{
-			title: "Orders",
+			title: "Requests",
 			icon: Package,
-			href: "/orders",
+			href: "/requests",
 		},
 		{
-			title: "Request Order",
-			icon: PlusCircle,
-			href: "/orders/request",
+			title: "Chat",
+			icon: MessageCircleMore,
+			href: "/chat",
 		},
+		// {
+		// 	title: "Order",
+		// 	icon: PlusIcon,
+		// 	href: "/order",
+		// },
 	];
 
 	return (
@@ -68,10 +77,12 @@ export function UserSidebar() {
 			</SidebarHeader>
 
 			<SidebarContent>
-				<SidebarGroup>
+				<SidebarGroup className="h-full">
 					<SidebarGroupLabel>Menu</SidebarGroupLabel>
-					<SidebarGroupContent>
-						<SidebarMenu>
+					<SidebarGroupContent className="flex flex-col justify-between h-full">
+						{/* Top Area */}
+						<SidebarMenu className="">
+							{/* Main Navigation Pages */}
 							{navigation.map((item) => (
 								<SidebarMenuItem key={item.href}>
 									<SidebarMenuButton
@@ -85,6 +96,20 @@ export function UserSidebar() {
 									/>
 								</SidebarMenuItem>
 							))}
+						</SidebarMenu>
+						{/* Bottom Area */}
+						<SidebarMenu>
+							<SidebarMenuItem>
+								<SidebarMenuButton
+									className="flex gap-2"
+									render={
+										<Link to="/order">
+											<PlusIcon className="h-4 w-4 shrink-0" />
+											<span className="truncate">New Order</span>
+										</Link>
+									}
+								/>
+							</SidebarMenuItem>
 						</SidebarMenu>
 					</SidebarGroupContent>
 				</SidebarGroup>
