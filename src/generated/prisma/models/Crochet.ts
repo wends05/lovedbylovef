@@ -41,6 +41,7 @@ export type CrochetMinAggregateOutputType = {
   description: string | null
   category: $Enums.Category | null
   price: number | null
+  isVisible: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -52,6 +53,7 @@ export type CrochetMaxAggregateOutputType = {
   description: string | null
   category: $Enums.Category | null
   price: number | null
+  isVisible: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -63,6 +65,7 @@ export type CrochetCountAggregateOutputType = {
   description: number
   category: number
   price: number
+  isVisible: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -84,6 +87,7 @@ export type CrochetMinAggregateInputType = {
   description?: true
   category?: true
   price?: true
+  isVisible?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -95,6 +99,7 @@ export type CrochetMaxAggregateInputType = {
   description?: true
   category?: true
   price?: true
+  isVisible?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -106,6 +111,7 @@ export type CrochetCountAggregateInputType = {
   description?: true
   category?: true
   price?: true
+  isVisible?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -204,6 +210,7 @@ export type CrochetGroupByOutputType = {
   description: string
   category: $Enums.Category
   price: number
+  isVisible: boolean
   createdAt: Date
   updatedAt: Date
   _count: CrochetCountAggregateOutputType | null
@@ -238,6 +245,7 @@ export type CrochetWhereInput = {
   description?: Prisma.StringFilter<"Crochet"> | string
   category?: Prisma.EnumCategoryFilter<"Crochet"> | $Enums.Category
   price?: Prisma.FloatFilter<"Crochet"> | number
+  isVisible?: Prisma.BoolFilter<"Crochet"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Crochet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Crochet"> | Date | string
 }
@@ -249,6 +257,7 @@ export type CrochetOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  isVisible?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -263,6 +272,7 @@ export type CrochetWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"Crochet"> | string
   category?: Prisma.EnumCategoryFilter<"Crochet"> | $Enums.Category
   price?: Prisma.FloatFilter<"Crochet"> | number
+  isVisible?: Prisma.BoolFilter<"Crochet"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Crochet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Crochet"> | Date | string
 }, "id">
@@ -274,6 +284,7 @@ export type CrochetOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  isVisible?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CrochetCountOrderByAggregateInput
@@ -293,6 +304,7 @@ export type CrochetScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"Crochet"> | string
   category?: Prisma.EnumCategoryWithAggregatesFilter<"Crochet"> | $Enums.Category
   price?: Prisma.FloatWithAggregatesFilter<"Crochet"> | number
+  isVisible?: Prisma.BoolWithAggregatesFilter<"Crochet"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Crochet"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Crochet"> | Date | string
 }
@@ -304,6 +316,7 @@ export type CrochetCreateInput = {
   description: string
   category: $Enums.Category
   price: number
+  isVisible?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -315,6 +328,7 @@ export type CrochetUncheckedCreateInput = {
   description: string
   category: $Enums.Category
   price: number
+  isVisible?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -326,6 +340,7 @@ export type CrochetUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  isVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -337,6 +352,7 @@ export type CrochetUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  isVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -348,6 +364,7 @@ export type CrochetCreateManyInput = {
   description: string
   category: $Enums.Category
   price: number
+  isVisible?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -359,6 +376,7 @@ export type CrochetUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  isVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -370,6 +388,7 @@ export type CrochetUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  isVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -381,6 +400,7 @@ export type CrochetCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  isVisible?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -396,6 +416,7 @@ export type CrochetMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  isVisible?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -407,6 +428,7 @@ export type CrochetMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  isVisible?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -431,6 +453,10 @@ export type FloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
@@ -444,6 +470,7 @@ export type CrochetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   description?: boolean
   category?: boolean
   price?: boolean
+  isVisible?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["crochet"]>
@@ -455,6 +482,7 @@ export type CrochetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   description?: boolean
   category?: boolean
   price?: boolean
+  isVisible?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["crochet"]>
@@ -466,6 +494,7 @@ export type CrochetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   description?: boolean
   category?: boolean
   price?: boolean
+  isVisible?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["crochet"]>
@@ -477,11 +506,12 @@ export type CrochetSelectScalar = {
   description?: boolean
   category?: boolean
   price?: boolean
+  isVisible?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CrochetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "imageURL" | "description" | "category" | "price" | "createdAt" | "updatedAt", ExtArgs["result"]["crochet"]>
+export type CrochetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "imageURL" | "description" | "category" | "price" | "isVisible" | "createdAt" | "updatedAt", ExtArgs["result"]["crochet"]>
 
 export type $CrochetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Crochet"
@@ -493,6 +523,7 @@ export type $CrochetPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     description: string
     category: $Enums.Category
     price: number
+    isVisible: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["crochet"]>
@@ -924,6 +955,7 @@ export interface CrochetFieldRefs {
   readonly description: Prisma.FieldRef<"Crochet", 'String'>
   readonly category: Prisma.FieldRef<"Crochet", 'Category'>
   readonly price: Prisma.FieldRef<"Crochet", 'Float'>
+  readonly isVisible: Prisma.FieldRef<"Crochet", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Crochet", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Crochet", 'DateTime'>
 }

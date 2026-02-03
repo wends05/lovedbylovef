@@ -974,6 +974,7 @@ export const CrochetScalarFieldEnum = {
   description: 'description',
   category: 'category',
   price: 'price',
+  isVisible: 'isVisible',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1001,10 +1002,11 @@ export const RequestScalarFieldEnum = {
   title: 'title',
   description: 'description',
   imageUrl: 'imageUrl',
+  imageKey: 'imageKey',
   status: 'status',
   adminResponse: 'adminResponse',
   approvedAt: 'approvedAt',
-  approvedBy: 'approvedBy',
+  approvedById: 'approvedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1148,6 +1150,13 @@ export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1200,13 +1209,6 @@ export type EnumRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'RequestStatus[]'
  */
 export type ListEnumRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RequestStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

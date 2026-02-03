@@ -12,7 +12,6 @@
 export const OrderStatus = {
   PENDING: 'PENDING',
   PROCESSING: 'PROCESSING',
-  SHIPPED: 'SHIPPED',
   DELIVERED: 'DELIVERED',
   CANCELED: 'CANCELED'
 } as const
@@ -31,19 +30,20 @@ export const Category = {
 export type Category = (typeof Category)[keyof typeof Category]
 
 
+export const RequestStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type RequestStatus = (typeof RequestStatus)[keyof typeof RequestStatus]
+
+
 export const Role = {
   USER: 'USER',
   ADMIN: 'ADMIN'
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]
-
-
-export const RequestStatus = {
-  PENDING: 'PENDING',
-  APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED',
-  COMPLETED: 'COMPLETED'
-} as const
-
-export type RequestStatus = (typeof RequestStatus)[keyof typeof RequestStatus]
