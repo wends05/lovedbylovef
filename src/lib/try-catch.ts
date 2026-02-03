@@ -10,11 +10,14 @@ export type TryCatchOptions<T> = {
 };
 
 export async function tryCatch<T>(
-	fn: () => Promise<T> | T,
+	fnOrPromise: (() => Promise<T> | T) | Promise<T>,
 	options?: TryCatchOptions<Awaited<T>>,
 ): Promise<TryCatchResult<Awaited<T>>> {
 	try {
-		const result = await fn();
+		const result =
+			typeof fnOrPromise === "function"
+				? await fnOrPromise()
+				: await fnOrPromise;
 
 		if (options?.onSuccess) {
 			const modifiedData = options.onSuccess(result);
