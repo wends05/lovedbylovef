@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma-client";
 import { tryCatch } from "@/lib/try-catch";
 import { adminMiddleware } from "../auth/middleware";
 import { RequestFormSubmission } from "./schemas/RequestForm";
+import { UpdateRequestStatusSchema } from "./schemas/UpdateRequestStatus";
 
 interface GetUserRequestsInput {
 	status?: RequestStatus | "ALL";
@@ -84,12 +85,8 @@ export const getRequestById = createServerFn({ method: "POST" })
 		return request;
 	});
 
-interface CancelRequestInput {
-	id: string;
-}
-
 export const cancelRequest = createServerFn({ method: "POST" })
-	.inputValidator((input: CancelRequestInput) => input)
+	.inputValidator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
 		const headers = await getRequestHeaders();
 		const session = await auth.api.getSession({
@@ -171,9 +168,9 @@ export const getAllRequests = createServerFn()
 			orderBy: { createdAt: "desc" },
 			where: {
 				OR: [
-					{status: RequestStatus.PENDING},
-					{status: RequestStatus.REJECTED},
-				]
+					{ status: RequestStatus.PENDING },
+					{ status: RequestStatus.REJECTED },
+				],
 			},
 			include: {
 				user: {
@@ -190,13 +187,7 @@ export const getAllRequests = createServerFn()
 
 export const updateRequestStatus = createServerFn({ method: "POST" })
 	.middleware([adminMiddleware])
-	.inputValidator(
-		z.object({
-			requestId: z.string(),
-			status: z.enum([RequestStatus.APPROVED, RequestStatus.REJECTED]),
-			adminResponse: z.string().optional(),
-		}),
-	)
+	.inputValidator(UpdateRequestStatusSchema)
 	.handler(async ({ data }) => {
 		const headers = await getRequestHeaders();
 		const session = await auth.api.getSession({

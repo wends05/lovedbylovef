@@ -209,7 +209,7 @@ export type CrochetGroupByOutputType = {
   imageURL: string
   description: string
   category: $Enums.Category
-  price: number
+  price: number | null
   isVisible: boolean
   createdAt: Date
   updatedAt: Date
@@ -244,7 +244,7 @@ export type CrochetWhereInput = {
   imageURL?: Prisma.StringFilter<"Crochet"> | string
   description?: Prisma.StringFilter<"Crochet"> | string
   category?: Prisma.EnumCategoryFilter<"Crochet"> | $Enums.Category
-  price?: Prisma.FloatFilter<"Crochet"> | number
+  price?: Prisma.FloatNullableFilter<"Crochet"> | number | null
   isVisible?: Prisma.BoolFilter<"Crochet"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Crochet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Crochet"> | Date | string
@@ -256,7 +256,7 @@ export type CrochetOrderByWithRelationInput = {
   imageURL?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
-  price?: Prisma.SortOrder
+  price?: Prisma.SortOrderInput | Prisma.SortOrder
   isVisible?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -271,7 +271,7 @@ export type CrochetWhereUniqueInput = Prisma.AtLeast<{
   imageURL?: Prisma.StringFilter<"Crochet"> | string
   description?: Prisma.StringFilter<"Crochet"> | string
   category?: Prisma.EnumCategoryFilter<"Crochet"> | $Enums.Category
-  price?: Prisma.FloatFilter<"Crochet"> | number
+  price?: Prisma.FloatNullableFilter<"Crochet"> | number | null
   isVisible?: Prisma.BoolFilter<"Crochet"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Crochet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Crochet"> | Date | string
@@ -283,7 +283,7 @@ export type CrochetOrderByWithAggregationInput = {
   imageURL?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
-  price?: Prisma.SortOrder
+  price?: Prisma.SortOrderInput | Prisma.SortOrder
   isVisible?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -303,7 +303,7 @@ export type CrochetScalarWhereWithAggregatesInput = {
   imageURL?: Prisma.StringWithAggregatesFilter<"Crochet"> | string
   description?: Prisma.StringWithAggregatesFilter<"Crochet"> | string
   category?: Prisma.EnumCategoryWithAggregatesFilter<"Crochet"> | $Enums.Category
-  price?: Prisma.FloatWithAggregatesFilter<"Crochet"> | number
+  price?: Prisma.FloatNullableWithAggregatesFilter<"Crochet"> | number | null
   isVisible?: Prisma.BoolWithAggregatesFilter<"Crochet"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Crochet"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Crochet"> | Date | string
@@ -315,7 +315,7 @@ export type CrochetCreateInput = {
   imageURL: string
   description: string
   category: $Enums.Category
-  price: number
+  price?: number | null
   isVisible?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -327,7 +327,7 @@ export type CrochetUncheckedCreateInput = {
   imageURL: string
   description: string
   category: $Enums.Category
-  price: number
+  price?: number | null
   isVisible?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -339,7 +339,7 @@ export type CrochetUpdateInput = {
   imageURL?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -351,7 +351,7 @@ export type CrochetUncheckedUpdateInput = {
   imageURL?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -363,7 +363,7 @@ export type CrochetCreateManyInput = {
   imageURL: string
   description: string
   category: $Enums.Category
-  price: number
+  price?: number | null
   isVisible?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -375,7 +375,7 @@ export type CrochetUpdateManyMutationInput = {
   imageURL?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -387,7 +387,7 @@ export type CrochetUncheckedUpdateManyInput = {
   imageURL?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   isVisible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -445,8 +445,8 @@ export type EnumCategoryFieldUpdateOperationsInput = {
   set?: $Enums.Category
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -522,7 +522,7 @@ export type $CrochetPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     imageURL: string
     description: string
     category: $Enums.Category
-    price: number
+    price: number | null
     isVisible: boolean
     createdAt: Date
     updatedAt: Date

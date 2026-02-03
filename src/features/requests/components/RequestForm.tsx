@@ -22,10 +22,17 @@ import { useAppForm } from "@/integrations/tanstack-form/formHooks";
 import { useUploadThing } from "@/integrations/uploadthing/react-helpers";
 import { tryCatch } from "@/lib/try-catch";
 import {
+	type RequestFormInput,
 	RequestFormSchema,
 	RequestFormSubmission,
 } from "../schemas/RequestForm";
 import { deleteImage, submitRequest } from "../server";
+
+const defaultValues: RequestFormInput = {
+	title: "",
+	description: "",
+	file: undefined,
+};
 
 const useRequestForm = (options?: { onSuccess?: () => void }) => {
 	const uploadThing = useUploadThing("imageUploader", {
@@ -43,18 +50,12 @@ const useRequestForm = (options?: { onSuccess?: () => void }) => {
 	});
 
 	return useAppForm({
-		defaultValues: {
-			title: "",
-			description: "",
-			file: undefined as File | undefined,
-		},
+		defaultValues,
 		validationLogic: revalidateLogic(),
 		validators: {
 			onDynamic: RequestFormSchema,
 		},
 		onSubmit: async ({ value, formApi }) => {
-			console.log(value.file);
-
 			let url: string | undefined;
 			let key: string | undefined;
 

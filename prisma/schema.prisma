@@ -13,7 +13,7 @@ model Crochet {
   imageURL    String
   description String
   category    Category
-  price       Float
+  price       Float?
   isVisible   Boolean  @default(true) // Admin controls visibility in public gallery
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
