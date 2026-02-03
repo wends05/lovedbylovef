@@ -33,23 +33,25 @@ export const adminMiddleware = createMiddleware().server(async ({ next }) => {
 	return await next();
 });
 
-export const userMiddleware = createMiddleware().server(async ({ next }) => {
-	const headers = getRequestHeaders();
-	const session = await auth.api.getSession({ headers });
+export const nonAdminMiddleware = createMiddleware().server(
+	async ({ next }) => {
+		const headers = getRequestHeaders();
+		const session = await auth.api.getSession({ headers });
 
-	if (!session) {
-		throw redirect({ to: "/signin" });
-	}
+		if (!session) {
+			throw redirect({ to: "/signin" });
+		}
 
-	console.log("Retrieving session:", session);
-	// Check if user has admin role
-	const userRole = session.user.role;
+		console.log("Retrieving session:", session);
+		// Check if user has admin role
+		const userRole = session.user.role;
 
-	console.log("User role:", userRole);
+		console.log("User role:", userRole);
 
-	if (userRole === "ADMIN") {
-		throw redirect({ to: "/admin/dashboard" });
-	}
+		if (userRole === "ADMIN") {
+			throw redirect({ to: "/admin/dashboard" });
+		}
 
-	return await next();
-});
+		return await next();
+	},
+);
