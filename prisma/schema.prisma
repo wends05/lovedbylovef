@@ -14,6 +14,7 @@ model Crochet {
   description String
   category    Category
   price       Float
+  isVisible   Boolean  @default(true) // Admin controls visibility in public gallery
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -27,12 +28,13 @@ model Order {
   status     OrderStatus
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum OrderStatus {
   PENDING
   PROCESSING
-  SHIPPED
   DELIVERED
   CANCELED
 }
@@ -45,31 +47,29 @@ enum Category {
   OTHERS
 }
 
-enum Role {
-  USER
-  ADMIN
-}
 
 // Request model for custom order requests with approval flow
 
 model Request {
   id            String        @id @default(cuid())
   userId        String
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User          @relation(name: "RequestUser", fields: [userId], references: [id], onDelete: Cascade)
   title         String
   description   String
   imageUrl      String? // Optional reference image
+  imageKey      String? // UploadThing file key for deletion
   status        RequestStatus @default(PENDING)
+
   // Admin response
   adminResponse String? // Admin's response message
   approvedAt    DateTime? // When admin approved the request
-  approvedBy    String? // Admin user ID who approved
+  approvedById  String? // Admin user ID who approved
+  approvedBy    User?    @relation(name: "ApprovedBy", fields: [approvedById], references: [id]) // Admin user ID who approved
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
   @@index([userId])
   @@index([status])
-  @@map("request")
 }
 
 enum RequestStatus {
@@ -77,6 +77,7 @@ enum RequestStatus {
   APPROVED // Admin approved, user can proceed
   REJECTED // Admin rejected
   COMPLETED // Order completed
+  CANCELLED // User cancelled the request
 }
 
 model User {
@@ -89,15 +90,23 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
-  requests      Request[] // User's custom order requests
+  requests      Request[]  @relation(name: "RequestUser") // User's custom order requests
 
   role       Role      @default(USER)
   banned     Boolean?  @default(false)
   banReason  String?
   banExpires DateTime?
+  approvedRequests Request[] @relation(name: "ApprovedBy") // Requests approved by the admin
 
+  orders     Order[]
   @@unique([email])
   @@map("user")
+}
+
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Session {
