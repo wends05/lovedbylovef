@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import RequestForm from "@/features/requests/components/RequestForm";
 
-export const Route = createFileRoute("/_protected/request")({
+export const Route = createFileRoute("/_protected/create-request")({
 	component: OrderRequestPage,
 });
 

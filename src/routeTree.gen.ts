@@ -9,11 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
+import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as AdminRequestsRouteImport } from './routes/admin/requests'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
@@ -23,8 +23,8 @@ import { Route as PublicGalleryRouteImport } from './routes/_public/gallery'
 import { Route as PublicContactRouteImport } from './routes/_public/contact'
 import { Route as PublicAboutRouteImport } from './routes/_public/about'
 import { Route as ProtectedRequestsRouteImport } from './routes/_protected/requests'
-import { Route as ProtectedRequestRouteImport } from './routes/_protected/request'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
+import { Route as ProtectedCreateRequestRouteImport } from './routes/_protected/create-request'
 import { Route as ProtectedChatRouteImport } from './routes/_protected/chat'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthSigninRouteImport } from './routes/_auth/signin'
@@ -32,10 +32,6 @@ import { Route as ApiUploadthingSplatRouteImport } from './routes/api/uploadthin
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ProtectedRequestIdRouteImport } from './routes/_protected/request.$id'
 
-const ProtectedRoute = ProtectedRouteImport.update({
-  id: '/_protected',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
@@ -52,6 +48,10 @@ const AdminRouteRoute = AdminRouteRouteImport.update({
 } as any)
 const PublicRouteRoute = PublicRouteRouteImport.update({
   id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
+  id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicIndexRoute = PublicIndexRouteImport.update({
@@ -97,22 +97,22 @@ const PublicAboutRoute = PublicAboutRouteImport.update({
 const ProtectedRequestsRoute = ProtectedRequestsRouteImport.update({
   id: '/requests',
   path: '/requests',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedRequestRoute = ProtectedRequestRouteImport.update({
-  id: '/request',
-  path: '/request',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedCreateRequestRoute = ProtectedCreateRequestRouteImport.update({
+  id: '/create-request',
+  path: '/create-request',
+  getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const ProtectedChatRoute = ProtectedChatRouteImport.update({
   id: '/chat',
   path: '/chat',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/signup',
@@ -135,9 +135,9 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProtectedRequestIdRoute = ProtectedRequestIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ProtectedRequestRoute,
+  id: '/request/$id',
+  path: '/request/$id',
+  getParentRoute: () => ProtectedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -147,8 +147,8 @@ export interface FileRoutesByFullPath {
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
   '/chat': typeof ProtectedChatRoute
+  '/create-request': typeof ProtectedCreateRequestRoute
   '/dashboard': typeof ProtectedDashboardRoute
-  '/request': typeof ProtectedRequestRouteWithChildren
   '/requests': typeof ProtectedRequestsRoute
   '/about': typeof PublicAboutRoute
   '/contact': typeof PublicContactRoute
@@ -162,14 +162,14 @@ export interface FileRoutesByFullPath {
   '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof PublicIndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
   '/$': typeof SplatRoute
-  '/': typeof PublicIndexRoute
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
   '/chat': typeof ProtectedChatRoute
+  '/create-request': typeof ProtectedCreateRequestRoute
   '/dashboard': typeof ProtectedDashboardRoute
-  '/request': typeof ProtectedRequestRouteWithChildren
   '/requests': typeof ProtectedRequestsRoute
   '/about': typeof PublicAboutRoute
   '/contact': typeof PublicContactRoute
@@ -184,16 +184,16 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_protected': typeof ProtectedRouteRouteWithChildren
   '/_public': typeof PublicRouteRouteWithChildren
   '/admin': typeof AdminRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/_auth': typeof AuthRouteWithChildren
-  '/_protected': typeof ProtectedRouteWithChildren
   '/_auth/signin': typeof AuthSigninRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_protected/chat': typeof ProtectedChatRoute
+  '/_protected/create-request': typeof ProtectedCreateRequestRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
-  '/_protected/request': typeof ProtectedRequestRouteWithChildren
   '/_protected/requests': typeof ProtectedRequestsRoute
   '/_public/about': typeof PublicAboutRoute
   '/_public/contact': typeof PublicContactRoute
@@ -216,8 +216,8 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signup'
     | '/chat'
+    | '/create-request'
     | '/dashboard'
-    | '/request'
     | '/requests'
     | '/about'
     | '/contact'
@@ -231,14 +231,14 @@ export interface FileRouteTypes {
     | '/api/uploadthing/$'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/admin'
     | '/$'
-    | '/'
     | '/signin'
     | '/signup'
     | '/chat'
+    | '/create-request'
     | '/dashboard'
-    | '/request'
     | '/requests'
     | '/about'
     | '/contact'
@@ -252,16 +252,16 @@ export interface FileRouteTypes {
     | '/api/uploadthing/$'
   id:
     | '__root__'
+    | '/_protected'
     | '/_public'
     | '/admin'
     | '/$'
     | '/_auth'
-    | '/_protected'
     | '/_auth/signin'
     | '/_auth/signup'
     | '/_protected/chat'
+    | '/_protected/create-request'
     | '/_protected/dashboard'
-    | '/_protected/request'
     | '/_protected/requests'
     | '/_public/about'
     | '/_public/contact'
@@ -277,24 +277,17 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
   PublicRouteRoute: typeof PublicRouteRouteWithChildren
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
   AuthRoute: typeof AuthRouteWithChildren
-  ProtectedRoute: typeof ProtectedRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiUploadthingSplatRoute: typeof ApiUploadthingSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_protected': {
-      id: '/_protected'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof ProtectedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_auth': {
       id: '/_auth'
       path: ''
@@ -321,6 +314,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof PublicRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtectedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/': {
@@ -384,28 +384,28 @@ declare module '@tanstack/react-router' {
       path: '/requests'
       fullPath: '/requests'
       preLoaderRoute: typeof ProtectedRequestsRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/request': {
-      id: '/_protected/request'
-      path: '/request'
-      fullPath: '/request'
-      preLoaderRoute: typeof ProtectedRequestRouteImport
-      parentRoute: typeof ProtectedRoute
+      parentRoute: typeof ProtectedRouteRoute
     }
     '/_protected/dashboard': {
       id: '/_protected/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof ProtectedDashboardRouteImport
-      parentRoute: typeof ProtectedRoute
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/create-request': {
+      id: '/_protected/create-request'
+      path: '/create-request'
+      fullPath: '/create-request'
+      preLoaderRoute: typeof ProtectedCreateRequestRouteImport
+      parentRoute: typeof ProtectedRouteRoute
     }
     '/_protected/chat': {
       id: '/_protected/chat'
       path: '/chat'
       fullPath: '/chat'
       preLoaderRoute: typeof ProtectedChatRouteImport
-      parentRoute: typeof ProtectedRoute
+      parentRoute: typeof ProtectedRouteRoute
     }
     '/_auth/signup': {
       id: '/_auth/signup'
@@ -437,13 +437,33 @@ declare module '@tanstack/react-router' {
     }
     '/_protected/request/$id': {
       id: '/_protected/request/$id'
-      path: '/$id'
+      path: '/request/$id'
       fullPath: '/request/$id'
       preLoaderRoute: typeof ProtectedRequestIdRouteImport
-      parentRoute: typeof ProtectedRequestRoute
+      parentRoute: typeof ProtectedRouteRoute
     }
   }
 }
+
+interface ProtectedRouteRouteChildren {
+  ProtectedChatRoute: typeof ProtectedChatRoute
+  ProtectedCreateRequestRoute: typeof ProtectedCreateRequestRoute
+  ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+  ProtectedRequestsRoute: typeof ProtectedRequestsRoute
+  ProtectedRequestIdRoute: typeof ProtectedRequestIdRoute
+}
+
+const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
+  ProtectedChatRoute: ProtectedChatRoute,
+  ProtectedCreateRequestRoute: ProtectedCreateRequestRoute,
+  ProtectedDashboardRoute: ProtectedDashboardRoute,
+  ProtectedRequestsRoute: ProtectedRequestsRoute,
+  ProtectedRequestIdRoute: ProtectedRequestIdRoute,
+}
+
+const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
+  ProtectedRouteRouteChildren,
+)
 
 interface PublicRouteRouteChildren {
   PublicAboutRoute: typeof PublicAboutRoute
@@ -493,41 +513,12 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
-interface ProtectedRequestRouteChildren {
-  ProtectedRequestIdRoute: typeof ProtectedRequestIdRoute
-}
-
-const ProtectedRequestRouteChildren: ProtectedRequestRouteChildren = {
-  ProtectedRequestIdRoute: ProtectedRequestIdRoute,
-}
-
-const ProtectedRequestRouteWithChildren =
-  ProtectedRequestRoute._addFileChildren(ProtectedRequestRouteChildren)
-
-interface ProtectedRouteChildren {
-  ProtectedChatRoute: typeof ProtectedChatRoute
-  ProtectedDashboardRoute: typeof ProtectedDashboardRoute
-  ProtectedRequestRoute: typeof ProtectedRequestRouteWithChildren
-  ProtectedRequestsRoute: typeof ProtectedRequestsRoute
-}
-
-const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedChatRoute: ProtectedChatRoute,
-  ProtectedDashboardRoute: ProtectedDashboardRoute,
-  ProtectedRequestRoute: ProtectedRequestRouteWithChildren,
-  ProtectedRequestsRoute: ProtectedRequestsRoute,
-}
-
-const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
-  ProtectedRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
+  ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
   PublicRouteRoute: PublicRouteRouteWithChildren,
   AdminRouteRoute: AdminRouteRouteWithChildren,
   SplatRoute: SplatRoute,
   AuthRoute: AuthRouteWithChildren,
-  ProtectedRoute: ProtectedRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiUploadthingSplatRoute: ApiUploadthingSplatRoute,
 }
