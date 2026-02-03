@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import RequestForm from "@/features/requests/components/RequestForm";
 
-export const Route = createFileRoute("/_protected/order")({
+export const Route = createFileRoute("/_protected/request")({
 	component: OrderRequestPage,
 });
 
@@ -10,5 +10,5 @@ function OrderRequestPage() {
 		<div className="flex h-full items-center justify-center w-full">
 			<RequestForm />
 		</div>
-	);
+	)
 }

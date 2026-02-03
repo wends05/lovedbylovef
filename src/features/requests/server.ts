@@ -2,10 +2,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import z from "zod";
 import { RequestStatus } from "@/generated/prisma/enums";
+import type { RequestUpdateInput } from "@/generated/prisma/models";
 import { utapi } from "@/integrations/uploadthing/api";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma-client";
 import { tryCatch } from "@/lib/try-catch";
+import { adminMiddleware } from "../auth/middleware";
 import { RequestFormSubmission } from "./schemas/RequestForm";
 
 interface GetUserRequestsInput {
@@ -160,4 +162,63 @@ export const deleteImage = createServerFn({ method: "POST" })
 		const res = await utapi.deleteFiles(data);
 
 		return { success: res.success, deletedCount: res.deletedCount };
+	});
+
+export const getAllRequests = createServerFn()
+	.middleware([adminMiddleware])
+	.handler(async () => {
+		const requests = await prisma.request.findMany({
+			orderBy: { createdAt: "desc" },
+			where: {
+				OR: [
+					{status: RequestStatus.PENDING},
+					{status: RequestStatus.REJECTED},
+				]
+			},
+			include: {
+				user: {
+					select: {
+						id: true,
+						name: true,
+						email: true,
+					},
+				},
+			},
+		});
+		return requests;
+	});
+
+export const updateRequestStatus = createServerFn({ method: "POST" })
+	.middleware([adminMiddleware])
+	.inputValidator(
+		z.object({
+			requestId: z.string(),
+			status: z.enum([RequestStatus.APPROVED, RequestStatus.REJECTED]),
+			adminResponse: z.string().optional(),
+		}),
+	)
+	.handler(async ({ data }) => {
+		const headers = await getRequestHeaders();
+		const session = await auth.api.getSession({
+			headers,
+		});
+
+		if (!session) {
+			throw new Error("Unauthorized");
+		}
+		const updateData: RequestUpdateInput = {
+			status: data.status,
+			adminResponse: data.adminResponse || null,
+			approvedBy: {
+				connect: { id: session.user.id },
+			},
+			approvedAt: new Date(),
+		};
+
+		const updatedRequest = await prisma.request.update({
+			where: { id: data.requestId },
+			data: updateData,
+		});
+
+		return updatedRequest;
 	});
