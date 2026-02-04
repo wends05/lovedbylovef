@@ -1,6 +1,5 @@
 import { revalidateLogic } from "@tanstack/react-form";
 import { Upload } from "lucide-react";
-import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -15,11 +14,10 @@ import {
 	DropZoneArea,
 	Dropzone,
 	DropzoneTrigger,
-	useDropzone,
 } from "@/components/ui/dropzone";
 import { ImageZoom } from "@/components/ui/image-zoom";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
-import { useUploadThing } from "@/integrations/uploadthing/react-helpers";
+import { useSingleImageUpload } from "@/integrations/uploadthing/use-single-image-upload";
 import { tryCatch } from "@/lib/try-catch";
 import {
 	type RequestFormInput,
@@ -34,22 +32,8 @@ const defaultValues: RequestFormInput = {
 	file: undefined,
 };
 
-const useRequestForm = (options?: { onSuccess?: () => void }) => {
-	const uploadThing = useUploadThing("imageUploader", {
-		onClientUploadComplete: (res) => {
-			console.log("Upload complete:", res);
-			toast.success("File uploaded successfully!");
-		},
-		onUploadError: (error) => {
-			console.error("Upload error:", error);
-			toast.error(`Upload failed: ${error.message}`);
-		},
-		onUploadBegin: () => {
-			toast.info("Upload started...");
-		},
-	});
-
-	return useAppForm({
+export default function RequestForm() {
+	const form = useAppForm({
 		defaultValues,
 		validationLogic: revalidateLogic(),
 		validators: {
@@ -60,14 +44,14 @@ const useRequestForm = (options?: { onSuccess?: () => void }) => {
 			let key: string | undefined;
 
 			if (value.file) {
-				if (uploadThing.isUploading) {
+				if (imageUpload.isUploading) {
 					return;
 				}
 
-				const files = await uploadThing.startUpload([value.file]);
-				if (files && files.length > 0) {
-					url = files[0].ufsUrl;
-					key = `${files[0].key}`;
+				const uploadedFile = await imageUpload.uploadFile();
+				if (uploadedFile) {
+					url = uploadedFile.ufsUrl;
+					key = `${uploadedFile.key}`;
 				}
 			}
 			const finalData = RequestFormSubmission.parse({
@@ -99,66 +83,37 @@ const useRequestForm = (options?: { onSuccess?: () => void }) => {
 			// Success! Clear the form
 			toast.success("Request submitted successfully!");
 			formApi.reset();
-			options?.onSuccess?.();
+			imageUpload.clear();
 		},
 	});
-};
 
-export default function RequestForm() {
-	const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-	const clearImagePreview = () => {
-		if (imagePreview) {
-			URL.revokeObjectURL(imagePreview);
-		}
-		setImagePreview(null);
-	};
-
-	const form = useRequestForm({
-		onSuccess: clearImagePreview,
-	});
-
-	const dropzone = useDropzone({
-		onDropFile: async (file) => {
-			console.log(file);
-			const previewUrl = URL.createObjectURL(file);
-			setImagePreview(previewUrl);
+	const imageUpload = useSingleImageUpload({
+		onFileChange: (file) => {
 			form.setFieldValue("file", file);
-			return {
-				status: "success",
-				result: previewUrl,
-			};
 		},
-		validation: {
-			accept: {
-				"image/*": [".png", ".jpg", ".jpeg", ".gif"],
-			},
-			maxSize: 8 * 1024 * 1024,
-			maxFiles: 1,
+		onUploadBegin: () => {
+			toast.info("Upload started...");
 		},
+		onUploadComplete: (res) => {
+			console.log("Upload complete:", res);
+			toast.success("File uploaded successfully!");
+		},
+		onUploadError: (error) => {
+			console.error("Upload error:", error);
+			toast.error(`Upload failed: ${error.message}`);
+		},
+		accept: {
+			"image/*": [".png", ".jpg", ".jpeg", ".gif"],
+		},
+		maxSize: 8 * 1024 * 1024,
+		maxFiles: 1,
 		shiftOnMaxFiles: true,
 	});
 
-	// Cleanup object URLs when component unmounts
-	useEffect(() => {
-		return () => {
-			if (imagePreview) {
-				URL.revokeObjectURL(imagePreview);
-			}
-		};
-	}, [imagePreview]);
+	const { dropzone, previewUrl, isUploading } = imageUpload;
 
 	const handleRemoveImage = () => {
-		if (imagePreview) {
-			URL.revokeObjectURL(imagePreview);
-		}
-		setImagePreview(null);
-		form.setFieldValue("file", undefined);
-
-		// Clear the dropzone files
-		dropzone.fileStatuses.forEach((file) => {
-			dropzone.onRemoveFile(file.id);
-		});
+		imageUpload.clear();
 	};
 
 	return (
@@ -214,12 +169,12 @@ export default function RequestForm() {
 								</Dropzone>
 
 								{/* Image Preview */}
-								{imagePreview && (
+								{previewUrl && (
 									<>
 										<div className="relative rounded-lg overflow-hidden border border-border bg-muted/50">
 											<ImageZoom>
 												<img
-													src={imagePreview}
+													src={previewUrl}
 													alt="Preview"
 													className="w-full h-46 object-contain"
 												/>
@@ -238,7 +193,7 @@ export default function RequestForm() {
 						)}
 					</form.AppField>
 					<form.AppForm>
-						<form.SubmitButton label="Submit" />
+						<form.SubmitButton label="Submit" disabled={isUploading} />
 					</form.AppForm>
 				</form>
 			</CardContent>

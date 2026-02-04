@@ -34,8 +34,8 @@ import { ImageZoom } from "@/components/ui/image-zoom";
 import { Separator } from "@/components/ui/separator";
 import type { RequestStatus } from "@/generated/prisma/enums";
 import { tryCatch } from "@/lib/try-catch";
-import { requestsOptions } from "../../options";
-import { cancelRequest } from "../../server";
+import { requestsOptions } from "../options";
+import { cancelRequest } from "../server";
 
 const statusConfig: Record<
 	RequestStatus,

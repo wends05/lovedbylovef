@@ -2,12 +2,17 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import z from "zod";
 import { RequestStatus } from "@/generated/prisma/enums";
-import type { RequestUpdateInput } from "@/generated/prisma/models";
+import type {
+	RequestUpdateInput,
+	RequestWhereInput,
+} from "@/generated/prisma/models";
 import { utapi } from "@/integrations/uploadthing/api";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma-client";
 import { tryCatch } from "@/lib/try-catch";
 import { adminMiddleware } from "../auth/middleware";
+import { initiateOrder } from "../order/admin/server";
+import { GetRequestsQuerySchema } from "./schemas/GetRequestsQuery";
 import { RequestFormSubmission } from "./schemas/RequestForm";
 import { UpdateRequestStatusSchema } from "./schemas/UpdateRequestStatus";
 
@@ -161,17 +166,49 @@ export const deleteImage = createServerFn({ method: "POST" })
 		return { success: res.success, deletedCount: res.deletedCount };
 	});
 
-export const getAllRequests = createServerFn()
+export const getAllRequests = createServerFn({ method: "POST" })
 	.middleware([adminMiddleware])
-	.handler(async () => {
+	.inputValidator(GetRequestsQuerySchema)
+	.handler(async ({ data }) => {
+		const pageSize = data.pageSize;
+
+		// Build where clause
+		const where: RequestWhereInput = {};
+
+		// Status filter
+		if (data.status && data.status !== "ALL") {
+			where.status = data.status;
+		}
+
+		// Search filter (searches title, description, user name, user email)
+		if (data.search && data.search.trim() !== "") {
+			where.OR = [
+				{ title: { contains: data.search, mode: "insensitive" } },
+				{ description: { contains: data.search, mode: "insensitive" } },
+				{ user: { name: { contains: data.search, mode: "insensitive" } } },
+				{ user: { email: { contains: data.search, mode: "insensitive" } } },
+			];
+		}
+
+		// Build orderBy clause
+		let orderBy = {};
+		if (data.sortBy === "userName") {
+			orderBy = { user: { name: data.sortOrder } };
+		} else {
+			orderBy = { [data.sortBy]: data.sortOrder };
+		}
+
+		// Fetch requests with pagination
 		const requests = await prisma.request.findMany({
-			orderBy: { createdAt: "desc" },
-			where: {
-				OR: [
-					{ status: RequestStatus.PENDING },
-					{ status: RequestStatus.REJECTED },
-				],
-			},
+			where,
+			orderBy,
+			take: pageSize + 1, // Fetch one extra to determine if there's more
+			...(data.cursor
+				? {
+						skip: 1,
+						cursor: { id: data.cursor },
+					}
+				: {}),
 			include: {
 				user: {
 					select: {
@@ -182,7 +219,16 @@ export const getAllRequests = createServerFn()
 				},
 			},
 		});
-		return requests;
+
+		const hasMore = requests.length > pageSize;
+		const items = hasMore ? requests.slice(0, pageSize) : requests;
+		const nextCursor = hasMore ? items[items.length - 1]?.id : undefined;
+
+		return {
+			items,
+			nextCursor,
+			hasMore,
+		};
 	});
 
 export const updateRequestStatus = createServerFn({ method: "POST" })
@@ -200,9 +246,6 @@ export const updateRequestStatus = createServerFn({ method: "POST" })
 		const updateData: RequestUpdateInput = {
 			status: data.status,
 			adminResponse: data.adminResponse || null,
-			approvedBy: {
-				connect: { id: session.user.id },
-			},
 			approvedAt: new Date(),
 		};
 
@@ -210,6 +253,18 @@ export const updateRequestStatus = createServerFn({ method: "POST" })
 			where: { id: data.requestId },
 			data: updateData,
 		});
+
+		if (updatedRequest.status === RequestStatus.APPROVED) {
+			// Handle initiating a conversation for the admin.
+
+			const { data, error, success } = await tryCatch(
+				initiateOrder({ data: { requestId: updatedRequest.id } }),
+			);
+
+			if (!success) {
+
+			}
+		}
 
 		return updatedRequest;
 	});

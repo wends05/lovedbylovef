@@ -103,9 +103,9 @@ export function UserSidebar() {
 								<SidebarMenuButton
 									className="flex gap-2"
 									render={
-										<Link to="/request">
+										<Link to="/create-request">
 											<PlusIcon className="h-4 w-4 shrink-0" />
-											<span className="truncate">New Order</span>
+											<span className="truncate">New Request</span>
 										</Link>
 									}
 								/>
