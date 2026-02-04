@@ -17,7 +17,6 @@ import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as AdminRequestsRouteImport } from './routes/admin/requests'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
-import { Route as AdminGalleryRouteImport } from './routes/admin/gallery'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as PublicGalleryRouteImport } from './routes/_public/gallery'
 import { Route as PublicContactRouteImport } from './routes/_public/contact'
@@ -28,9 +27,13 @@ import { Route as ProtectedCreateRequestRouteImport } from './routes/_protected/
 import { Route as ProtectedChatRouteImport } from './routes/_protected/chat'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthSigninRouteImport } from './routes/_auth/signin'
+import { Route as AdminGalleryRouteRouteImport } from './routes/admin/gallery/route'
+import { Route as AdminGalleryIndexRouteImport } from './routes/admin/gallery/index'
 import { Route as ApiUploadthingSplatRouteImport } from './routes/api/uploadthing/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AdminGalleryCreateRouteImport } from './routes/admin/gallery/create'
 import { Route as ProtectedRequestIdRouteImport } from './routes/_protected/request.$id'
+import { Route as AdminGalleryIdEditRouteImport } from './routes/admin/gallery/$id.edit'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -67,11 +70,6 @@ const AdminRequestsRoute = AdminRequestsRouteImport.update({
 const AdminOrdersRoute = AdminOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminGalleryRoute = AdminGalleryRouteImport.update({
-  id: '/gallery',
-  path: '/gallery',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
@@ -124,6 +122,16 @@ const AuthSigninRoute = AuthSigninRouteImport.update({
   path: '/signin',
   getParentRoute: () => AuthRoute,
 } as any)
+const AdminGalleryRouteRoute = AdminGalleryRouteRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminGalleryIndexRoute = AdminGalleryIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminGalleryRouteRoute,
+} as any)
 const ApiUploadthingSplatRoute = ApiUploadthingSplatRouteImport.update({
   id: '/api/uploadthing/$',
   path: '/api/uploadthing/$',
@@ -134,16 +142,27 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminGalleryCreateRoute = AdminGalleryCreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => AdminGalleryRouteRoute,
+} as any)
 const ProtectedRequestIdRoute = ProtectedRequestIdRouteImport.update({
   id: '/request/$id',
   path: '/request/$id',
   getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const AdminGalleryIdEditRoute = AdminGalleryIdEditRouteImport.update({
+  id: '/$id/edit',
+  path: '/$id/edit',
+  getParentRoute: () => AdminGalleryRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
   '/$': typeof SplatRoute
+  '/admin/gallery': typeof AdminGalleryRouteRouteWithChildren
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
   '/chat': typeof ProtectedChatRoute
@@ -154,12 +173,14 @@ export interface FileRoutesByFullPath {
   '/contact': typeof PublicContactRoute
   '/gallery': typeof PublicGalleryRoute
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/gallery': typeof AdminGalleryRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/request/$id': typeof ProtectedRequestIdRoute
+  '/admin/gallery/create': typeof AdminGalleryCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
+  '/admin/gallery/': typeof AdminGalleryIndexRoute
+  '/admin/gallery/$id/edit': typeof AdminGalleryIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
@@ -175,12 +196,14 @@ export interface FileRoutesByTo {
   '/contact': typeof PublicContactRoute
   '/gallery': typeof PublicGalleryRoute
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/gallery': typeof AdminGalleryRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/request/$id': typeof ProtectedRequestIdRoute
+  '/admin/gallery/create': typeof AdminGalleryCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
+  '/admin/gallery': typeof AdminGalleryIndexRoute
+  '/admin/gallery/$id/edit': typeof AdminGalleryIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -189,6 +212,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/_auth': typeof AuthRouteWithChildren
+  '/admin/gallery': typeof AdminGalleryRouteRouteWithChildren
   '/_auth/signin': typeof AuthSigninRoute
   '/_auth/signup': typeof AuthSignupRoute
   '/_protected/chat': typeof ProtectedChatRoute
@@ -199,13 +223,15 @@ export interface FileRoutesById {
   '/_public/contact': typeof PublicContactRoute
   '/_public/gallery': typeof PublicGalleryRoute
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/gallery': typeof AdminGalleryRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/_public/': typeof PublicIndexRoute
   '/_protected/request/$id': typeof ProtectedRequestIdRoute
+  '/admin/gallery/create': typeof AdminGalleryCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
+  '/admin/gallery/': typeof AdminGalleryIndexRoute
+  '/admin/gallery/$id/edit': typeof AdminGalleryIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -213,6 +239,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/$'
+    | '/admin/gallery'
     | '/signin'
     | '/signup'
     | '/chat'
@@ -223,12 +250,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/gallery'
     | '/admin/dashboard'
-    | '/admin/gallery'
     | '/admin/orders'
     | '/admin/requests'
     | '/request/$id'
+    | '/admin/gallery/create'
     | '/api/auth/$'
     | '/api/uploadthing/$'
+    | '/admin/gallery/'
+    | '/admin/gallery/$id/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -244,12 +273,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/gallery'
     | '/admin/dashboard'
-    | '/admin/gallery'
     | '/admin/orders'
     | '/admin/requests'
     | '/request/$id'
+    | '/admin/gallery/create'
     | '/api/auth/$'
     | '/api/uploadthing/$'
+    | '/admin/gallery'
+    | '/admin/gallery/$id/edit'
   id:
     | '__root__'
     | '/_protected'
@@ -257,6 +288,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/$'
     | '/_auth'
+    | '/admin/gallery'
     | '/_auth/signin'
     | '/_auth/signup'
     | '/_protected/chat'
@@ -267,13 +299,15 @@ export interface FileRouteTypes {
     | '/_public/contact'
     | '/_public/gallery'
     | '/admin/dashboard'
-    | '/admin/gallery'
     | '/admin/orders'
     | '/admin/requests'
     | '/_public/'
     | '/_protected/request/$id'
+    | '/admin/gallery/create'
     | '/api/auth/$'
     | '/api/uploadthing/$'
+    | '/admin/gallery/'
+    | '/admin/gallery/$id/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -342,13 +376,6 @@ declare module '@tanstack/react-router' {
       path: '/orders'
       fullPath: '/admin/orders'
       preLoaderRoute: typeof AdminOrdersRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/gallery': {
-      id: '/admin/gallery'
-      path: '/gallery'
-      fullPath: '/admin/gallery'
-      preLoaderRoute: typeof AdminGalleryRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/dashboard': {
@@ -421,6 +448,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSigninRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/admin/gallery': {
+      id: '/admin/gallery'
+      path: '/gallery'
+      fullPath: '/admin/gallery'
+      preLoaderRoute: typeof AdminGalleryRouteRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/gallery/': {
+      id: '/admin/gallery/'
+      path: '/'
+      fullPath: '/admin/gallery/'
+      preLoaderRoute: typeof AdminGalleryIndexRouteImport
+      parentRoute: typeof AdminGalleryRouteRoute
+    }
     '/api/uploadthing/$': {
       id: '/api/uploadthing/$'
       path: '/api/uploadthing/$'
@@ -435,12 +476,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/gallery/create': {
+      id: '/admin/gallery/create'
+      path: '/create'
+      fullPath: '/admin/gallery/create'
+      preLoaderRoute: typeof AdminGalleryCreateRouteImport
+      parentRoute: typeof AdminGalleryRouteRoute
+    }
     '/_protected/request/$id': {
       id: '/_protected/request/$id'
       path: '/request/$id'
       fullPath: '/request/$id'
       preLoaderRoute: typeof ProtectedRequestIdRouteImport
       parentRoute: typeof ProtectedRouteRoute
+    }
+    '/admin/gallery/$id/edit': {
+      id: '/admin/gallery/$id/edit'
+      path: '/$id/edit'
+      fullPath: '/admin/gallery/$id/edit'
+      preLoaderRoute: typeof AdminGalleryIdEditRouteImport
+      parentRoute: typeof AdminGalleryRouteRoute
     }
   }
 }
@@ -483,16 +538,31 @@ const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
   PublicRouteRouteChildren,
 )
 
+interface AdminGalleryRouteRouteChildren {
+  AdminGalleryCreateRoute: typeof AdminGalleryCreateRoute
+  AdminGalleryIndexRoute: typeof AdminGalleryIndexRoute
+  AdminGalleryIdEditRoute: typeof AdminGalleryIdEditRoute
+}
+
+const AdminGalleryRouteRouteChildren: AdminGalleryRouteRouteChildren = {
+  AdminGalleryCreateRoute: AdminGalleryCreateRoute,
+  AdminGalleryIndexRoute: AdminGalleryIndexRoute,
+  AdminGalleryIdEditRoute: AdminGalleryIdEditRoute,
+}
+
+const AdminGalleryRouteRouteWithChildren =
+  AdminGalleryRouteRoute._addFileChildren(AdminGalleryRouteRouteChildren)
+
 interface AdminRouteRouteChildren {
+  AdminGalleryRouteRoute: typeof AdminGalleryRouteRouteWithChildren
   AdminDashboardRoute: typeof AdminDashboardRoute
-  AdminGalleryRoute: typeof AdminGalleryRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminRequestsRoute: typeof AdminRequestsRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminGalleryRouteRoute: AdminGalleryRouteRouteWithChildren,
   AdminDashboardRoute: AdminDashboardRoute,
-  AdminGalleryRoute: AdminGalleryRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminRequestsRoute: AdminRequestsRoute,
 }

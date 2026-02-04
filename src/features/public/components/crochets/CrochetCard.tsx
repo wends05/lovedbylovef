@@ -1,17 +1,8 @@
 import { Package } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Category } from "@/generated/prisma";
+import type { Crochet } from "@/generated/prisma/client";
 import { categoryLabels } from "./CategoryFilter";
-
-interface Crochet {
-	id: string;
-	name: string;
-	description: string;
-	category: Category;
-	price: number;
-	imageURL: string;
-}
 
 interface CrochetCardProps {
 	crochet: Crochet;
@@ -39,7 +30,7 @@ export function CrochetCard({ crochet }: CrochetCardProps) {
 						{crochet.name}
 					</CardTitle>
 				</div>
-				<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+				<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary w-max">
 					{categoryLabels[crochet.category]}
 				</span>
 			</CardHeader>
@@ -47,7 +38,7 @@ export function CrochetCard({ crochet }: CrochetCardProps) {
 				<p className="text-sm text-muted-foreground line-clamp-2 mb-3">
 					{crochet.description}
 				</p>
-				<p className="font-semibold text-lg">${crochet.price.toFixed(2)}</p>
+				<p className="font-semibold text-lg">₱{crochet.price}</p>
 			</CardContent>
 		</Card>
 	);

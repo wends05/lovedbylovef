@@ -1,12 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import RequestManagement from "@/features/admin/components/requests-page/RequestManagement";
-import { adminDashboardOptions } from "@/features/admin/options";
+import RequestManagement from "@/features/admin/requests-page/components/RequestManagement";
+import { RequestSearchParamsSchema } from "@/features/admin/requests-page/schemas/RequestSearchParams";
 
 export const Route = createFileRoute("/admin/requests")({
-	loader: async ({ context }) => {
-		await context.queryClient.ensureQueryData(
-			adminDashboardOptions.getRequests,
-		);
-	},
+	validateSearch: RequestSearchParamsSchema,
 	component: RequestManagement,
 });

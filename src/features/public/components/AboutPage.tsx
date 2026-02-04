@@ -165,7 +165,7 @@ export default function AboutPage() {
 							<Button
 								className="w-full"
 								style={{ backgroundColor: "var(--primary)" }}
-								onClick={() => navigate({ to: "/request" })}
+								onClick={() => navigate({ to: "/create-request" })}
 							>
 								Request Custom Order
 								<ArrowRight className="w-4 h-4 ml-2" />
