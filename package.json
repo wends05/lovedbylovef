@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
-    "start": "bun .output/server/index.mjs",
+    "start": "bun server.ts",
     "preview": "vite preview",
     "test": "vitest run",
     "format": "biome format",
