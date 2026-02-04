@@ -11,6 +11,8 @@ model Crochet {
   id          String   @id @default(cuid())
   name        String
   imageURL    String
+  imageKey    String?
+  imageHash   String?
   description String
   category    Category
   price       Float?
@@ -21,15 +23,16 @@ model Crochet {
 
 model Order {
   id         String      @id @default(cuid())
-  userId     String
-  crochetId  String
-  quantity   Int
-  totalPrice Float
+  requestorId     String
+  requestId  String      @unique
+  totalPrice Float?
   status     OrderStatus
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
 
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [requestorId], references: [id], onDelete: Cascade)
+  request    Request     @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  orderChat  OrderChat?
 }
 
 enum OrderStatus {
@@ -63,10 +66,9 @@ model Request {
   // Admin response
   adminResponse String? // Admin's response message
   approvedAt    DateTime? // When admin approved the request
-  approvedById  String? // Admin user ID who approved
-  approvedBy    User?    @relation(name: "ApprovedBy", fields: [approvedById], references: [id]) // Admin user ID who approved
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+  order         Order?
 
   @@index([userId])
   @@index([status])
@@ -96,11 +98,36 @@ model User {
   banned     Boolean?  @default(false)
   banReason  String?
   banExpires DateTime?
-  approvedRequests Request[] @relation(name: "ApprovedBy") // Requests approved by the admin
 
   orders     Order[]
+  orderChats OrderChat[]
+  chatMessages ChatMessage[]
   @@unique([email])
   @@map("user")
+}
+
+model OrderChat {
+  id        String   @id @default(cuid())
+  orderId   String   @unique
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  ChatMessage[]
+}
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  orderChatId String
+  authorId    String
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  chat   OrderChat @relation(fields: [orderChatId], references: [id], onDelete: Cascade)
+  author User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
 
 

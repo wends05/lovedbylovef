@@ -38,6 +38,16 @@ export type Request = Prisma.RequestModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model OrderChat
+ * 
+ */
+export type OrderChat = Prisma.OrderChatModel
+/**
+ * Model ChatMessage
+ * 
+ */
+export type ChatMessage = Prisma.ChatMessageModel
+/**
  * Model Session
  * 
  */

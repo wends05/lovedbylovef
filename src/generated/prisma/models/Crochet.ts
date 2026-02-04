@@ -38,6 +38,8 @@ export type CrochetMinAggregateOutputType = {
   id: string | null
   name: string | null
   imageURL: string | null
+  imageKey: string | null
+  imageHash: string | null
   description: string | null
   category: $Enums.Category | null
   price: number | null
@@ -50,6 +52,8 @@ export type CrochetMaxAggregateOutputType = {
   id: string | null
   name: string | null
   imageURL: string | null
+  imageKey: string | null
+  imageHash: string | null
   description: string | null
   category: $Enums.Category | null
   price: number | null
@@ -62,6 +66,8 @@ export type CrochetCountAggregateOutputType = {
   id: number
   name: number
   imageURL: number
+  imageKey: number
+  imageHash: number
   description: number
   category: number
   price: number
@@ -84,6 +90,8 @@ export type CrochetMinAggregateInputType = {
   id?: true
   name?: true
   imageURL?: true
+  imageKey?: true
+  imageHash?: true
   description?: true
   category?: true
   price?: true
@@ -96,6 +104,8 @@ export type CrochetMaxAggregateInputType = {
   id?: true
   name?: true
   imageURL?: true
+  imageKey?: true
+  imageHash?: true
   description?: true
   category?: true
   price?: true
@@ -108,6 +118,8 @@ export type CrochetCountAggregateInputType = {
   id?: true
   name?: true
   imageURL?: true
+  imageKey?: true
+  imageHash?: true
   description?: true
   category?: true
   price?: true
@@ -207,6 +219,8 @@ export type CrochetGroupByOutputType = {
   id: string
   name: string
   imageURL: string
+  imageKey: string | null
+  imageHash: string | null
   description: string
   category: $Enums.Category
   price: number | null
@@ -242,6 +256,8 @@ export type CrochetWhereInput = {
   id?: Prisma.StringFilter<"Crochet"> | string
   name?: Prisma.StringFilter<"Crochet"> | string
   imageURL?: Prisma.StringFilter<"Crochet"> | string
+  imageKey?: Prisma.StringNullableFilter<"Crochet"> | string | null
+  imageHash?: Prisma.StringNullableFilter<"Crochet"> | string | null
   description?: Prisma.StringFilter<"Crochet"> | string
   category?: Prisma.EnumCategoryFilter<"Crochet"> | $Enums.Category
   price?: Prisma.FloatNullableFilter<"Crochet"> | number | null
@@ -254,6 +270,8 @@ export type CrochetOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   imageURL?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageHash?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -269,6 +287,8 @@ export type CrochetWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CrochetWhereInput | Prisma.CrochetWhereInput[]
   name?: Prisma.StringFilter<"Crochet"> | string
   imageURL?: Prisma.StringFilter<"Crochet"> | string
+  imageKey?: Prisma.StringNullableFilter<"Crochet"> | string | null
+  imageHash?: Prisma.StringNullableFilter<"Crochet"> | string | null
   description?: Prisma.StringFilter<"Crochet"> | string
   category?: Prisma.EnumCategoryFilter<"Crochet"> | $Enums.Category
   price?: Prisma.FloatNullableFilter<"Crochet"> | number | null
@@ -281,6 +301,8 @@ export type CrochetOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   imageURL?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageHash?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -301,6 +323,8 @@ export type CrochetScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Crochet"> | string
   name?: Prisma.StringWithAggregatesFilter<"Crochet"> | string
   imageURL?: Prisma.StringWithAggregatesFilter<"Crochet"> | string
+  imageKey?: Prisma.StringNullableWithAggregatesFilter<"Crochet"> | string | null
+  imageHash?: Prisma.StringNullableWithAggregatesFilter<"Crochet"> | string | null
   description?: Prisma.StringWithAggregatesFilter<"Crochet"> | string
   category?: Prisma.EnumCategoryWithAggregatesFilter<"Crochet"> | $Enums.Category
   price?: Prisma.FloatNullableWithAggregatesFilter<"Crochet"> | number | null
@@ -313,6 +337,8 @@ export type CrochetCreateInput = {
   id?: string
   name: string
   imageURL: string
+  imageKey?: string | null
+  imageHash?: string | null
   description: string
   category: $Enums.Category
   price?: number | null
@@ -325,6 +351,8 @@ export type CrochetUncheckedCreateInput = {
   id?: string
   name: string
   imageURL: string
+  imageKey?: string | null
+  imageHash?: string | null
   description: string
   category: $Enums.Category
   price?: number | null
@@ -337,6 +365,8 @@ export type CrochetUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   imageURL?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -349,6 +379,8 @@ export type CrochetUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   imageURL?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -361,6 +393,8 @@ export type CrochetCreateManyInput = {
   id?: string
   name: string
   imageURL: string
+  imageKey?: string | null
+  imageHash?: string | null
   description: string
   category: $Enums.Category
   price?: number | null
@@ -373,6 +407,8 @@ export type CrochetUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   imageURL?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -385,6 +421,8 @@ export type CrochetUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   imageURL?: Prisma.StringFieldUpdateOperationsInput | string
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -397,6 +435,8 @@ export type CrochetCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   imageURL?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
+  imageHash?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -413,6 +453,8 @@ export type CrochetMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   imageURL?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
+  imageHash?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -425,6 +467,8 @@ export type CrochetMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   imageURL?: Prisma.SortOrder
+  imageKey?: Prisma.SortOrder
+  imageHash?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
   price?: Prisma.SortOrder
@@ -439,6 +483,10 @@ export type CrochetSumOrderByAggregateInput = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type EnumCategoryFieldUpdateOperationsInput = {
@@ -467,6 +515,8 @@ export type CrochetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   name?: boolean
   imageURL?: boolean
+  imageKey?: boolean
+  imageHash?: boolean
   description?: boolean
   category?: boolean
   price?: boolean
@@ -479,6 +529,8 @@ export type CrochetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   name?: boolean
   imageURL?: boolean
+  imageKey?: boolean
+  imageHash?: boolean
   description?: boolean
   category?: boolean
   price?: boolean
@@ -491,6 +543,8 @@ export type CrochetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   name?: boolean
   imageURL?: boolean
+  imageKey?: boolean
+  imageHash?: boolean
   description?: boolean
   category?: boolean
   price?: boolean
@@ -503,6 +557,8 @@ export type CrochetSelectScalar = {
   id?: boolean
   name?: boolean
   imageURL?: boolean
+  imageKey?: boolean
+  imageHash?: boolean
   description?: boolean
   category?: boolean
   price?: boolean
@@ -511,7 +567,7 @@ export type CrochetSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CrochetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "imageURL" | "description" | "category" | "price" | "isVisible" | "createdAt" | "updatedAt", ExtArgs["result"]["crochet"]>
+export type CrochetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "imageURL" | "imageKey" | "imageHash" | "description" | "category" | "price" | "isVisible" | "createdAt" | "updatedAt", ExtArgs["result"]["crochet"]>
 
 export type $CrochetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Crochet"
@@ -520,6 +576,8 @@ export type $CrochetPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     name: string
     imageURL: string
+    imageKey: string | null
+    imageHash: string | null
     description: string
     category: $Enums.Category
     price: number | null
@@ -952,6 +1010,8 @@ export interface CrochetFieldRefs {
   readonly id: Prisma.FieldRef<"Crochet", 'String'>
   readonly name: Prisma.FieldRef<"Crochet", 'String'>
   readonly imageURL: Prisma.FieldRef<"Crochet", 'String'>
+  readonly imageKey: Prisma.FieldRef<"Crochet", 'String'>
+  readonly imageHash: Prisma.FieldRef<"Crochet", 'String'>
   readonly description: Prisma.FieldRef<"Crochet", 'String'>
   readonly category: Prisma.FieldRef<"Crochet", 'Category'>
   readonly price: Prisma.FieldRef<"Crochet", 'Float'>

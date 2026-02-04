@@ -55,6 +55,8 @@ export const ModelName = {
   Order: 'Order',
   Request: 'Request',
   User: 'User',
+  OrderChat: 'OrderChat',
+  ChatMessage: 'ChatMessage',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification'
@@ -80,6 +82,8 @@ export const CrochetScalarFieldEnum = {
   id: 'id',
   name: 'name',
   imageURL: 'imageURL',
+  imageKey: 'imageKey',
+  imageHash: 'imageHash',
   description: 'description',
   category: 'category',
   price: 'price',
@@ -93,9 +97,8 @@ export type CrochetScalarFieldEnum = (typeof CrochetScalarFieldEnum)[keyof typeo
 
 export const OrderScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  crochetId: 'crochetId',
-  quantity: 'quantity',
+  requestorId: 'requestorId',
+  requestId: 'requestId',
   totalPrice: 'totalPrice',
   status: 'status',
   createdAt: 'createdAt',
@@ -115,7 +118,6 @@ export const RequestScalarFieldEnum = {
   status: 'status',
   adminResponse: 'adminResponse',
   approvedAt: 'approvedAt',
-  approvedById: 'approvedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -138,6 +140,29 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const OrderChatScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrderChatScalarFieldEnum = (typeof OrderChatScalarFieldEnum)[keyof typeof OrderChatScalarFieldEnum]
+
+
+export const ChatMessageScalarFieldEnum = {
+  id: 'id',
+  orderChatId: 'orderChatId',
+  authorId: 'authorId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {

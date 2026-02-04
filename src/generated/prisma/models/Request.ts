@@ -34,7 +34,6 @@ export type RequestMinAggregateOutputType = {
   status: $Enums.RequestStatus | null
   adminResponse: string | null
   approvedAt: Date | null
-  approvedById: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -49,7 +48,6 @@ export type RequestMaxAggregateOutputType = {
   status: $Enums.RequestStatus | null
   adminResponse: string | null
   approvedAt: Date | null
-  approvedById: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -64,7 +62,6 @@ export type RequestCountAggregateOutputType = {
   status: number
   adminResponse: number
   approvedAt: number
-  approvedById: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -81,7 +78,6 @@ export type RequestMinAggregateInputType = {
   status?: true
   adminResponse?: true
   approvedAt?: true
-  approvedById?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -96,7 +92,6 @@ export type RequestMaxAggregateInputType = {
   status?: true
   adminResponse?: true
   approvedAt?: true
-  approvedById?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -111,7 +106,6 @@ export type RequestCountAggregateInputType = {
   status?: true
   adminResponse?: true
   approvedAt?: true
-  approvedById?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -199,7 +193,6 @@ export type RequestGroupByOutputType = {
   status: $Enums.RequestStatus
   adminResponse: string | null
   approvedAt: Date | null
-  approvedById: string | null
   createdAt: Date
   updatedAt: Date
   _count: RequestCountAggregateOutputType | null
@@ -235,11 +228,10 @@ export type RequestWhereInput = {
   status?: Prisma.EnumRequestStatusFilter<"Request"> | $Enums.RequestStatus
   adminResponse?: Prisma.StringNullableFilter<"Request"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"Request"> | Date | string | null
-  approvedById?: Prisma.StringNullableFilter<"Request"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
 }
 
 export type RequestOrderByWithRelationInput = {
@@ -252,11 +244,10 @@ export type RequestOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   adminResponse?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
-  approvedBy?: Prisma.UserOrderByWithRelationInput
+  order?: Prisma.OrderOrderByWithRelationInput
 }
 
 export type RequestWhereUniqueInput = Prisma.AtLeast<{
@@ -272,11 +263,10 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumRequestStatusFilter<"Request"> | $Enums.RequestStatus
   adminResponse?: Prisma.StringNullableFilter<"Request"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"Request"> | Date | string | null
-  approvedById?: Prisma.StringNullableFilter<"Request"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
 }, "id">
 
 export type RequestOrderByWithAggregationInput = {
@@ -289,7 +279,6 @@ export type RequestOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   adminResponse?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.RequestCountOrderByAggregateInput
@@ -310,7 +299,6 @@ export type RequestScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumRequestStatusWithAggregatesFilter<"Request"> | $Enums.RequestStatus
   adminResponse?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
   approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Request"> | Date | string | null
-  approvedById?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Request"> | Date | string
 }
@@ -327,7 +315,7 @@ export type RequestCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutRequestsInput
-  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedRequestsInput
+  order?: Prisma.OrderCreateNestedOneWithoutRequestInput
 }
 
 export type RequestUncheckedCreateInput = {
@@ -340,9 +328,9 @@ export type RequestUncheckedCreateInput = {
   status?: $Enums.RequestStatus
   adminResponse?: string | null
   approvedAt?: Date | string | null
-  approvedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  order?: Prisma.OrderUncheckedCreateNestedOneWithoutRequestInput
 }
 
 export type RequestUpdateInput = {
@@ -357,7 +345,7 @@ export type RequestUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutRequestsNestedInput
-  approvedBy?: Prisma.UserUpdateOneWithoutApprovedRequestsNestedInput
+  order?: Prisma.OrderUpdateOneWithoutRequestNestedInput
 }
 
 export type RequestUncheckedUpdateInput = {
@@ -370,9 +358,9 @@ export type RequestUncheckedUpdateInput = {
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUncheckedUpdateOneWithoutRequestNestedInput
 }
 
 export type RequestCreateManyInput = {
@@ -385,7 +373,6 @@ export type RequestCreateManyInput = {
   status?: $Enums.RequestStatus
   adminResponse?: string | null
   approvedAt?: Date | string | null
-  approvedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -413,9 +400,13 @@ export type RequestUncheckedUpdateManyInput = {
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type RequestScalarRelationFilter = {
+  is?: Prisma.RequestWhereInput
+  isNot?: Prisma.RequestWhereInput
 }
 
 export type RequestCountOrderByAggregateInput = {
@@ -428,7 +419,6 @@ export type RequestCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   adminResponse?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -443,7 +433,6 @@ export type RequestMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   adminResponse?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -458,7 +447,6 @@ export type RequestMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   adminResponse?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -473,8 +461,18 @@ export type RequestOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
+export type RequestCreateNestedOneWithoutOrderInput = {
+  create?: Prisma.XOR<Prisma.RequestCreateWithoutOrderInput, Prisma.RequestUncheckedCreateWithoutOrderInput>
+  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutOrderInput
+  connect?: Prisma.RequestWhereUniqueInput
+}
+
+export type RequestUpdateOneRequiredWithoutOrderNestedInput = {
+  create?: Prisma.XOR<Prisma.RequestCreateWithoutOrderInput, Prisma.RequestUncheckedCreateWithoutOrderInput>
+  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutOrderInput
+  upsert?: Prisma.RequestUpsertWithoutOrderInput
+  connect?: Prisma.RequestWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RequestUpdateToOneWithWhereWithoutOrderInput, Prisma.RequestUpdateWithoutOrderInput>, Prisma.RequestUncheckedUpdateWithoutOrderInput>
 }
 
 export type EnumRequestStatusFieldUpdateOperationsInput = {
@@ -492,24 +490,10 @@ export type RequestCreateNestedManyWithoutUserInput = {
   connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
 }
 
-export type RequestCreateNestedManyWithoutApprovedByInput = {
-  create?: Prisma.XOR<Prisma.RequestCreateWithoutApprovedByInput, Prisma.RequestUncheckedCreateWithoutApprovedByInput> | Prisma.RequestCreateWithoutApprovedByInput[] | Prisma.RequestUncheckedCreateWithoutApprovedByInput[]
-  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutApprovedByInput | Prisma.RequestCreateOrConnectWithoutApprovedByInput[]
-  createMany?: Prisma.RequestCreateManyApprovedByInputEnvelope
-  connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
-}
-
 export type RequestUncheckedCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.RequestCreateWithoutUserInput, Prisma.RequestUncheckedCreateWithoutUserInput> | Prisma.RequestCreateWithoutUserInput[] | Prisma.RequestUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.RequestCreateOrConnectWithoutUserInput | Prisma.RequestCreateOrConnectWithoutUserInput[]
   createMany?: Prisma.RequestCreateManyUserInputEnvelope
-  connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
-}
-
-export type RequestUncheckedCreateNestedManyWithoutApprovedByInput = {
-  create?: Prisma.XOR<Prisma.RequestCreateWithoutApprovedByInput, Prisma.RequestUncheckedCreateWithoutApprovedByInput> | Prisma.RequestCreateWithoutApprovedByInput[] | Prisma.RequestUncheckedCreateWithoutApprovedByInput[]
-  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutApprovedByInput | Prisma.RequestCreateOrConnectWithoutApprovedByInput[]
-  createMany?: Prisma.RequestCreateManyApprovedByInputEnvelope
   connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
 }
 
@@ -527,20 +511,6 @@ export type RequestUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
 }
 
-export type RequestUpdateManyWithoutApprovedByNestedInput = {
-  create?: Prisma.XOR<Prisma.RequestCreateWithoutApprovedByInput, Prisma.RequestUncheckedCreateWithoutApprovedByInput> | Prisma.RequestCreateWithoutApprovedByInput[] | Prisma.RequestUncheckedCreateWithoutApprovedByInput[]
-  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutApprovedByInput | Prisma.RequestCreateOrConnectWithoutApprovedByInput[]
-  upsert?: Prisma.RequestUpsertWithWhereUniqueWithoutApprovedByInput | Prisma.RequestUpsertWithWhereUniqueWithoutApprovedByInput[]
-  createMany?: Prisma.RequestCreateManyApprovedByInputEnvelope
-  set?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
-  disconnect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
-  delete?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
-  connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
-  update?: Prisma.RequestUpdateWithWhereUniqueWithoutApprovedByInput | Prisma.RequestUpdateWithWhereUniqueWithoutApprovedByInput[]
-  updateMany?: Prisma.RequestUpdateManyWithWhereWithoutApprovedByInput | Prisma.RequestUpdateManyWithWhereWithoutApprovedByInput[]
-  deleteMany?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
-}
-
 export type RequestUncheckedUpdateManyWithoutUserNestedInput = {
   create?: Prisma.XOR<Prisma.RequestCreateWithoutUserInput, Prisma.RequestUncheckedCreateWithoutUserInput> | Prisma.RequestCreateWithoutUserInput[] | Prisma.RequestUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.RequestCreateOrConnectWithoutUserInput | Prisma.RequestCreateOrConnectWithoutUserInput[]
@@ -555,59 +525,7 @@ export type RequestUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
 }
 
-export type RequestUncheckedUpdateManyWithoutApprovedByNestedInput = {
-  create?: Prisma.XOR<Prisma.RequestCreateWithoutApprovedByInput, Prisma.RequestUncheckedCreateWithoutApprovedByInput> | Prisma.RequestCreateWithoutApprovedByInput[] | Prisma.RequestUncheckedCreateWithoutApprovedByInput[]
-  connectOrCreate?: Prisma.RequestCreateOrConnectWithoutApprovedByInput | Prisma.RequestCreateOrConnectWithoutApprovedByInput[]
-  upsert?: Prisma.RequestUpsertWithWhereUniqueWithoutApprovedByInput | Prisma.RequestUpsertWithWhereUniqueWithoutApprovedByInput[]
-  createMany?: Prisma.RequestCreateManyApprovedByInputEnvelope
-  set?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
-  disconnect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
-  delete?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
-  connect?: Prisma.RequestWhereUniqueInput | Prisma.RequestWhereUniqueInput[]
-  update?: Prisma.RequestUpdateWithWhereUniqueWithoutApprovedByInput | Prisma.RequestUpdateWithWhereUniqueWithoutApprovedByInput[]
-  updateMany?: Prisma.RequestUpdateManyWithWhereWithoutApprovedByInput | Prisma.RequestUpdateManyWithWhereWithoutApprovedByInput[]
-  deleteMany?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
-}
-
-export type RequestCreateWithoutUserInput = {
-  id?: string
-  title: string
-  description: string
-  imageUrl?: string | null
-  imageKey?: string | null
-  status?: $Enums.RequestStatus
-  adminResponse?: string | null
-  approvedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedRequestsInput
-}
-
-export type RequestUncheckedCreateWithoutUserInput = {
-  id?: string
-  title: string
-  description: string
-  imageUrl?: string | null
-  imageKey?: string | null
-  status?: $Enums.RequestStatus
-  adminResponse?: string | null
-  approvedAt?: Date | string | null
-  approvedById?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type RequestCreateOrConnectWithoutUserInput = {
-  where: Prisma.RequestWhereUniqueInput
-  create: Prisma.XOR<Prisma.RequestCreateWithoutUserInput, Prisma.RequestUncheckedCreateWithoutUserInput>
-}
-
-export type RequestCreateManyUserInputEnvelope = {
-  data: Prisma.RequestCreateManyUserInput | Prisma.RequestCreateManyUserInput[]
-  skipDuplicates?: boolean
-}
-
-export type RequestCreateWithoutApprovedByInput = {
+export type RequestCreateWithoutOrderInput = {
   id?: string
   title: string
   description: string
@@ -621,7 +539,7 @@ export type RequestCreateWithoutApprovedByInput = {
   user: Prisma.UserCreateNestedOneWithoutRequestsInput
 }
 
-export type RequestUncheckedCreateWithoutApprovedByInput = {
+export type RequestUncheckedCreateWithoutOrderInput = {
   id?: string
   userId: string
   title: string
@@ -635,13 +553,85 @@ export type RequestUncheckedCreateWithoutApprovedByInput = {
   updatedAt?: Date | string
 }
 
-export type RequestCreateOrConnectWithoutApprovedByInput = {
+export type RequestCreateOrConnectWithoutOrderInput = {
   where: Prisma.RequestWhereUniqueInput
-  create: Prisma.XOR<Prisma.RequestCreateWithoutApprovedByInput, Prisma.RequestUncheckedCreateWithoutApprovedByInput>
+  create: Prisma.XOR<Prisma.RequestCreateWithoutOrderInput, Prisma.RequestUncheckedCreateWithoutOrderInput>
 }
 
-export type RequestCreateManyApprovedByInputEnvelope = {
-  data: Prisma.RequestCreateManyApprovedByInput | Prisma.RequestCreateManyApprovedByInput[]
+export type RequestUpsertWithoutOrderInput = {
+  update: Prisma.XOR<Prisma.RequestUpdateWithoutOrderInput, Prisma.RequestUncheckedUpdateWithoutOrderInput>
+  create: Prisma.XOR<Prisma.RequestCreateWithoutOrderInput, Prisma.RequestUncheckedCreateWithoutOrderInput>
+  where?: Prisma.RequestWhereInput
+}
+
+export type RequestUpdateToOneWithWhereWithoutOrderInput = {
+  where?: Prisma.RequestWhereInput
+  data: Prisma.XOR<Prisma.RequestUpdateWithoutOrderInput, Prisma.RequestUncheckedUpdateWithoutOrderInput>
+}
+
+export type RequestUpdateWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
+  adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutRequestsNestedInput
+}
+
+export type RequestUncheckedUpdateWithoutOrderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
+  adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type RequestCreateWithoutUserInput = {
+  id?: string
+  title: string
+  description: string
+  imageUrl?: string | null
+  imageKey?: string | null
+  status?: $Enums.RequestStatus
+  adminResponse?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  order?: Prisma.OrderCreateNestedOneWithoutRequestInput
+}
+
+export type RequestUncheckedCreateWithoutUserInput = {
+  id?: string
+  title: string
+  description: string
+  imageUrl?: string | null
+  imageKey?: string | null
+  status?: $Enums.RequestStatus
+  adminResponse?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  order?: Prisma.OrderUncheckedCreateNestedOneWithoutRequestInput
+}
+
+export type RequestCreateOrConnectWithoutUserInput = {
+  where: Prisma.RequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.RequestCreateWithoutUserInput, Prisma.RequestUncheckedCreateWithoutUserInput>
+}
+
+export type RequestCreateManyUserInputEnvelope = {
+  data: Prisma.RequestCreateManyUserInput | Prisma.RequestCreateManyUserInput[]
   skipDuplicates?: boolean
 }
 
@@ -674,44 +664,12 @@ export type RequestScalarWhereInput = {
   status?: Prisma.EnumRequestStatusFilter<"Request"> | $Enums.RequestStatus
   adminResponse?: Prisma.StringNullableFilter<"Request"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"Request"> | Date | string | null
-  approvedById?: Prisma.StringNullableFilter<"Request"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
 }
 
-export type RequestUpsertWithWhereUniqueWithoutApprovedByInput = {
-  where: Prisma.RequestWhereUniqueInput
-  update: Prisma.XOR<Prisma.RequestUpdateWithoutApprovedByInput, Prisma.RequestUncheckedUpdateWithoutApprovedByInput>
-  create: Prisma.XOR<Prisma.RequestCreateWithoutApprovedByInput, Prisma.RequestUncheckedCreateWithoutApprovedByInput>
-}
-
-export type RequestUpdateWithWhereUniqueWithoutApprovedByInput = {
-  where: Prisma.RequestWhereUniqueInput
-  data: Prisma.XOR<Prisma.RequestUpdateWithoutApprovedByInput, Prisma.RequestUncheckedUpdateWithoutApprovedByInput>
-}
-
-export type RequestUpdateManyWithWhereWithoutApprovedByInput = {
-  where: Prisma.RequestScalarWhereInput
-  data: Prisma.XOR<Prisma.RequestUpdateManyMutationInput, Prisma.RequestUncheckedUpdateManyWithoutApprovedByInput>
-}
-
 export type RequestCreateManyUserInput = {
   id?: string
-  title: string
-  description: string
-  imageUrl?: string | null
-  imageKey?: string | null
-  status?: $Enums.RequestStatus
-  adminResponse?: string | null
-  approvedAt?: Date | string | null
-  approvedById?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type RequestCreateManyApprovedByInput = {
-  id?: string
-  userId: string
   title: string
   description: string
   imageUrl?: string | null
@@ -734,7 +692,7 @@ export type RequestUpdateWithoutUserInput = {
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  approvedBy?: Prisma.UserUpdateOneWithoutApprovedRequestsNestedInput
+  order?: Prisma.OrderUpdateOneWithoutRequestNestedInput
 }
 
 export type RequestUncheckedUpdateWithoutUserInput = {
@@ -746,56 +704,13 @@ export type RequestUncheckedUpdateWithoutUserInput = {
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUncheckedUpdateOneWithoutRequestNestedInput
 }
 
 export type RequestUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
-  adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type RequestUpdateWithoutApprovedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
-  adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutRequestsNestedInput
-}
-
-export type RequestUncheckedUpdateWithoutApprovedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
-  adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type RequestUncheckedUpdateManyWithoutApprovedByInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -819,11 +734,10 @@ export type RequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   status?: boolean
   adminResponse?: boolean
   approvedAt?: boolean
-  approvedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  approvedBy?: boolean | Prisma.Request$approvedByArgs<ExtArgs>
+  order?: boolean | Prisma.Request$orderArgs<ExtArgs>
 }, ExtArgs["result"]["request"]>
 
 export type RequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -836,11 +750,9 @@ export type RequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   status?: boolean
   adminResponse?: boolean
   approvedAt?: boolean
-  approvedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  approvedBy?: boolean | Prisma.Request$approvedByArgs<ExtArgs>
 }, ExtArgs["result"]["request"]>
 
 export type RequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -853,11 +765,9 @@ export type RequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   status?: boolean
   adminResponse?: boolean
   approvedAt?: boolean
-  approvedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  approvedBy?: boolean | Prisma.Request$approvedByArgs<ExtArgs>
 }, ExtArgs["result"]["request"]>
 
 export type RequestSelectScalar = {
@@ -870,30 +780,27 @@ export type RequestSelectScalar = {
   status?: boolean
   adminResponse?: boolean
   approvedAt?: boolean
-  approvedById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "imageUrl" | "imageKey" | "status" | "adminResponse" | "approvedAt" | "approvedById" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
+export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "imageUrl" | "imageKey" | "status" | "adminResponse" | "approvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
 export type RequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  approvedBy?: boolean | Prisma.Request$approvedByArgs<ExtArgs>
+  order?: boolean | Prisma.Request$orderArgs<ExtArgs>
 }
 export type RequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  approvedBy?: boolean | Prisma.Request$approvedByArgs<ExtArgs>
 }
 export type RequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  approvedBy?: boolean | Prisma.Request$approvedByArgs<ExtArgs>
 }
 
 export type $RequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Request"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
-    approvedBy: Prisma.$UserPayload<ExtArgs> | null
+    order: Prisma.$OrderPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -905,7 +812,6 @@ export type $RequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     status: $Enums.RequestStatus
     adminResponse: string | null
     approvedAt: Date | null
-    approvedById: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["request"]>
@@ -1303,7 +1209,7 @@ readonly fields: RequestFieldRefs;
 export interface Prisma__RequestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  approvedBy<T extends Prisma.Request$approvedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Request$approvedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  order<T extends Prisma.Request$orderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Request$orderArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1342,7 +1248,6 @@ export interface RequestFieldRefs {
   readonly status: Prisma.FieldRef<"Request", 'RequestStatus'>
   readonly adminResponse: Prisma.FieldRef<"Request", 'String'>
   readonly approvedAt: Prisma.FieldRef<"Request", 'DateTime'>
-  readonly approvedById: Prisma.FieldRef<"Request", 'String'>
   readonly createdAt: Prisma.FieldRef<"Request", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Request", 'DateTime'>
 }
@@ -1741,22 +1646,22 @@ export type RequestDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Request.approvedBy
+ * Request.order
  */
-export type Request$approvedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Request$orderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the Order
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.OrderSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the Order
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.OrderOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
 }
 
 /**
