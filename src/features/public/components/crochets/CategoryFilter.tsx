@@ -1,4 +1,4 @@
-import type { Category } from "@/generated/prisma";
+import type { Category } from "@/generated/prisma/enums";
 
 const categoryLabels: Record<Category, string> = {
 	ACCESSORY: "Accessories",

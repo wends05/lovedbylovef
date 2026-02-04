@@ -22,8 +22,8 @@ import {
 } from "@/components/ui/dropzone";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Category } from "@/generated/prisma/enums";
 import { CATEGORY_OPTIONS } from "@/features/admin/gallery/schemas/GalleryOptions";
+import { Category } from "@/generated/prisma/enums";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
 import { useSingleImageUpload } from "@/integrations/uploadthing/use-single-image-upload";
 import { hashFile } from "@/lib/hash-file";
@@ -161,7 +161,10 @@ export default function CreateCrochetForm() {
 									<form.AppField name="category">
 										{(field) => (
 											<field.SelectField
-												items={CATEGORY_OPTIONS}
+												items={CATEGORY_OPTIONS.map((option) => ({
+													label: option.label,
+													value: option.value,
+												}))}
 												label="Category"
 												description="Select a category for the crochet item"
 												placeholder="Select category"
