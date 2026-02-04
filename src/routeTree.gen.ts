@@ -11,10 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as SplatRouteImport } from './routes/$'
+import { Route as ChatRouteRouteImport } from './routes/chat/route'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as ChatOrderIdRouteImport } from './routes/chat/$orderId'
 import { Route as AdminRequestsRouteImport } from './routes/admin/requests'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
@@ -22,9 +24,9 @@ import { Route as PublicGalleryRouteImport } from './routes/_public/gallery'
 import { Route as PublicContactRouteImport } from './routes/_public/contact'
 import { Route as PublicAboutRouteImport } from './routes/_public/about'
 import { Route as ProtectedRequestsRouteImport } from './routes/_protected/requests'
+import { Route as ProtectedOrdersRouteImport } from './routes/_protected/orders'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedCreateRequestRouteImport } from './routes/_protected/create-request'
-import { Route as ProtectedChatRouteImport } from './routes/_protected/chat'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthSigninRouteImport } from './routes/_auth/signin'
 import { Route as AdminGalleryRouteRouteImport } from './routes/admin/gallery/route'
@@ -44,6 +46,11 @@ const SplatRoute = SplatRouteImport.update({
   path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChatRouteRoute = ChatRouteRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRouteRoute = AdminRouteRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -61,6 +68,11 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PublicRouteRoute,
+} as any)
+const ChatOrderIdRoute = ChatOrderIdRouteImport.update({
+  id: '/$orderId',
+  path: '/$orderId',
+  getParentRoute: () => ChatRouteRoute,
 } as any)
 const AdminRequestsRoute = AdminRequestsRouteImport.update({
   id: '/requests',
@@ -97,6 +109,11 @@ const ProtectedRequestsRoute = ProtectedRequestsRouteImport.update({
   path: '/requests',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
+const ProtectedOrdersRoute = ProtectedOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
 const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -105,11 +122,6 @@ const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
 const ProtectedCreateRequestRoute = ProtectedCreateRequestRouteImport.update({
   id: '/create-request',
   path: '/create-request',
-  getParentRoute: () => ProtectedRouteRoute,
-} as any)
-const ProtectedChatRoute = ProtectedChatRouteImport.update({
-  id: '/chat',
-  path: '/chat',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
@@ -161,13 +173,14 @@ const AdminGalleryIdEditRoute = AdminGalleryIdEditRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
+  '/chat': typeof ChatRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/admin/gallery': typeof AdminGalleryRouteRouteWithChildren
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
-  '/chat': typeof ProtectedChatRoute
   '/create-request': typeof ProtectedCreateRequestRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/orders': typeof ProtectedOrdersRoute
   '/requests': typeof ProtectedRequestsRoute
   '/about': typeof PublicAboutRoute
   '/contact': typeof PublicContactRoute
@@ -175,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
+  '/chat/$orderId': typeof ChatOrderIdRoute
   '/request/$id': typeof ProtectedRequestIdRoute
   '/admin/gallery/create': typeof AdminGalleryCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -185,12 +199,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
+  '/chat': typeof ChatRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/signin': typeof AuthSigninRoute
   '/signup': typeof AuthSignupRoute
-  '/chat': typeof ProtectedChatRoute
   '/create-request': typeof ProtectedCreateRequestRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/orders': typeof ProtectedOrdersRoute
   '/requests': typeof ProtectedRequestsRoute
   '/about': typeof PublicAboutRoute
   '/contact': typeof PublicContactRoute
@@ -198,6 +213,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
+  '/chat/$orderId': typeof ChatOrderIdRoute
   '/request/$id': typeof ProtectedRequestIdRoute
   '/admin/gallery/create': typeof AdminGalleryCreateRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -210,14 +226,15 @@ export interface FileRoutesById {
   '/_protected': typeof ProtectedRouteRouteWithChildren
   '/_public': typeof PublicRouteRouteWithChildren
   '/admin': typeof AdminRouteRouteWithChildren
+  '/chat': typeof ChatRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/_auth': typeof AuthRouteWithChildren
   '/admin/gallery': typeof AdminGalleryRouteRouteWithChildren
   '/_auth/signin': typeof AuthSigninRoute
   '/_auth/signup': typeof AuthSignupRoute
-  '/_protected/chat': typeof ProtectedChatRoute
   '/_protected/create-request': typeof ProtectedCreateRequestRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
+  '/_protected/orders': typeof ProtectedOrdersRoute
   '/_protected/requests': typeof ProtectedRequestsRoute
   '/_public/about': typeof PublicAboutRoute
   '/_public/contact': typeof PublicContactRoute
@@ -225,6 +242,7 @@ export interface FileRoutesById {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
+  '/chat/$orderId': typeof ChatOrderIdRoute
   '/_public/': typeof PublicIndexRoute
   '/_protected/request/$id': typeof ProtectedRequestIdRoute
   '/admin/gallery/create': typeof AdminGalleryCreateRoute
@@ -238,13 +256,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/chat'
     | '/$'
     | '/admin/gallery'
     | '/signin'
     | '/signup'
-    | '/chat'
     | '/create-request'
     | '/dashboard'
+    | '/orders'
     | '/requests'
     | '/about'
     | '/contact'
@@ -252,6 +271,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/orders'
     | '/admin/requests'
+    | '/chat/$orderId'
     | '/request/$id'
     | '/admin/gallery/create'
     | '/api/auth/$'
@@ -262,12 +282,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/chat'
     | '/$'
     | '/signin'
     | '/signup'
-    | '/chat'
     | '/create-request'
     | '/dashboard'
+    | '/orders'
     | '/requests'
     | '/about'
     | '/contact'
@@ -275,6 +296,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/orders'
     | '/admin/requests'
+    | '/chat/$orderId'
     | '/request/$id'
     | '/admin/gallery/create'
     | '/api/auth/$'
@@ -286,14 +308,15 @@ export interface FileRouteTypes {
     | '/_protected'
     | '/_public'
     | '/admin'
+    | '/chat'
     | '/$'
     | '/_auth'
     | '/admin/gallery'
     | '/_auth/signin'
     | '/_auth/signup'
-    | '/_protected/chat'
     | '/_protected/create-request'
     | '/_protected/dashboard'
+    | '/_protected/orders'
     | '/_protected/requests'
     | '/_public/about'
     | '/_public/contact'
@@ -301,6 +324,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/orders'
     | '/admin/requests'
+    | '/chat/$orderId'
     | '/_public/'
     | '/_protected/request/$id'
     | '/admin/gallery/create'
@@ -314,6 +338,7 @@ export interface RootRouteChildren {
   ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
   PublicRouteRoute: typeof PublicRouteRouteWithChildren
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
+  ChatRouteRoute: typeof ChatRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
   AuthRoute: typeof AuthRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -334,6 +359,13 @@ declare module '@tanstack/react-router' {
       path: '/$'
       fullPath: '/$'
       preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -363,6 +395,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRouteRoute
+    }
+    '/chat/$orderId': {
+      id: '/chat/$orderId'
+      path: '/$orderId'
+      fullPath: '/chat/$orderId'
+      preLoaderRoute: typeof ChatOrderIdRouteImport
+      parentRoute: typeof ChatRouteRoute
     }
     '/admin/requests': {
       id: '/admin/requests'
@@ -413,6 +452,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedRequestsRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
+    '/_protected/orders': {
+      id: '/_protected/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof ProtectedOrdersRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
     '/_protected/dashboard': {
       id: '/_protected/dashboard'
       path: '/dashboard'
@@ -425,13 +471,6 @@ declare module '@tanstack/react-router' {
       path: '/create-request'
       fullPath: '/create-request'
       preLoaderRoute: typeof ProtectedCreateRequestRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
-    '/_protected/chat': {
-      id: '/_protected/chat'
-      path: '/chat'
-      fullPath: '/chat'
-      preLoaderRoute: typeof ProtectedChatRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
     '/_auth/signup': {
@@ -501,17 +540,17 @@ declare module '@tanstack/react-router' {
 }
 
 interface ProtectedRouteRouteChildren {
-  ProtectedChatRoute: typeof ProtectedChatRoute
   ProtectedCreateRequestRoute: typeof ProtectedCreateRequestRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+  ProtectedOrdersRoute: typeof ProtectedOrdersRoute
   ProtectedRequestsRoute: typeof ProtectedRequestsRoute
   ProtectedRequestIdRoute: typeof ProtectedRequestIdRoute
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
-  ProtectedChatRoute: ProtectedChatRoute,
   ProtectedCreateRequestRoute: ProtectedCreateRequestRoute,
   ProtectedDashboardRoute: ProtectedDashboardRoute,
+  ProtectedOrdersRoute: ProtectedOrdersRoute,
   ProtectedRequestsRoute: ProtectedRequestsRoute,
   ProtectedRequestIdRoute: ProtectedRequestIdRoute,
 }
@@ -571,6 +610,18 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
   AdminRouteRouteChildren,
 )
 
+interface ChatRouteRouteChildren {
+  ChatOrderIdRoute: typeof ChatOrderIdRoute
+}
+
+const ChatRouteRouteChildren: ChatRouteRouteChildren = {
+  ChatOrderIdRoute: ChatOrderIdRoute,
+}
+
+const ChatRouteRouteWithChildren = ChatRouteRoute._addFileChildren(
+  ChatRouteRouteChildren,
+)
+
 interface AuthRouteChildren {
   AuthSigninRoute: typeof AuthSigninRoute
   AuthSignupRoute: typeof AuthSignupRoute
@@ -587,6 +638,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
   PublicRouteRoute: PublicRouteRouteWithChildren,
   AdminRouteRoute: AdminRouteRouteWithChildren,
+  ChatRouteRoute: ChatRouteRouteWithChildren,
   SplatRoute: SplatRoute,
   AuthRoute: AuthRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

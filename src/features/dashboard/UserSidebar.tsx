@@ -51,15 +51,10 @@ export function UserSidebar() {
 			href: "/requests",
 		},
 		{
-			title: "Chat",
+			title: "Orders",
 			icon: MessageCircleMore,
-			href: "/chat",
+			href: "/orders",
 		},
-		// {
-		// 	title: "Order",
-		// 	icon: PlusIcon,
-		// 	href: "/order",
-		// },
 	];
 
 	return (
