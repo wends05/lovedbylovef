@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -10,10 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
-
-type OrderChatPageProps = {
-	orderId: string;
-};
+import { chatQueryOptions } from "../options";
 
 const PLACEHOLDER_MESSAGES = [
 	{
@@ -36,13 +34,20 @@ const PLACEHOLDER_MESSAGES = [
 	},
 ];
 
+type OrderChatPageProps = {
+	orderId: string;
+};
+
 export default function OrderChatPage({ orderId }: OrderChatPageProps) {
 	const router = useRouter();
 
-	const { data } = authClient.useSession();
+	const { data: userData } = authClient.useSession();
+	const { data: chatData } = useSuspenseQuery(
+		chatQueryOptions.getChatData(orderId),
+	);
 
 	const handleBack = () => {
-		if (data?.user.role === "ADMIN") {
+		if (userData?.user.role === "ADMIN") {
 			router.navigate({
 				to: "/admin/orders",
 			});
