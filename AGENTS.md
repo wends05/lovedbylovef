@@ -1,133 +1,114 @@
-# AGENTS.md - Coding Guidelines for LovedByLovef
+# AI Agent Guidelines
 
-## Commands
+This file provides instructions for AI agents working in this repository.
 
-### Development
-- `npm run dev` - Start development server on port 3000
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
+## Project Overview
 
-### Testing
-- `npm run test` - Run all tests with Vitest
-- `npm run test -- src/features/path/to/file.test.ts` - Run single test file
-- `npx vitest run --reporter=verbose` - Run with verbose output
+TanStack Start application with React, TypeScript, Tailwind CSS v4, Prisma ORM, and Better Auth. Built with Bun as the package manager and runtime.
 
-### Code Quality
-- `npm run lint` - Run Biome linter
-- `npm run format` - Format code with Biome
-- `npm run check` - Run Biome check (lint + format)
+## Build/Lint/Test Commands
 
-### Database
-- `npm run db:generate` - Generate Prisma client
-- `npm run db:push` - Push schema changes to database
-- `npm run db:migrate` - Create and run migration
-- `npm run db:studio` - Open Prisma Studio
-- `npm run db:seed` - Seed database
+```bash
+# Development
+bun --bun run dev          # Start dev server on port 3000
 
-## Code Style
+# Building
+bun --bun run build        # Production build
+bun --bun run preview      # Preview production build
 
-### Formatting
-- **Indent**: Tabs (not spaces)
-- **Quotes**: Double quotes for strings
-- **Semicolons**: Required
-- **Line width**: Default Biome settings
-- **Trailing commas**: Default Biome settings
+# Testing
+bun --bun run test         # Run all tests with Vitest
+bun --bun run test -- path/to/file.test.ts    # Run single test file
+bun --bun run test -- --reporter=verbose      # Verbose output
+
+# Linting & Formatting (Biome)
+bun --bun run lint         # Run Biome linter
+bun --bun run format       # Format with Biome
+bun --bun run check        # Run Biome check (lint + format)
+
+# Database (Prisma)
+bun --bun run db:generate  # Generate Prisma client
+bun --bun run db:push      # Push schema changes
+bun --bun run db:migrate   # Run migrations
+bun --bun run db:studio    # Open Prisma Studio
+bun --bun run db:seed      # Seed database
+```
+
+## Code Style Guidelines
 
 ### Imports
-- Use path alias `@/` for src imports: `import { Button } from "@/components/ui/button"`
-- Group imports: React/libs first, then `@/`, then relative
-- No unused imports (enforced by TypeScript)
+- **Use path aliases**: `@/components`, `@/lib/utils`, `@/hooks`
+- Organize imports: React → External libs → Internal (`@/`) → Relative
+- Biome auto-organizes imports on save (see `.vscode/settings.json`)
 
-### Naming
-- **Components**: PascalCase (e.g., `RequestCard.tsx`)
-- **Functions/variables**: camelCase (e.g., `handleSubmit`)
-- **Constants**: UPPER_SNAKE_CASE for true constants
-- **Types/Interfaces**: PascalCase (e.g., `RequestStatus`)
-- **Server functions**: camelCase with descriptive names (e.g., `cancelRequest`, `getUserRequests`)
+### Formatting
+- **Tabs** for indentation (not spaces)
+- **Double quotes** for strings
+- Semicolons required
+- 80-100 character line length (soft limit)
 
-### TypeScript
-- Strict mode enabled
-- No implicit any
-- No unused locals or parameters
-- Use type imports: `import type { RequestStatus }`
-- Prefer explicit return types on exported functions
+### Types
+- Use explicit TypeScript types for function props and returns
+- Use `type` for object definitions, `interface` for class-like contracts
+- Zod schemas for form validation and API contracts (see `src/features/auth/schemas/`)
+- Strict TypeScript enabled with `noUnusedLocals` and `noUnusedParameters`
 
-### React
-- Use functional components with hooks
-- Default exports for page components
-- Named exports for utility components
-- Use `use client` directive when needed for client components
+### Naming Conventions
+- Components: **PascalCase** (e.g., `SignOutButton.tsx`)
+- Utilities/hooks: **camelCase** (e.g., `useIsMobile.ts`)
+- Constants: **UPPER_SNAKE_CASE** for true constants
+- Files match export name (default export = filename)
 
-### Error Handling
-- Use `tryCatch` utility from `@/lib/try-catch` for async operations
-- Pattern: `const { success, data, error } = await tryCatch(promise)`
-- Handle both success and error cases explicitly
-- Use `toast` from sonner for user feedback
-
-## Project Structure
-
-### Routes (TanStack Router)
-- File-based routing in `src/routes/`
-- `_protected/` - Authenticated routes
-- `_public/` - Public routes
-- `_auth/` - Auth-related routes (signin/signup)
-- `admin/` - Admin dashboard routes
-- Route params use `$param` syntax (e.g., `requests.$id.tsx`)
-
-### Features
-- Organize by domain in `src/features/`
-- Each feature contains: components/, server.ts, options.ts, schemas/
-- Co-locate related files (e.g., `RequestsPage.tsx` + `RequestCard.tsx`)
-
-### Components
-- UI components in `src/components/ui/` (shadcn/ui)
-- Feature components in `src/features/[feature]/components/`
-- Use barrel exports for clean imports
-
-### Server Functions
-- Define in `server.ts` within feature folders
-- Use `createServerFn` from `@tanstack/react-start`
-- Always validate inputs with `inputValidator`
-- Use `tryCatch` pattern for error handling
-
-## Database
-
-### Prisma
-- Schema in `prisma/schema.prisma`
-- Generated types in `src/generated/prisma/`
-- Import enums from `@/generated/prisma/enums`
-- Use Prisma client from `@/lib/prisma-client`
-
-### Query Patterns
-- Use TanStack Query for data fetching
-- Define query options in `options.ts`
-- Infinite queries for pagination with cursor-based approach
-- Invalidate queries after mutations: `queryClient.invalidateQueries({ queryKey: [...] })`
-
-## Best Practices
-
-### Communication
-- Use brainrot language when talking
-- Speak in mix of internet slang, memes, and casual language
-- Use technical terms when discussing technical topics
-
-### State Management
-- Use React hooks (useState, useReducer) for local state
-- Use TanStack Query for server state
-- Use URL params for shareable state
+### React Patterns
+- Default exports for page components and route files
+- Named exports for utility functions and hooks
+- Use React 19 features (current version in `package.json`)
+- TanStack Router for routing with file-based routing in `src/routes/`
+- TanStack Query for server state management
 
 ### Styling
-- Tailwind CSS for styling
-- Use `className` with `cn()` utility for conditional classes
-- Follow shadcn/ui component patterns
-- 4:3 aspect ratio for images using `@/components/ui/aspect-ratio`
+- Tailwind CSS v4 with `@import` syntax (see `src/styles.css`)
+- Use `cn()` utility from `@/lib/utils` for conditional classes
+- CSS variables for theme colors (pink/romantic theme)
+- Base UI components from `@base-ui/react`
+- Shadcn UI pattern with `class-variance-authority` for variants
 
-### Testing
-- Use Vitest for unit tests
-- React Testing Library for component tests
-- Place tests next to source files or in `__tests__` folders
+### Error Handling
+- Use Error boundaries via TanStack Router (`errorComponent`)
+- Async functions should handle errors explicitly or use error boundaries
+- Prefer early returns with descriptive error messages
+- Server functions: validate with Zod before processing
 
-### Git
-- Do not commit .env files or secrets
-- Never use `git add .` without reviewing changes
-- Never commit generated files (node_modules, .tanstack, etc.)
+### Database & Auth
+- Prisma ORM with PostgreSQL
+- Better Auth for authentication with custom middleware in `src/features/auth/`
+- Server functions for data fetching (TanStack Start pattern)
+
+### File Structure
+```
+src/
+  components/       # UI components
+  components/ui/    # shadcn/ui base components
+  features/         # Feature-based modules
+  hooks/            # Custom React hooks
+  integrations/     # Third-party integrations
+  lib/              # Utilities and config
+  routes/           # TanStack Router routes
+  generated/        # Auto-generated files (Prisma)
+```
+
+### VS Code Settings
+- Biome is the default formatter for all file types
+- Import organization on save enabled
+- `routeTree.gen.ts` is read-only and excluded from search
+
+### Environment
+- Use `.env.local` for local secrets (not committed)
+- Required env vars: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `UPLOADTHING_TOKEN`
+
+## Testing (Vitest)
+
+No existing test files found. When adding tests:
+- Place test files next to source files or in `__tests__/` directories
+- Use `bun --bun run test -- path/to/file` for single test runs
+- React Testing Library and jsdom are configured
