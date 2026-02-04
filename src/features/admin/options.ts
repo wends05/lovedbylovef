@@ -1,8 +1,10 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import type { GetRequestsQueryInput } from "../requests/schemas/GetRequestsQuery";
+import type { GetOrdersQueryInput } from "./orders/schemas/GetOrdersQuery";
 import { getAllRequests } from "../requests/server";
 import { getAdminDashboardData } from "./dashboard/server";
 import { getAllCrochetsAdmin, getCrochetById } from "./gallery/server";
+import { getAllOrders } from "./orders/server";
 
 export const adminDashboardQueryOptions = {
 	getAdminDashboardData: queryOptions({
@@ -17,6 +19,23 @@ export const adminDashboardQueryOptions = {
 				getAllRequests({
 					data: {
 						...filters,
+						cursor: pageParam as string | undefined,
+					},
+				}),
+			initialPageParam: undefined as string | undefined,
+			getNextPageParam: (lastPage) => lastPage.nextCursor,
+		}),
+
+getOrders: (
+		filters: { pageSize?: number; status?: GetOrdersQueryInput["status"] } = {},
+	) =>
+		infiniteQueryOptions({
+			queryKey: ["adminOrders", filters],
+			queryFn: ({ pageParam }) =>
+				getAllOrders({
+					data: {
+						pageSize: filters.pageSize ?? 20,
+						status: filters.status ?? "ALL",
 						cursor: pageParam as string | undefined,
 					},
 				}),
