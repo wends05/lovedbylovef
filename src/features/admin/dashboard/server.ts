@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { prisma } from "@/lib/prisma-client";
-import { adminMiddleware } from "../auth/middleware";
+import { adminMiddleware } from "../../auth/middleware";
 
 // Admin Dashboard Data
 export const getAdminDashboardData = createServerFn()

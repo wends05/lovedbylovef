@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { AdminLayout } from "@/features/admin/components/layouts/AdminLayout";
+import { AdminLayout } from "@/features/admin/AdminLayout";
 import { adminMiddleware } from "@/features/auth/middleware";
 import { authClient } from "@/lib/auth-client";
 

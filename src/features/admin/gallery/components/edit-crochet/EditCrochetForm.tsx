@@ -1,5 +1,8 @@
+"use client";
+
 import { revalidateLogic } from "@tanstack/react-form";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { Camera, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -22,92 +25,128 @@ import {
 } from "@/components/ui/dropzone";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Category } from "@/generated/prisma/enums";
+import { CATEGORY_OPTIONS } from "@/features/admin/gallery/schemas/GalleryOptions";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
 import { useSingleImageUpload } from "@/integrations/uploadthing/use-single-image-upload";
 import { hashFile } from "@/lib/hash-file";
 import { tryCatch } from "@/lib/try-catch";
-import { adminDashboardOptions } from "../../options";
-import type { CreateCrochetFormInput } from "../schemas/CrochetSchemas";
-import { CreateCrochetFormSchema } from "../schemas/CrochetSchemas";
-import { createCrochet } from "../server";
+import { Route } from "@/routes/admin/gallery/$id.edit";
+import { adminDashboardQueryOptions } from "../../../options";
+import { galleryMutationOptions } from "../../options";
+import type { UpdateCrochetFormInput } from "../../schemas/CrochetSchemas";
+import { UpdateCrochetFormSchema } from "../../schemas/CrochetSchemas";
 
-const CATEGORY_OPTIONS = [
-	{ value: Category.TOY, label: "Toy" },
-	{ value: Category.WEARABLE, label: "Wearable" },
-	{ value: Category.HOME_DECOR, label: "Home Decor" },
-	{ value: Category.ACCESSORY, label: "Accessory" },
-	{ value: Category.OTHERS, label: "Others" },
-];
-
-const defaultValues: CreateCrochetFormInput = {
-	name: "",
-	description: "",
-	category: Category.TOY,
-	price: null,
-	imageURL: undefined,
-	isVisible: true,
-	file: undefined as unknown as File,
-};
-
-export default function CreateCrochetForm() {
+export default function EditCrochetForm() {
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
+	// Get crochet data from route loader
+	const { crochet } = Route.useLoaderData();
+	const updateCrochetMutation = useMutation(
+		galleryMutationOptions.updateCrochet,
+	);
+	const deleteCrochetImageMutation = useMutation(
+		galleryMutationOptions.deleteCrochetImage,
+	);
+
+	// Set initial preview to existing image
+	const initialImageUrl = crochet.imageURL;
+
+	const defaultValues: UpdateCrochetFormInput = {
+		id: crochet.id,
+		name: crochet.name,
+		description: crochet.description,
+		category: crochet.category,
+		price: crochet.price,
+		imageURL: crochet.imageURL,
+		imageKey: crochet.imageKey ?? undefined,
+		imageHash: crochet.imageHash ?? undefined,
+		isVisible: crochet.isVisible,
+		file: undefined as unknown as File | undefined,
+	};
+
 	const form = useAppForm({
-		defaultValues: defaultValues,
+		defaultValues,
 		validationLogic: revalidateLogic(),
 		validators: {
-			onDynamic: CreateCrochetFormSchema,
+			onDynamic: UpdateCrochetFormSchema,
 		},
 		onSubmit: async ({ value }) => {
-			if (!value.file) {
-				toast.error("Please upload an image");
-				return;
-			}
+			let didUploadNewImage = false;
+			let imageUrl = value.imageURL;
+			let imageKey = value.imageKey;
+			let imageHash = value.imageHash;
+			if (value.file) {
+				if (isUploading) {
+					return;
+				}
 
-			const uploadedFile = await imageUpload.uploadFile();
-			if (!uploadedFile) {
-				toast.error("Image upload failed. Please try again.");
-				return;
+				const nextHash = await hashFile(value.file);
+				if (imageHash && nextHash === imageHash) {
+					// Same file selected; skip upload.
+				} else {
+					const uploadedFile = await imageUpload.uploadFile();
+					if (!uploadedFile) {
+						toast.error("Image upload failed. Please try again.");
+						return;
+					}
+					imageUrl = uploadedFile.ufsUrl;
+					imageKey = uploadedFile.key;
+					imageHash = nextHash;
+					didUploadNewImage = true;
+				}
 			}
 
 			const submitData = {
+				id: value.id,
 				name: value.name,
 				description: value.description,
 				category: value.category,
 				price: value.price,
-				imageURL: uploadedFile.ufsUrl,
-				imageKey: uploadedFile.key,
-				imageHash: await hashFile(value.file),
+				imageURL: imageUrl,
+				imageKey: imageKey,
+				imageHash: imageHash,
 				isVisible: value.isVisible,
 			};
 
 			const { success, error } = await tryCatch(
-				createCrochet({ data: submitData }),
+				updateCrochetMutation.mutateAsync({ data: submitData }),
 			);
 
 			if (!success) {
-				toast.error("Failed to create crochet", {
+				toast.error("Failed to update crochet", {
 					description: error || "Something went wrong",
 				});
 			} else {
-				toast.success("Crochet created successfully!");
+				toast.success("Crochet updated successfully!");
 
-				// Reset form and image
-				form.reset();
-				imageUpload.clear();
+				if (didUploadNewImage && value.imageKey) {
+					const { error: deleteError } = await tryCatch(
+						deleteCrochetImageMutation.mutateAsync({ data: value.imageKey }),
+					);
+					if (deleteError) {
+						console.error(
+							"Error deleting previous image after update:",
+							deleteError,
+						);
+					}
+				}
 
 				// Invalidate gallery query
 				await queryClient.invalidateQueries(
-					adminDashboardOptions.getAllCrochets,
+					adminDashboardQueryOptions.getAllCrochets,
 				);
+
+				// Navigate back to gallery
+				navigate({ to: "/admin/gallery" });
 			}
 		},
 	});
 
 	const imageUpload = useSingleImageUpload({
+		initialUrl: initialImageUrl,
 		onFileChange: (file) => {
-			form.setFieldValue("file", (file ?? undefined) as unknown as File);
+			form.setFieldValue("file", file);
 		},
 		onUploadBegin: () => {
 			toast.info("Upload started...");
@@ -126,16 +165,15 @@ export default function CreateCrochetForm() {
 		shiftOnMaxFiles: true,
 	});
 
-	const { dropzone, previewUrl, isUploading } = imageUpload;
+	const { dropzone, isUploading, previewUrl } = imageUpload;
 
 	return (
 		<div className="container mx-auto max-w-4xl py-8">
 			<Card>
 				<CardHeader>
-					<CardTitle>Create New Crochet Item</CardTitle>
+					<CardTitle>Edit Crochet Item</CardTitle>
 					<CardDescription>
-						Add a new crochet item to your gallery. Fill in the details and
-						upload an image.
+						Update the details for &quot;{crochet.name}&quot;
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
@@ -165,7 +203,10 @@ export default function CreateCrochetForm() {
 									<form.AppField name="category">
 										{(field) => (
 											<field.SelectField
-												items={CATEGORY_OPTIONS}
+												items={CATEGORY_OPTIONS.map((option) => ({
+													label: option.label,
+													value: option.value,
+												}))}
 												label="Category"
 												description="Select a category for the crochet item"
 												placeholder="Select category"
@@ -175,15 +216,17 @@ export default function CreateCrochetForm() {
 								</div>
 
 								{/* Price Field */}
-								<form.AppField name="price">
-									{(field) => (
-										<field.NumberField
-											label="Price (optional)"
-											placeholder="Enter price"
-											description="Leave empty for price on request"
-										/>
-									)}
-								</form.AppField>
+								<div>
+									<form.AppField name="price">
+										{(field) => (
+											<field.NumberField
+												label="Price (optional)"
+												placeholder="Enter price"
+												description="Leave empty for price on request"
+											/>
+										)}
+									</form.AppField>
+								</div>
 							</div>
 
 							{/* Right Column - Image Upload */}
@@ -263,36 +306,34 @@ export default function CreateCrochetForm() {
 						</div>
 
 						{/* Description Field - Full Width */}
-						<form.AppField name="description">
-							{(field) => (
-								<field.TextareaField
-									label="Description"
-									placeholder="Describe your crochet item..."
-									rows={4}
-								/>
-							)}
-						</form.AppField>
+						<div>
+							<form.AppField name="description">
+								{(field) => (
+									<field.TextareaField
+										label="Description"
+										placeholder="Describe your crochet item..."
+										rows={4}
+									/>
+								)}
+							</form.AppField>
+						</div>
 
-						{/* Submit Button */}
+						{/* Submit Buttons */}
 						<div className="flex justify-end gap-4">
 							<Button
 								type="button"
 								variant="outline"
-								onClick={() => {
-									form.reset();
-									imageUpload.clear();
-								}}
-								disabled={form.state.isSubmitting || isUploading}
+								onClick={() => navigate({ to: "/admin/gallery" })}
+								disabled={form.state.isSubmitting || imageUpload.isUploading}
 							>
-								Reset
+								Cancel
 							</Button>
-							<form.AppForm>
-								<form.SubmitButton
-									label="Submit"
-									isSubmittingLabel="Submitting"
-									disabled={form.state.isSubmitting || isUploading}
-								/>
-							</form.AppForm>
+							<Button
+								type="submit"
+								disabled={form.state.isSubmitting || imageUpload.isUploading}
+							>
+								{form.state.isSubmitting ? "Updating..." : "Update Crochet"}
+							</Button>
 						</div>
 					</form>
 				</CardContent>

@@ -1,4 +1,4 @@
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { format, formatDistanceToNow } from "date-fns";
 import {
@@ -34,8 +34,7 @@ import { ImageZoom } from "@/components/ui/image-zoom";
 import { Separator } from "@/components/ui/separator";
 import type { RequestStatus } from "@/generated/prisma/enums";
 import { tryCatch } from "@/lib/try-catch";
-import { requestsOptions } from "../options";
-import { cancelRequest } from "../server";
+import { requestsMutationOptions, requestsQueryOptions } from "../options";
 
 const statusConfig: Record<
 	RequestStatus,
@@ -88,12 +87,15 @@ const statusConfig: Record<
 export default function RequestDetailPage() {
 	const { id } = useParams({ from: "/_protected/request/$id" });
 	const { data: request } = useSuspenseQuery(
-		requestsOptions.getRequestById(id),
+		requestsQueryOptions.getRequestById(id),
 	);
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 	const [isCancelling, setIsCancelling] = useState(false);
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
+	const cancelRequestMutation = useMutation(
+		requestsMutationOptions.cancelRequest,
+	);
 
 	const status = statusConfig[request.status];
 	const StatusIcon = status.icon;
@@ -101,7 +103,9 @@ export default function RequestDetailPage() {
 	const handleCancel = async () => {
 		setIsCancelling(true);
 
-		const { success, error } = await tryCatch(cancelRequest({ data: { id } }));
+		const { success, error } = await tryCatch(
+			cancelRequestMutation.mutateAsync({ data: { id } }),
+		);
 
 		if (!success) {
 			toast.error("Error", {

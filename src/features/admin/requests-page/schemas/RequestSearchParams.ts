@@ -13,10 +13,8 @@ export const RequestSearchParamsSchema = z
 			])
 			.optional(),
 		search: z.string().optional(),
-		sortBy: z.enum(["createdAt", "updatedAt", "userName"]).optional(),
+		sortBy: z.enum(["createdAt", "updatedAt"]).optional(),
 		sortOrder: z.enum(["asc", "desc"]).optional(),
-		dateFrom: z.string().datetime().optional(),
-		dateTo: z.string().datetime().optional(),
 	})
 	.catchall(z.any()); // Allow other params to pass through
 

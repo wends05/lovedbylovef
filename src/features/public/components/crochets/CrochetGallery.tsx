@@ -2,18 +2,18 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import type { Category } from "@/generated/prisma/enums";
-import { publicOptions } from "../../options";
+import { publicQueryOptions } from "../../options";
 import { CategoryFilter } from "./CategoryFilter";
 import { CrochetCard } from "./CrochetCard";
 
 export default function GalleryPage() {
 	const [activeCategory, setActiveCategory] = useState<Category | "ALL">("ALL");
 	const { data: crochets } = useSuspenseQuery(
-		publicOptions.getVisibleCrochets(
+		publicQueryOptions.getVisibleCrochets(
 			activeCategory === "ALL" ? undefined : activeCategory,
 		),
 	);
-	const { data: categories } = useSuspenseQuery(publicOptions.getCategories());
+	const { data: categories } = useSuspenseQuery(publicQueryOptions.getCategories());
 
 	return (
 		<div className="container mx-auto px-4 py-12">

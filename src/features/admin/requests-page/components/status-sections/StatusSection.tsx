@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { RequestStatus } from "@/generated/prisma/enums";
+import type { AdminRequestsPage } from "@/features/requests/types";
 import { EmptyState } from "../shared/EmptyState";
 import { useStatusRequests } from "./hooks/useStatusRequests";
 import { StatusRequestCard } from "./StatusRequestCard";
@@ -11,25 +12,8 @@ type NonPendingStatus = Exclude<RequestStatus, "PENDING">;
 interface StatusSectionProps {
 	status: NonPendingStatus;
 	search?: string;
-	sortBy?: "createdAt" | "updatedAt" | "userName";
+	sortBy?: "createdAt" | "updatedAt";
 	sortOrder?: "asc" | "desc";
-	dateFrom?: string;
-	dateTo?: string;
-}
-
-interface RequestPage {
-	items: Array<{
-		id: string;
-		title: string;
-		status: string;
-		user: { name: string; email: string };
-		createdAt: Date;
-		description: string;
-		imageUrl: string | null;
-		adminResponse: string | null;
-	}>;
-	nextCursor?: string;
-	hasMore: boolean;
 }
 
 export function StatusSection({
@@ -37,8 +21,6 @@ export function StatusSection({
 	search,
 	sortBy,
 	sortOrder,
-	dateFrom,
-	dateTo,
 }: StatusSectionProps) {
 	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
 		useStatusRequests({
@@ -46,12 +28,10 @@ export function StatusSection({
 			search,
 			sortBy,
 			sortOrder,
-			dateFrom,
-			dateTo,
 		});
 
 	const allRequests =
-		data?.pages.flatMap((page: unknown) => (page as RequestPage).items) ?? [];
+		data?.pages.flatMap((page) => (page as AdminRequestsPage).items) ?? [];
 	const totalCount = allRequests.length;
 
 	if (isLoading) {

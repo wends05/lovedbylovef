@@ -10,7 +10,7 @@ import {
 import { RequestStatus } from "@/generated/prisma/enums";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
 import { tryCatch } from "@/lib/try-catch";
-import { adminDashboardOptions } from "../../options";
+import { adminDashboardQueryOptions } from "../../options";
 import {
 	type AdminResponseFormData,
 	AdminResponseSchema,
@@ -21,7 +21,7 @@ const useAdminResponseForm = (options: {
 	onSubmit: (data: UpdateRequestStatusInput) => Promise<void>;
 }) => {
 	const defaultValues: AdminResponseFormData = {
-		response: "",
+		response: undefined,
 		action: undefined,
 	};
 	const queryClient = useQueryClient();
@@ -32,9 +32,8 @@ const useAdminResponseForm = (options: {
 			onDynamic: AdminResponseSchema,
 		},
 		onSubmit: async ({ value, formApi }) => {
-			console.log(value);
 			const parsedData = UpdateRequestStatusSchema.parse({
-				adminResponse: value.response,
+				adminResponse: value.response || undefined,
 				requestId: options.requestId,
 				status: value.action,
 			});
@@ -48,11 +47,9 @@ const useAdminResponseForm = (options: {
 			}
 
 			// invalidate related queries - invalidate all admin request queries
-			await queryClient.invalidateQueries({
-				queryKey: ["adminRequests"],
-			});
+
 			await queryClient.invalidateQueries(
-				adminDashboardOptions.getAdminDashboardData,
+				adminDashboardQueryOptions.getAdminDashboardData,
 			);
 
 			// Success! Clear the form

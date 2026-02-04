@@ -10,7 +10,7 @@ export const getDashboardData = createServerFn().handler(async () => {
 	});
 	const dashboardData = await prisma.$transaction([
 		prisma.order.count({
-			where: { userId: session?.user?.id },
+			where: { requestorId: session?.user?.id },
 		}),
 		prisma.request.count({
 			where: { userId: session?.user?.id },

@@ -1,16 +1,16 @@
 "use client";
 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AdminSidebar } from "@/features/admin/components/AdminSidebar";
+import { UserSidebar } from "@/features/dashboard/UserSidebar";
 
-interface AdminLayoutProps {
+interface UserLayoutProps {
 	children: React.ReactNode;
 }
 
-export function AdminLayout({ children }: AdminLayoutProps) {
+export function UserLayout({ children }: UserLayoutProps) {
 	return (
 		<SidebarProvider>
-			<AdminSidebar />
+			<UserSidebar />
 			<SidebarInset className="flex flex-col">
 				<main className="flex-1 p-6">{children}</main>
 			</SidebarInset>

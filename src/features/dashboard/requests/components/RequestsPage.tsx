@@ -1,18 +1,27 @@
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	useInfiniteQuery,
+	useMutation,
+	useQueryClient,
+} from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { CancelDialog } from "@/features/requests/components/CancelDialog";
+import { EmptyState } from "@/features/requests/components/EmptyState";
+import { RequestCard } from "@/features/requests/components/RequestCard";
+import { RequestSkeleton } from "@/features/requests/components/RequestSkeleton";
+import {
+	StatusFilters,
+	statusConfig,
+} from "@/features/requests/components/StatusFilters";
+import {
+	requestsMutationOptions,
+	requestsQueryOptions,
+} from "@/features/requests/options";
 import type { RequestStatus } from "@/generated/prisma/enums";
 import { tryCatch } from "@/lib/try-catch";
-import { requestsOptions } from "../options";
-import { cancelRequest } from "../server";
-import { CancelDialog } from "./CancelDialog";
-import { EmptyState } from "./EmptyState";
-import { RequestCard } from "./RequestCard";
-import { RequestSkeleton } from "./RequestSkeleton";
-import { StatusFilters, statusConfig } from "./StatusFilters";
 
 export default function RequestsPage() {
 	const [activeFilter, setActiveFilter] = useState<RequestStatus | "ALL">(
@@ -22,6 +31,9 @@ export default function RequestsPage() {
 	const [requestToCancel, setRequestToCancel] = useState<string | null>(null);
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
+	const cancelRequestMutation = useMutation(
+		requestsMutationOptions.cancelRequest,
+	);
 
 	const {
 		data,
@@ -30,7 +42,9 @@ export default function RequestsPage() {
 		isFetchingNextPage,
 		isLoading,
 		refetch,
-	} = useInfiniteQuery(requestsOptions.getUserRequestsInfinite(activeFilter));
+	} = useInfiniteQuery(
+		requestsQueryOptions.getUserRequestsInfinite(activeFilter),
+	);
 
 	const allRequests = data?.pages.flatMap((page) => page.items) ?? [];
 
@@ -43,7 +57,7 @@ export default function RequestsPage() {
 		if (!requestToCancel) return;
 
 		const { success, error } = await tryCatch(
-			cancelRequest({ data: { id: requestToCancel } }),
+			cancelRequestMutation.mutateAsync({ data: { id: requestToCancel } }),
 		);
 
 		if (!success) {

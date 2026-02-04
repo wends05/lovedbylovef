@@ -1,10 +1,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Heart, Package } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { dashboardOptions } from "../options";
+import { dashboardQueryOptions } from "../../options";
 
 export default function HomePage() {
-	const { data } = useSuspenseQuery(dashboardOptions.getDashboardData);
+	const { data } = useSuspenseQuery(dashboardQueryOptions.getDashboardData);
 	const { data: session } = authClient.useSession();
 	const userName = session?.user?.name || "there";
 

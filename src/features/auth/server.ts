@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { auth } from "@/lib/auth";
-import { SignInSchema, SignUpSchema } from "./schemas/auth";
+import { SignInSchema, SignUpSchema } from "./schemas/standard";
 
 export const signUpServer = createServerFn({ method: "POST" })
 	.inputValidator(SignUpSchema)

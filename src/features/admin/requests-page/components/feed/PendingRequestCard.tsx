@@ -9,25 +9,12 @@ import {
 import { ImageZoom } from "@/components/ui/image-zoom";
 import { Separator } from "@/components/ui/separator";
 import type { UpdateRequestStatusInput } from "@/features/requests/schemas/UpdateRequestStatus";
+import type { AdminRequestItem } from "@/features/requests/types";
 import { RequestResponseForm } from "../RequestResponseForm";
 import { StatusBadge } from "../shared/StatusBadge";
 
-interface Request {
-	id: string;
-	title: string;
-	description: string;
-	status: string;
-	imageUrl: string | null;
-	adminResponse: string | null;
-	createdAt: Date;
-	user: {
-		name: string;
-		email: string;
-	};
-}
-
 interface PendingRequestCardProps {
-	request: Request;
+	request: AdminRequestItem;
 	onProcess: (data: UpdateRequestStatusInput) => Promise<void>;
 }
 

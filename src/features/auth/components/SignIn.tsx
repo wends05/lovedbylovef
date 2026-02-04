@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import {
@@ -11,11 +12,12 @@ import {
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
 import { authClient } from "@/lib/auth-client";
 import { tryCatch } from "@/lib/try-catch";
-import { SignInSchema } from "../schemas/auth";
-import { signInServer } from "../server";
+import { authOptions } from "../options";
+import { SignInSchema } from "../schemas/standard";
 
 const useSignIn = () => {
 	const navigate = useNavigate();
+	const signInMutation = useMutation(authOptions.signInServer);
 	return useAppForm({
 		defaultValues: {
 			email: "",
@@ -24,7 +26,7 @@ const useSignIn = () => {
 		validators: { onSubmit: SignInSchema },
 		onSubmit: async ({ value }) => {
 			const { error, success } = await tryCatch(() =>
-				signInServer({ data: value }),
+				signInMutation.mutateAsync({ data: value }),
 			);
 
 			if (success) {

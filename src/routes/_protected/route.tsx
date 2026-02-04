@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { nonAdminMiddleware } from "@/features/auth/middleware";
-import { UserLayout } from "@/features/dashboard/layouts/UserLayout";
+import { UserLayout } from "@/features/dashboard/UserLayout";
 import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/_protected")({

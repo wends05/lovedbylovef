@@ -1,19 +1,14 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { adminDashboardOptions } from "@/features/admin/options";
+import { adminDashboardQueryOptions } from "@/features/admin/options";
 import type { RequestStatus } from "@/generated/prisma/enums";
 
-// Type for non-pending statuses
-type NonPendingStatus = Exclude<RequestStatus, "PENDING">;
-
 interface UseStatusRequestsOptions {
-	status: NonPendingStatus;
+	status: RequestStatus;
 	pageSize?: number;
-	sortBy?: "createdAt" | "updatedAt" | "userName";
+	sortBy?: "createdAt" | "updatedAt";
 	sortOrder?: "asc" | "desc";
 	search?: string;
-	dateFrom?: string;
-	dateTo?: string;
 }
 
 export function useStatusRequests(options: UseStatusRequestsOptions) {
@@ -24,11 +19,9 @@ export function useStatusRequests(options: UseStatusRequestsOptions) {
 			sortBy: options.sortBy ?? "createdAt",
 			sortOrder: options.sortOrder ?? "desc",
 			search: options.search,
-			dateFrom: options.dateFrom,
-			dateTo: options.dateTo,
 		}),
 		[options],
 	);
 
-	return useInfiniteQuery(adminDashboardOptions.getRequests(filters));
+	return useInfiniteQuery(adminDashboardQueryOptions.getRequests(filters));
 }

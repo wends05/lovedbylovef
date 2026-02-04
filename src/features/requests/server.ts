@@ -22,7 +22,7 @@ interface GetUserRequestsInput {
 	pageSize?: number;
 }
 
-export const getUserRequests = createServerFn({ method: "POST" })
+export const getUserRequests = createServerFn()
 	.inputValidator((input: GetUserRequestsInput) => input)
 	.handler(async ({ data }) => {
 		const headers = await getRequestHeaders();
@@ -64,7 +64,7 @@ export const getUserRequests = createServerFn({ method: "POST" })
 		};
 	});
 
-export const getRequestById = createServerFn({ method: "POST" })
+export const getRequestById = createServerFn()
 	.inputValidator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
 		const headers = await getRequestHeaders();
@@ -166,7 +166,7 @@ export const deleteImage = createServerFn({ method: "POST" })
 		return { success: res.success, deletedCount: res.deletedCount };
 	});
 
-export const getAllRequests = createServerFn({ method: "POST" })
+export const getAllRequests = createServerFn()
 	.middleware([adminMiddleware])
 	.inputValidator(GetRequestsQuerySchema)
 	.handler(async ({ data }) => {
@@ -243,6 +243,24 @@ export const updateRequestStatus = createServerFn({ method: "POST" })
 		if (!session) {
 			throw new Error("Unauthorized");
 		}
+
+		// check if the request exists and if the request is to be approved.
+
+		if (data.status === RequestStatus.APPROVED) {
+			// Handle initiating a conversation for the admin.
+			const { data: order, error, success } = await tryCatch(
+				initiateOrder({ data: { requestId: data.requestId } }),
+			);
+
+			if (!success) {
+				throw new Error(
+					error || "Failed to initiate order for approved request",
+				);
+			}
+
+			return order;
+		}
+
 		const updateData: RequestUpdateInput = {
 			status: data.status,
 			adminResponse: data.adminResponse || null,
@@ -253,18 +271,6 @@ export const updateRequestStatus = createServerFn({ method: "POST" })
 			where: { id: data.requestId },
 			data: updateData,
 		});
-
-		if (updatedRequest.status === RequestStatus.APPROVED) {
-			// Handle initiating a conversation for the admin.
-
-			const { data, error, success } = await tryCatch(
-				initiateOrder({ data: { requestId: updatedRequest.id } }),
-			);
-
-			if (!success) {
-
-			}
-		}
 
 		return updatedRequest;
 	});

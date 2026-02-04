@@ -7,8 +7,8 @@ import { RequestStatus } from "@/generated/prisma/enums";
 import { tryCatch } from "@/lib/try-catch";
 // Import the route to get typed search params
 import { Route } from "@/routes/admin/requests";
-import { PendingRequestsFeed } from "./feed/PendingRequestsFeed";
-import { OtherStatusesView } from "./status-sections/OtherStatusesView";
+import { PendingRequestsFeed } from "./components/feed/PendingRequestsFeed";
+import { OtherStatusesView } from "./components/status-sections/OtherStatusesView";
 
 export default function RequestManagement() {
 	const queryClient = useQueryClient();
@@ -20,14 +20,9 @@ export default function RequestManagement() {
 	const search = Route.useSearch();
 
 	// Get initial status from URL, fallback to APPROVED if not set
-	// Note: This component only handles non-pending statuses
-	const initialStatusTab = (search.status ?? RequestStatus.APPROVED) as Exclude<
-		RequestStatus,
-		"PENDING"
-	>;
+	const initialStatusTab = search.status ?? RequestStatus.APPROVED;
 
 	const handleProcessRequest = async (data: UpdateRequestStatusInput) => {
-		// handle updates to the request status.
 		const { success, error } = await tryCatch(
 			updateRequestStatusMutation.mutateAsync({ data }),
 		);

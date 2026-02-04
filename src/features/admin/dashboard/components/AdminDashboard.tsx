@@ -1,11 +1,11 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { DollarSign, Package, TrendingUp, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { adminDashboardOptions } from "../options";
+import { adminDashboardQueryOptions } from "../../options";
 
 export default function AdminDashboard() {
 	const { data } = useSuspenseQuery(
-		adminDashboardOptions.getAdminDashboardData,
+		adminDashboardQueryOptions.getAdminDashboardData,
 	);
 
 	const stats = [

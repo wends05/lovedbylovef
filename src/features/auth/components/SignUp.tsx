@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import {
@@ -11,11 +12,12 @@ import {
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
 import { authClient } from "@/lib/auth-client";
 import { tryCatch } from "@/lib/try-catch";
-import { SignUpSchema } from "../schemas/auth";
-import { signUpServer } from "../server";
+import { authOptions } from "../options";
+import { SignUpSchema } from "../schemas/standard";
 
 const useSignUp = () => {
 	const navigate = useNavigate();
+	const signUpMutation = useMutation(authOptions.signUpServer);
 	return useAppForm({
 		defaultValues: {
 			email: "",
@@ -25,7 +27,7 @@ const useSignUp = () => {
 		validators: { onSubmit: SignUpSchema },
 		onSubmit: async ({ value }) => {
 			const { success, error } = await tryCatch(() =>
-				signUpServer({ data: value }),
+				signUpMutation.mutateAsync({ data: value }),
 			);
 			if (success) {
 				toast.success("Account created successfully");

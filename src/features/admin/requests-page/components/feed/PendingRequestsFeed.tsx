@@ -1,23 +1,29 @@
-import type { UseInfiniteQueryResult } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { RequestStatus } from "@/generated/prisma/enums";
 import type { UpdateRequestStatusInput } from "@/features/requests/schemas/UpdateRequestStatus";
+import type { AdminRequestsPage } from "@/features/requests/types";
+import { useStatusRequests } from "../status-sections/hooks/useStatusRequests";
 import { EmptyState } from "../shared/EmptyState";
 import { PendingRequestCard } from "./PendingRequestCard";
 
 interface PendingRequestsFeedProps {
-	query: UseInfiniteQueryResult<any, any>;
 	onProcess: (data: UpdateRequestStatusInput) => Promise<void>;
 }
 
 export function PendingRequestsFeed({
-	query,
 	onProcess,
 }: PendingRequestsFeedProps) {
 	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-		query;
+		useStatusRequests({
+			status: RequestStatus.PENDING,
+			pageSize: 10,
+			sortBy: "createdAt",
+			sortOrder: "desc",
+		});
 
-	const allRequests = data?.pages.flatMap((page: any) => page.items) ?? [];
+	const allRequests =
+		data?.pages.flatMap((page) => (page as AdminRequestsPage).items) ?? [];
 	const totalCount = allRequests.length;
 
 	if (isLoading) {
@@ -40,7 +46,7 @@ export function PendingRequestsFeed({
 			) : (
 				<>
 					<div className="grid gap-4">
-						{allRequests.map((request: any) => (
+						{allRequests.map((request) => (
 							<PendingRequestCard
 								key={request.id}
 								request={request}

@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import {
 	Select,
 	SelectContent,
@@ -30,10 +30,8 @@ const OTHER_STATUSES = [
 interface OtherStatusesViewProps {
 	initialStatus: NonPendingStatus;
 	initialSearch?: string;
-	initialSortBy?: "createdAt" | "updatedAt" | "userName";
+	initialSortBy?: "createdAt" | "updatedAt";
 	initialSortOrder?: "asc" | "desc";
-	initialDateFrom?: string;
-	initialDateTo?: string;
 }
 
 const DEFAULT_FILTERS = {
@@ -47,8 +45,6 @@ export function OtherStatusesView({
 	initialSearch,
 	initialSortBy,
 	initialSortOrder,
-	initialDateFrom,
-	initialDateTo,
 }: OtherStatusesViewProps) {
 	const navigate = routeApi.useNavigate();
 	const queryClient = useQueryClient();
@@ -60,103 +56,81 @@ export function OtherStatusesView({
 	const [filters, setFilters] = useState<{
 		status: NonPendingStatus;
 		pageSize: number;
-		sortBy: "createdAt" | "updatedAt" | "userName";
+		sortBy: "createdAt" | "updatedAt";
 		sortOrder: "asc" | "desc";
 		search?: string;
-		dateFrom?: string;
-		dateTo?: string;
 	}>({
 		status: initialStatus,
 		pageSize: DEFAULT_FILTERS.pageSize,
 		sortBy: initialSortBy ?? DEFAULT_FILTERS.sortBy,
 		sortOrder: initialSortOrder ?? DEFAULT_FILTERS.sortOrder,
 		search: initialSearch,
-		dateFrom: initialDateFrom,
-		dateTo: initialDateTo,
 	});
 
 	// Sync filters to URL with type-safe navigation
-	const syncToUrl = useCallback(
-		(newFilters: typeof filters, newTab: NonPendingStatus) => {
-			// Build search params that match RequestSearchParams type
-			const search: Partial<RequestSearchParams> = {};
+	const syncToUrl = (newFilters: typeof filters, newTab: NonPendingStatus) => {
+		// Build search params that match RequestSearchParams type
+		const search: Partial<RequestSearchParams> = {};
 
-			// Only include non-default values
-			if (newTab !== RequestStatus.APPROVED) {
-				search.status = newTab;
-			}
-			if (newFilters.search) {
-				search.search = newFilters.search;
-			}
-			if (newFilters.sortBy !== "createdAt") {
-				search.sortBy = newFilters.sortBy;
-			}
-			if (newFilters.sortOrder !== "desc") {
-				search.sortOrder = newFilters.sortOrder;
-			}
-			if (newFilters.dateFrom) {
-				search.dateFrom = newFilters.dateFrom;
-			}
-			if (newFilters.dateTo) {
-				search.dateTo = newFilters.dateTo;
-			}
+		// Only include non-default values
+		if (newTab !== RequestStatus.APPROVED) {
+			search.status = newTab;
+		}
+		if (newFilters.search) {
+			search.search = newFilters.search;
+		}
+		if (newFilters.sortBy !== "createdAt") {
+			search.sortBy = newFilters.sortBy;
+		}
+		if (newFilters.sortOrder !== "desc") {
+			search.sortOrder = newFilters.sortOrder;
+		}
 
-			// Type-safe navigation using the current route
-			navigate({
-				to: ".", // Stay on current route
-				search,
-				replace: true,
-			});
-		},
-		[navigate],
-	);
+		// Type-safe navigation using the current route
+		navigate({
+			to: ".", // Stay on current route
+			search,
+			replace: true,
+		});
+	};
 
 	// Handle tab change
-	const handleTabChange = useCallback(
-		(value: string) => {
-			const newStatus = value as NonPendingStatus;
-			setActiveTab(newStatus);
+	const handleTabChange = (value: string) => {
+		const newStatus = value as NonPendingStatus;
+		setActiveTab(newStatus);
 
-			const newFilters = { ...filters, status: newStatus };
-			setFilters(newFilters);
+		const newFilters = { ...filters, status: newStatus };
+		setFilters(newFilters);
 
-			// Invalidate query to refetch with new status
-			queryClient.invalidateQueries({
-				queryKey: ["adminRequests"],
-			});
+		// Invalidate query to refetch with new status
+		queryClient.invalidateQueries({
+			queryKey: ["adminRequests"],
+		});
 
-			syncToUrl(newFilters, newStatus);
-		},
-		[filters, queryClient, syncToUrl],
-	);
-
+		syncToUrl(newFilters, newStatus);
+	};
 	// Handle filter change - simplified signature to match StatusFiltersProps
-	const handleFilterChange = useCallback(
-		(
-			key: keyof typeof filters,
-			value: (typeof filters)[keyof typeof filters],
-		) => {
-			const newFilters = { ...filters, [key]: value };
-			setFilters(newFilters);
-			syncToUrl(newFilters, activeTab);
-		},
-		[filters, activeTab, syncToUrl],
-	);
+	const handleFilterChange = (
+		key: keyof typeof filters,
+		value: (typeof filters)[keyof typeof filters],
+	) => {
+		const newFilters = { ...filters, [key]: value };
+		setFilters(newFilters);
+		syncToUrl(newFilters, activeTab);
+	};
 
 	// Handle reset
-	const handleReset = useCallback(() => {
+	const handleReset = () => {
 		const resetFilters = {
 			status: activeTab,
 			pageSize: DEFAULT_FILTERS.pageSize,
 			sortBy: DEFAULT_FILTERS.sortBy,
 			sortOrder: DEFAULT_FILTERS.sortOrder,
 			search: undefined,
-			dateFrom: undefined,
-			dateTo: undefined,
 		};
 		setFilters(resetFilters);
 		syncToUrl(resetFilters, activeTab);
-	}, [activeTab, syncToUrl]);
+	};
 
 	return (
 		<div className="space-y-4">
@@ -187,8 +161,6 @@ export function OtherStatusesView({
 								search={filters.search}
 								sortBy={filters.sortBy}
 								sortOrder={filters.sortOrder}
-								dateFrom={filters.dateFrom}
-								dateTo={filters.dateTo}
 							/>
 						</TabsContent>
 					))}
@@ -217,8 +189,6 @@ export function OtherStatusesView({
 					search={filters.search}
 					sortBy={filters.sortBy}
 					sortOrder={filters.sortOrder}
-					dateFrom={filters.dateFrom}
-					dateTo={filters.dateTo}
 				/>
 			</div>
 		</div>

@@ -1,4 +1,5 @@
 import { revalidateLogic } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
 import { Upload } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -24,7 +25,7 @@ import {
 	RequestFormSchema,
 	RequestFormSubmission,
 } from "../schemas/RequestForm";
-import { deleteImage, submitRequest } from "../server";
+import { requestsMutationOptions } from "../options";
 
 const defaultValues: RequestFormInput = {
 	title: "",
@@ -33,6 +34,12 @@ const defaultValues: RequestFormInput = {
 };
 
 export default function RequestForm() {
+	const submitRequestMutation = useMutation(
+		requestsMutationOptions.submitRequest,
+	);
+	const deleteImageMutation = useMutation(
+		requestsMutationOptions.deleteImage,
+	);
 	const form = useAppForm({
 		defaultValues,
 		validationLogic: revalidateLogic(),
@@ -61,14 +68,16 @@ export default function RequestForm() {
 				imageKey: key,
 			});
 
-			const { error } = await tryCatch(submitRequest({ data: finalData }));
+			const { error } = await tryCatch(
+				submitRequestMutation.mutateAsync({ data: finalData }),
+			);
 			if (error) {
 				toast.error("Submission failed. Please try again.");
 
 				// Delete the uploaded file if submission fails
 				if (finalData.imageKey) {
 					const { error: deleteError } = await tryCatch(
-						deleteImage({ data: finalData.imageKey }),
+						deleteImageMutation.mutateAsync({ data: finalData.imageKey }),
 					);
 					if (deleteError) {
 						console.error(

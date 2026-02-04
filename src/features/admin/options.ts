@@ -1,16 +1,15 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import type { GetRequestsQueryInput } from "../requests/schemas/GetRequestsQuery";
 import { getAllRequests } from "../requests/server";
+import { getAdminDashboardData } from "./dashboard/server";
 import { getAllCrochetsAdmin, getCrochetById } from "./gallery/server";
-import { getAdminDashboardData } from "./server";
 
-export const adminDashboardOptions = {
+export const adminDashboardQueryOptions = {
 	getAdminDashboardData: queryOptions({
 		queryKey: ["adminDashboardData"],
 		queryFn: getAdminDashboardData,
 	}),
 
-	// Now accepts filters and returns infinite query options
 	getRequests: (filters: Omit<GetRequestsQueryInput, "cursor">) =>
 		infiniteQueryOptions({
 			queryKey: ["adminRequests", filters],

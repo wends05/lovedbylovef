@@ -3,7 +3,6 @@
 import { Link, useRouter } from "@tanstack/react-router";
 import {
 	GalleryHorizontalEnd,
-	Home,
 	LayoutDashboard,
 	LogOut,
 	Mail,

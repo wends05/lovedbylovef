@@ -22,7 +22,7 @@ export const getAllCrochetsAdmin = createServerFn()
 	});
 
 // Get crochet by ID
-export const getCrochetById = createServerFn({ method: "POST" })
+export const getCrochetById = createServerFn()
 	.middleware([adminMiddleware])
 	.inputValidator(GetCrochetByIdSchema)
 	.handler(async ({ data }) => {
@@ -81,6 +81,13 @@ export const deleteCrochet = createServerFn({ method: "POST" })
 	.middleware([adminMiddleware])
 	.inputValidator(DeleteCrochetSchema)
 	.handler(async ({ data }) => {
+		// handle deletion of the image also
+		const crochet = await prisma.crochet.findUnique({
+			where: { id: data.id },
+		});
+		if (crochet?.imageKey) {
+			await utapi.deleteFiles([crochet.imageKey]);
+		}
 		await prisma.crochet.delete({
 			where: { id: data.id },
 		});

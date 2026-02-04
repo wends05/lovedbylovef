@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import EditCrochetForm from "@/features/admin/gallery/edit-crochet/EditCrochetForm";
+import EditCrochetForm from "@/features/admin/gallery/components/edit-crochet/EditCrochetForm";
 import { getCrochetById } from "@/features/admin/gallery/server";
 
 export const Route = createFileRoute("/admin/gallery/$id/edit")({

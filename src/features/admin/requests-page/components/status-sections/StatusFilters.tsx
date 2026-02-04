@@ -15,11 +15,9 @@ import type { RequestStatus } from "@/generated/prisma/enums";
 interface FilterState {
 	status?: string | RequestStatus;
 	pageSize?: number;
-	sortBy?: "createdAt" | "updatedAt" | "userName";
+	sortBy?: "createdAt" | "updatedAt";
 	sortOrder?: "asc" | "desc";
 	search?: string;
-	dateFrom?: string;
-	dateTo?: string;
 }
 
 interface StatusFiltersProps {
@@ -34,7 +32,6 @@ interface StatusFiltersProps {
 const SORT_OPTIONS = [
 	{ value: "createdAt", label: "Date Created" },
 	{ value: "updatedAt", label: "Date Updated" },
-	{ value: "userName", label: "User Name" },
 ] as const;
 
 const ORDER_OPTIONS = [
