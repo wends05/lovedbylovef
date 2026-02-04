@@ -87,8 +87,7 @@ const fileStatusReducer = <TUploadRes, TUploadError>(
 		case "update-status":
 			return state.map((fileStatus) => {
 				if (fileStatus.id === action.id) {
-					// eslint-disable-next-line @typescript-eslint/no-unused-vars
-					const { id, type, ...rest } = action;
+					const { ...rest } = action;
 					return {
 						...fileStatus,
 						...rest,
@@ -152,6 +151,8 @@ const getRootError = (
 			}
 			case "too-many-files":
 				return `max ${limits.maxFiles} files`;
+			default:
+				return "invalid file";
 		}
 	});
 	const joinedErrors = errors.join(", ");
@@ -180,10 +181,10 @@ type UseDropzoneProps<TUploadRes, TUploadError> = {
 	shiftOnMaxFiles?: boolean;
 } & (TUploadError extends string
 	? {
-			shapeUploadError?: (error: TUploadError) => string | void;
+			shapeUploadError?: (error: TUploadError) => string | undefined;
 		}
 	: {
-			shapeUploadError: (error: TUploadError) => string | void;
+			shapeUploadError: (error: TUploadError) => string | undefined;
 		});
 
 interface UseDropzoneReturn<TUploadRes, TUploadError> {
@@ -231,7 +232,7 @@ const useDropzone = <TUploadRes, TUploadError = string>(
 				pOnRootError(error);
 			}
 		},
-		[pOnRootError, _setRootError],
+		[pOnRootError],
 	);
 
 	const [fileStatuses, dispatch] = useReducer(fileStatusReducer, []);
@@ -388,6 +389,7 @@ const useDropzone = <TUploadRes, TUploadError = string>(
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: Creating a generic context
 const DropZoneContext = createContext<UseDropzoneReturn<any, any>>({
 	getRootProps: () => ({}) as never,
 	getInputProps: () => ({}) as never,
@@ -438,11 +440,9 @@ const DropZoneArea = forwardRef<HTMLDivElement, DropZoneAreaProps>(
 			context.getRootProps();
 
 		return (
-			// A11y behavior is handled through Trigger. All of these are only relevant to drag and drop which means this should be fine?
-			// eslint-disable-next-line jsx-a11y/no-static-element-interactions
+			// biome-ignore lint/a11y/noStaticElementInteractions:  A11y behavior is handled through Trigger. All of these are only relevant to drag and drop which means this should be fine?
 			<div
 				ref={(instance) => {
-					// TODO: test if this actually works?
 					ref.current = instance;
 					if (typeof forwardedRef === "function") {
 						forwardedRef(instance);
@@ -456,7 +456,6 @@ const DropZoneArea = forwardRef<HTMLDivElement, DropZoneAreaProps>(
 				onDragLeave={onDragLeave}
 				onDrop={onDrop}
 				{...props}
-				aria-label="dropzone"
 				className={cn(
 					"flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
 					context.isDragActive && "animate-pulse bg-black/5",
@@ -658,12 +657,30 @@ const DropzoneMessage = forwardRef<HTMLParagraphElement, DropzoneMessageProps>(
 );
 DropzoneMessage.displayName = "DropzoneMessage";
 
-interface DropzoneRemoveFileProps extends ButtonProps {}
+interface DropzoneRemoveFileProps
+	extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+	variant?:
+		| "default"
+		| "outline"
+		| "secondary"
+		| "ghost"
+		| "destructive"
+		| "link";
+	size?:
+		| "default"
+		| "sm"
+		| "lg"
+		| "icon"
+		| "xs"
+		| "icon-xs"
+		| "icon-sm"
+		| "icon-lg";
+}
 
 const DropzoneRemoveFile = forwardRef<
 	HTMLButtonElement,
 	DropzoneRemoveFileProps
->(({ className, ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
 	const context = useDropzoneFileListContext();
 	if (!context) {
 		throw new Error(
@@ -682,17 +699,35 @@ const DropzoneRemoveFile = forwardRef<
 				className,
 			)}
 		>
-			{props.children}
+			{children}
 			<span className="sr-only">Remove file</span>
 		</Button>
 	);
 });
 DropzoneRemoveFile.displayName = "DropzoneRemoveFile";
 
-interface DropzoneRetryFileProps extends ButtonProps {}
+interface DropzoneRetryFileProps
+	extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+	variant?:
+		| "default"
+		| "outline"
+		| "secondary"
+		| "ghost"
+		| "destructive"
+		| "link";
+	size?:
+		| "default"
+		| "sm"
+		| "lg"
+		| "icon"
+		| "xs"
+		| "icon-xs"
+		| "icon-sm"
+		| "icon-lg";
+}
 
 const DropzoneRetryFile = forwardRef<HTMLButtonElement, DropzoneRetryFileProps>(
-	({ className, ...props }, ref) => {
+	({ className, children, ...props }, ref) => {
 		const context = useDropzoneFileListContext();
 
 		if (!context) {
@@ -717,7 +752,7 @@ const DropzoneRetryFile = forwardRef<HTMLButtonElement, DropzoneRetryFileProps>(
 					className,
 				)}
 			>
-				{props.children}
+				{children}
 				<span className="sr-only">Retry</span>
 			</Button>
 		);
@@ -804,7 +839,6 @@ const InfiniteProgress = forwardRef<HTMLDivElement, InfiniteProgressProps>(
 				)}
 			>
 				<div
-					//   TODO: add proper done transition
 					className={cn(
 						"h-full w-full rounded-full bg-primary",
 						done ? "translate-x-0" : "animate-infinite-progress",
