@@ -1,14 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
-import {
-	AlertCircle,
-	CheckCircle,
-	Clock,
-	Eye,
-	MoreVertical,
-	Package,
-	X,
-	XCircle,
-} from "lucide-react";
+import { Eye, MoreVertical, Package, X } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,19 +15,8 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { RequestStatus } from "@/generated/prisma/enums";
-import type { Request } from "./types";
-
-const statusConfig: Record<
-	RequestStatus,
-	{ label: string; color: string; icon: React.ElementType }
-> = {
-	PENDING: { label: "Pending", color: "bg-yellow-500", icon: Clock },
-	APPROVED: { label: "Approved", color: "bg-green-500", icon: CheckCircle },
-	REJECTED: { label: "Rejected", color: "bg-red-500", icon: XCircle },
-	COMPLETED: { label: "Completed", color: "bg-blue-500", icon: Package },
-	CANCELLED: { label: "Cancelled", color: "bg-gray-500", icon: AlertCircle },
-};
+import { REQUEST_STATUS_BADGE_CONFIG } from "@/features/requests/schemas/RequestOptions";
+import type { Request } from "@/generated/prisma/client";
 
 interface RequestCardProps {
 	request: Request;
@@ -45,7 +25,7 @@ interface RequestCardProps {
 }
 
 export function RequestCard({ request, onCancel, onView }: RequestCardProps) {
-	const status = statusConfig[request.status];
+	const status = REQUEST_STATUS_BADGE_CONFIG[request.status];
 	const StatusIcon = status.icon;
 
 	return (

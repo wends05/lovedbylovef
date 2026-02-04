@@ -17,15 +17,15 @@ import {
 	DropzoneTrigger,
 } from "@/components/ui/dropzone";
 import { ImageZoom } from "@/components/ui/image-zoom";
-import { useAppForm } from "@/integrations/tanstack-form/formHooks";
-import { useSingleImageUpload } from "@/integrations/uploadthing/use-single-image-upload";
-import { tryCatch } from "@/lib/try-catch";
+import { requestsMutationOptions } from "@/features/requests/options";
 import {
 	type RequestFormInput,
 	RequestFormSchema,
 	RequestFormSubmission,
-} from "../schemas/RequestForm";
-import { requestsMutationOptions } from "../options";
+} from "@/features/requests/schemas/RequestForm";
+import { useAppForm } from "@/integrations/tanstack-form/formHooks";
+import { useSingleImageUpload } from "@/integrations/uploadthing/use-single-image-upload";
+import { tryCatch } from "@/lib/try-catch";
 
 const defaultValues: RequestFormInput = {
 	title: "",
@@ -33,13 +33,11 @@ const defaultValues: RequestFormInput = {
 	file: undefined,
 };
 
-export default function RequestForm() {
+export default function CreateRequestForm() {
 	const submitRequestMutation = useMutation(
 		requestsMutationOptions.submitRequest,
 	);
-	const deleteImageMutation = useMutation(
-		requestsMutationOptions.deleteImage,
-	);
+	const deleteImageMutation = useMutation(requestsMutationOptions.deleteImage);
 	const form = useAppForm({
 		defaultValues,
 		validationLogic: revalidateLogic(),

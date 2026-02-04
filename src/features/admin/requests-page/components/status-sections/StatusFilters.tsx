@@ -11,6 +11,10 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import type { RequestStatus } from "@/generated/prisma/enums";
+import {
+	ADMIN_REQUEST_ORDER_OPTIONS,
+	ADMIN_REQUEST_SORT_OPTIONS,
+} from "@/features/requests/schemas/RequestOptions";
 
 interface FilterState {
 	status?: string | RequestStatus;
@@ -28,16 +32,6 @@ interface StatusFiltersProps {
 	) => void;
 	onReset: () => void;
 }
-
-const SORT_OPTIONS = [
-	{ value: "createdAt", label: "Date Created" },
-	{ value: "updatedAt", label: "Date Updated" },
-] as const;
-
-const ORDER_OPTIONS = [
-	{ value: "desc", label: "Newest First" },
-	{ value: "asc", label: "Oldest First" },
-] as const;
 
 export function StatusFilters({
 	filters,
@@ -86,7 +80,7 @@ export function StatusFilters({
 					<SelectValue placeholder="Sort by..." />
 				</SelectTrigger>
 				<SelectContent>
-					{SORT_OPTIONS.map((option) => (
+					{ADMIN_REQUEST_SORT_OPTIONS.map((option) => (
 						<SelectItem key={option.value} value={option.value}>
 							{option.label}
 						</SelectItem>
@@ -105,7 +99,7 @@ export function StatusFilters({
 					<SelectValue placeholder="Order..." />
 				</SelectTrigger>
 				<SelectContent>
-					{ORDER_OPTIONS.map((option) => (
+					{ADMIN_REQUEST_ORDER_OPTIONS.map((option) => (
 						<SelectItem key={option.value} value={option.value}>
 							{option.label}
 						</SelectItem>

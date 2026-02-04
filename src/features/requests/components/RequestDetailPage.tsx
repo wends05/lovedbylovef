@@ -1,16 +1,7 @@
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { format, formatDistanceToNow } from "date-fns";
-import {
-	AlertCircle,
-	ArrowLeft,
-	CheckCircle,
-	Clock,
-	Loader2,
-	Package,
-	X,
-	XCircle,
-} from "lucide-react";
+import { ArrowLeft, Loader2, Package, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -32,57 +23,9 @@ import {
 } from "@/components/ui/dialog";
 import { ImageZoom } from "@/components/ui/image-zoom";
 import { Separator } from "@/components/ui/separator";
-import type { RequestStatus } from "@/generated/prisma/enums";
 import { tryCatch } from "@/lib/try-catch";
 import { requestsMutationOptions, requestsQueryOptions } from "../options";
-
-const statusConfig: Record<
-	RequestStatus,
-	{
-		label: string;
-		color: string;
-		bgColor: string;
-		icon: React.ElementType;
-		description: string;
-	}
-> = {
-	PENDING: {
-		label: "Pending",
-		color: "text-yellow-600",
-		bgColor: "bg-yellow-50",
-		icon: Clock,
-		description: "Your request is waiting for admin review",
-	},
-	APPROVED: {
-		label: "Approved",
-		color: "text-green-600",
-		bgColor: "bg-green-50",
-		icon: CheckCircle,
-		description:
-			"Your request has been approved! You can proceed with your order",
-	},
-	REJECTED: {
-		label: "Rejected",
-		color: "text-red-600",
-		bgColor: "bg-red-50",
-		icon: XCircle,
-		description: "Unfortunately, your request has been rejected",
-	},
-	COMPLETED: {
-		label: "Completed",
-		color: "text-blue-600",
-		bgColor: "bg-blue-50",
-		icon: Package,
-		description: "Your crochet order has been completed",
-	},
-	CANCELLED: {
-		label: "Cancelled",
-		color: "text-gray-600",
-		bgColor: "bg-gray-50",
-		icon: AlertCircle,
-		description: "You have cancelled this request",
-	},
-};
+import { REQUEST_STATUS_DETAIL_CONFIG } from "../schemas/RequestOptions";
 
 export default function RequestDetailPage() {
 	const { id } = useParams({ from: "/_protected/request/$id" });
@@ -97,7 +40,7 @@ export default function RequestDetailPage() {
 		requestsMutationOptions.cancelRequest,
 	);
 
-	const status = statusConfig[request.status];
+	const status = REQUEST_STATUS_DETAIL_CONFIG[request.status];
 	const StatusIcon = status.icon;
 
 	const handleCancel = async () => {

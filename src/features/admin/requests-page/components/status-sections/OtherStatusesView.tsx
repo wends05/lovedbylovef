@@ -10,6 +10,10 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RequestStatus } from "@/generated/prisma/enums";
+import {
+	ADMIN_REQUEST_DEFAULT_FILTERS,
+	ADMIN_REQUEST_STATUS_TABS,
+} from "@/features/requests/schemas/RequestOptions";
 import type { RequestSearchParams } from "../../schemas/RequestSearchParams";
 import { StatusFilters } from "./StatusFilters";
 import { StatusSection } from "./StatusSection";
@@ -20,12 +24,6 @@ const routeApi = getRouteApi("/admin/requests");
 // Type for non-pending statuses (used in this component)
 type NonPendingStatus = Exclude<RequestStatus, "PENDING">;
 
-const OTHER_STATUSES = [
-	{ value: RequestStatus.APPROVED, label: "Approved" },
-	{ value: RequestStatus.REJECTED, label: "Rejected" },
-	{ value: RequestStatus.COMPLETED, label: "Completed" },
-	{ value: RequestStatus.CANCELLED, label: "Cancelled" },
-] as const;
 
 interface OtherStatusesViewProps {
 	initialStatus: NonPendingStatus;
@@ -33,12 +31,6 @@ interface OtherStatusesViewProps {
 	initialSortBy?: "createdAt" | "updatedAt";
 	initialSortOrder?: "asc" | "desc";
 }
-
-const DEFAULT_FILTERS = {
-	pageSize: 20,
-	sortBy: "createdAt" as const,
-	sortOrder: "desc" as const,
-};
 
 export function OtherStatusesView({
 	initialStatus,
@@ -61,9 +53,9 @@ export function OtherStatusesView({
 		search?: string;
 	}>({
 		status: initialStatus,
-		pageSize: DEFAULT_FILTERS.pageSize,
-		sortBy: initialSortBy ?? DEFAULT_FILTERS.sortBy,
-		sortOrder: initialSortOrder ?? DEFAULT_FILTERS.sortOrder,
+		pageSize: ADMIN_REQUEST_DEFAULT_FILTERS.pageSize,
+		sortBy: initialSortBy ?? ADMIN_REQUEST_DEFAULT_FILTERS.sortBy,
+		sortOrder: initialSortOrder ?? ADMIN_REQUEST_DEFAULT_FILTERS.sortOrder,
 		search: initialSearch,
 	});
 
@@ -123,9 +115,9 @@ export function OtherStatusesView({
 	const handleReset = () => {
 		const resetFilters = {
 			status: activeTab,
-			pageSize: DEFAULT_FILTERS.pageSize,
-			sortBy: DEFAULT_FILTERS.sortBy,
-			sortOrder: DEFAULT_FILTERS.sortOrder,
+			pageSize: ADMIN_REQUEST_DEFAULT_FILTERS.pageSize,
+			sortBy: ADMIN_REQUEST_DEFAULT_FILTERS.sortBy,
+			sortOrder: ADMIN_REQUEST_DEFAULT_FILTERS.sortOrder,
 			search: undefined,
 		};
 		setFilters(resetFilters);
@@ -147,14 +139,14 @@ export function OtherStatusesView({
 			<div className="hidden md:block">
 				<Tabs value={activeTab} onValueChange={handleTabChange}>
 					<TabsList className="grid w-full grid-cols-4">
-						{OTHER_STATUSES.map((status) => (
+						{ADMIN_REQUEST_STATUS_TABS.map((status) => (
 							<TabsTrigger key={status.value} value={status.value}>
 								{status.label}
 							</TabsTrigger>
 						))}
 					</TabsList>
 
-					{OTHER_STATUSES.map((status) => (
+					{ADMIN_REQUEST_STATUS_TABS.map((status) => (
 						<TabsContent key={status.value} value={status.value}>
 							<StatusSection
 								status={status.value}
@@ -177,7 +169,7 @@ export function OtherStatusesView({
 						<SelectValue placeholder="Select status..." />
 					</SelectTrigger>
 					<SelectContent>
-						{OTHER_STATUSES.map((status) => (
+						{ADMIN_REQUEST_STATUS_TABS.map((status) => (
 							<SelectItem key={status.value} value={status.value}>
 								{status.label}
 							</SelectItem>

@@ -1,11 +1,8 @@
 import z from "zod";
 import { RequestStatus } from "@/generated/prisma/enums";
+import { PaginationSchema } from "@/lib/schemas/PaginationSchema";
 
-export const GetRequestsQuerySchema = z.object({
-	// Pagination
-	cursor: z.string().optional(),
-	pageSize: z.number().min(1).max(100).default(20),
-
+export const GetRequestsQuerySchema = PaginationSchema.extend({
 	// Filtering
 	status: z
 		.enum([
