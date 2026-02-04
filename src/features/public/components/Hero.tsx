@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { ArrowRight, Heart, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -85,10 +86,13 @@ export default function Hero() {
 						style={{
 							backgroundColor: "var(--primary)",
 						}}
-					>
-						Explore Designs
-						<ArrowRight className="w-4 h-4 ml-2" />
-					</Button>
+						render={
+							<Link to="/gallery">
+								Explore Designs
+								<ArrowRight className="w-4 h-4 ml-2" />
+							</Link>
+						}
+					/>
 
 					<Button
 						variant="outline"
@@ -99,9 +103,8 @@ export default function Hero() {
 							color: "var(--primary)",
 							backgroundColor: "transparent",
 						}}
-					>
-						Learn More
-					</Button>
+						render={<Link to="/about">Learn More</Link>}
+					/>
 				</div>
 			</div>
 
