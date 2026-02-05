@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Accept } from "react-dropzone";
 import { useDropzone } from "@/components/ui/dropzone";
-import { useUploadThing } from "./react-helpers";
+import { uploadImage } from "./storage";
 
 type UploadedImage = {
-	ufsUrl: string;
-	key: string;
+	publicUrl: string;
+	path: string;
 };
 
 type UseSingleImageUploadOptions = {
@@ -18,6 +18,8 @@ type UseSingleImageUploadOptions = {
 	onUploadBegin?: () => void;
 	onUploadComplete?: (files: UploadedImage[]) => void;
 	onUploadError?: (error: Error) => void;
+	pathPrefix?: string;
+	bucket?: string;
 };
 
 type UseSingleImageUploadReturn = {
@@ -43,22 +45,13 @@ export function useSingleImageUpload(
 		onUploadBegin,
 		onUploadComplete,
 		onUploadError,
+		pathPrefix,
+		bucket,
 	} = options;
 
 	const [file, setFile] = useState<File | undefined>(undefined);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-	const uploadThing = useUploadThing("imageUploader", {
-		onClientUploadComplete: (res) => {
-			onUploadComplete?.(res as UploadedImage[]);
-		},
-		onUploadError: (error) => {
-			onUploadError?.(error);
-		},
-		onUploadBegin: () => {
-			onUploadBegin?.();
-		},
-	});
+	const [isUploading, setIsUploading] = useState(false);
 
 	const setFileAndPreview = useCallback(
 		(nextFile?: File) => {
@@ -94,15 +87,34 @@ export function useSingleImageUpload(
 	});
 
 	const uploadFile = useCallback(async () => {
-		if (!file || uploadThing.isUploading) {
+		if (!file || isUploading) {
 			return null;
 		}
-		const files = await uploadThing.startUpload([file]);
-		if (!files || files.length === 0) {
+		try {
+			setIsUploading(true);
+			onUploadBegin?.();
+			const uploaded = await uploadImage({
+				file,
+				pathPrefix,
+				bucket,
+			});
+			onUploadComplete?.([uploaded]);
+			return uploaded;
+		} catch (error) {
+			onUploadError?.(error as Error);
 			return null;
+		} finally {
+			setIsUploading(false);
 		}
-		return files[0] as UploadedImage;
-	}, [file, uploadThing.isUploading, uploadThing.startUpload]);
+	}, [
+		file,
+		isUploading,
+		onUploadBegin,
+		onUploadComplete,
+		onUploadError,
+		pathPrefix,
+		bucket,
+	]);
 
 	const clear = useCallback(() => {
 		dropzone.fileStatuses.forEach((status) => {
@@ -128,7 +140,7 @@ export function useSingleImageUpload(
 		previewUrl,
 		displayUrl,
 		file,
-		isUploading: uploadThing.isUploading,
+		isUploading,
 		uploadFile,
 		clear,
 	};

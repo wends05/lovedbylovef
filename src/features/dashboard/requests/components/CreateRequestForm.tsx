@@ -24,7 +24,7 @@ import {
 	RequestFormSubmission,
 } from "@/features/requests/schemas/RequestForm";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
-import { useSingleImageUpload } from "@/integrations/uploadthing/use-single-image-upload";
+import { useSingleImageUpload } from "@/integrations/supabase/use-single-image-upload";
 import { tryCatch } from "@/lib/try-catch";
 
 const defaultValues: RequestFormInput = {
@@ -55,8 +55,8 @@ export default function CreateRequestForm() {
 
 				const uploadedFile = await imageUpload.uploadFile();
 				if (uploadedFile) {
-					url = uploadedFile.ufsUrl;
-					key = `${uploadedFile.key}`;
+					url = uploadedFile.publicUrl;
+					key = `${uploadedFile.path}`;
 				}
 			}
 			const finalData = RequestFormSubmission.parse({
@@ -95,6 +95,7 @@ export default function CreateRequestForm() {
 	});
 
 	const imageUpload = useSingleImageUpload({
+		pathPrefix: "requests",
 		onFileChange: (file) => {
 			form.setFieldValue("file", file);
 		},

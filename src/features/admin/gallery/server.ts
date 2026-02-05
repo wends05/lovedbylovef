@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import z from "zod";
 import { adminMiddleware } from "@/features/auth/middleware";
-import { utapi } from "@/integrations/uploadthing/api";
+import { deleteImageFromStorage } from "@/integrations/supabase/storage-server";
 import { prisma } from "@/lib/prisma-client";
 import {
 	CreateCrochetSchema,
@@ -72,8 +72,8 @@ export const deleteCrochetImage = createServerFn({ method: "POST" })
 	.middleware([adminMiddleware])
 	.inputValidator(z.string())
 	.handler(async ({ data }) => {
-		const res = await utapi.deleteFiles(data);
-		return { success: res.success, deletedCount: res.deletedCount };
+		await deleteImageFromStorage(data);
+		return { success: true };
 	});
 
 // Delete crochet (hard delete)
@@ -86,7 +86,7 @@ export const deleteCrochet = createServerFn({ method: "POST" })
 			where: { id: data.id },
 		});
 		if (crochet?.imageKey) {
-			await utapi.deleteFiles([crochet.imageKey]);
+			await deleteImageFromStorage(crochet.imageKey);
 		}
 		await prisma.crochet.delete({
 			where: { id: data.id },

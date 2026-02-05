@@ -1,12 +1,13 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Heart, Package } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
+import { useSupabaseSession } from "@/integrations/supabase/use-session";
 import { dashboardQueryOptions } from "../../options";
 
 export default function HomePage() {
 	const { data } = useSuspenseQuery(dashboardQueryOptions.getDashboardData);
-	const { data: session } = authClient.useSession();
-	const userName = session?.user?.name || "there";
+	const { session } = useSupabaseSession();
+	const userName =
+		(session?.user.user_metadata as { name?: string } | null)?.name || "there";
 
 	return (
 		<div className="w-full">

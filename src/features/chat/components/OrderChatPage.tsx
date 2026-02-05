@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,8 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
+import { authQueryOptions } from "@/features/auth/options";
+import { useSupabaseSession } from "@/integrations/supabase/use-session";
 import { chatQueryOptions } from "../options";
 
 const PLACEHOLDER_MESSAGES = [
@@ -35,28 +36,48 @@ const PLACEHOLDER_MESSAGES = [
 ];
 
 type OrderChatPageProps = {
-	orderId: string;
+	orderId?: string;
 };
 
 export default function OrderChatPage({ orderId }: OrderChatPageProps) {
 	const router = useRouter();
+	const { session } = useSupabaseSession();
+	const { data: roleData } = useQuery(authQueryOptions.getCurrentUserRole);
 
-	const { data: userData } = authClient.useSession();
-	const { data: chatData } = useSuspenseQuery(
-		chatQueryOptions.getChatData(orderId),
-	);
+	const { data: chatData } = useQuery({
+		...chatQueryOptions.getChatData(orderId ?? "missing"),
+		enabled: Boolean(orderId),
+	});
+	const orderStatus = chatData?.order?.status;
 
 	const handleBack = () => {
-		if (userData?.user.role === "ADMIN") {
+		if (roleData?.role === "ADMIN") {
 			router.navigate({
 				to: "/admin/orders",
 			});
-		} else {
+		} else if (session) {
 			router.navigate({
 				to: "/requests",
 			});
+		} else {
+			router.navigate({ to: "/" });
 		}
 	};
+	if (!orderId) {
+		return (
+			<Card>
+				<CardHeader>
+					<CardTitle>Chat</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<p className="text-sm text-muted-foreground">
+						Select an order to view its chat thread.
+					</p>
+				</CardContent>
+			</Card>
+		);
+	}
+
 	return (
 		<div className="space-y-6 h-full flex-1">
 			<Card className="h-full">
@@ -67,6 +88,11 @@ export default function OrderChatPage({ orderId }: OrderChatPageProps) {
 					<CardTitle>Order Chat · #{orderId}</CardTitle>
 				</CardHeader>
 				<CardContent className="space-y-4 h-full flex flex-col">
+					{orderStatus && (
+						<p className="text-xs text-muted-foreground">
+							Status: <span className="font-medium">{orderStatus}</span>
+						</p>
+					)}
 					<div className="space-y-3 h-full">
 						{PLACEHOLDER_MESSAGES.map((message) => (
 							<div key={message.id} className="rounded-xl border p-3">

@@ -25,7 +25,7 @@ import { Switch } from "@/components/ui/switch";
 import { CATEGORY_OPTIONS } from "@/features/admin/gallery/schemas/GalleryOptions";
 import { Category } from "@/generated/prisma/enums";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
-import { useSingleImageUpload } from "@/integrations/uploadthing/use-single-image-upload";
+import { useSingleImageUpload } from "@/integrations/supabase/use-single-image-upload";
 import { hashFile } from "@/lib/hash-file";
 import { tryCatch } from "@/lib/try-catch";
 import { adminDashboardQueryOptions } from "../../../options";
@@ -72,8 +72,8 @@ export default function CreateCrochetForm() {
 				description: value.description,
 				category: value.category,
 				price: value.price,
-				imageURL: uploadedFile.ufsUrl,
-				imageKey: uploadedFile.key,
+				imageURL: uploadedFile.publicUrl,
+				imageKey: uploadedFile.path,
 				imageHash: await hashFile(value.file),
 				isVisible: value.isVisible,
 			};
@@ -102,6 +102,7 @@ export default function CreateCrochetForm() {
 	});
 
 	const imageUpload = useSingleImageUpload({
+		pathPrefix: "crochets",
 		onFileChange: (file) => {
 			form.setFieldValue("file", (file ?? undefined) as unknown as File);
 		},

@@ -10,7 +10,6 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
-import { authClient } from "@/lib/auth-client";
 import { tryCatch } from "@/lib/try-catch";
 import { authOptions } from "../options";
 import { SignUpSchema } from "../schemas/standard";
@@ -26,13 +25,12 @@ const useSignUp = () => {
 		},
 		validators: { onSubmit: SignUpSchema },
 		onSubmit: async ({ value }) => {
-			const { success, error } = await tryCatch(() =>
+			const { success, error, data } = await tryCatch(() =>
 				signUpMutation.mutateAsync({ data: value }),
 			);
 			if (success) {
 				toast.success("Account created successfully");
-				const { data: session } = await authClient.getSession();
-				const role = (session?.user as { role?: string })?.role;
+				const role = (data as { role?: string } | undefined)?.role;
 				if (role === "ADMIN") {
 					navigate({ to: "/admin/dashboard" });
 				} else {

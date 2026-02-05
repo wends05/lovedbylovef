@@ -27,7 +27,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { CATEGORY_OPTIONS } from "@/features/admin/gallery/schemas/GalleryOptions";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
-import { useSingleImageUpload } from "@/integrations/uploadthing/use-single-image-upload";
+import { useSingleImageUpload } from "@/integrations/supabase/use-single-image-upload";
 import { hashFile } from "@/lib/hash-file";
 import { tryCatch } from "@/lib/try-catch";
 import { Route } from "@/routes/admin/gallery/$id.edit";
@@ -90,8 +90,8 @@ export default function EditCrochetForm() {
 						toast.error("Image upload failed. Please try again.");
 						return;
 					}
-					imageUrl = uploadedFile.ufsUrl;
-					imageKey = uploadedFile.key;
+					imageUrl = uploadedFile.publicUrl;
+					imageKey = uploadedFile.path;
 					imageHash = nextHash;
 					didUploadNewImage = true;
 				}
@@ -144,6 +144,7 @@ export default function EditCrochetForm() {
 	});
 
 	const imageUpload = useSingleImageUpload({
+		pathPrefix: "crochets",
 		initialUrl: initialImageUrl,
 		onFileChange: (file) => {
 			form.setFieldValue("file", file);

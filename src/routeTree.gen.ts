@@ -31,8 +31,6 @@ import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthSigninRouteImport } from './routes/_auth/signin'
 import { Route as AdminGalleryRouteRouteImport } from './routes/admin/gallery/route'
 import { Route as AdminGalleryIndexRouteImport } from './routes/admin/gallery/index'
-import { Route as ApiUploadthingSplatRouteImport } from './routes/api/uploadthing/$'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AdminGalleryCreateRouteImport } from './routes/admin/gallery/create'
 import { Route as ProtectedRequestIdRouteImport } from './routes/_protected/request.$id'
 import { Route as AdminGalleryIdEditRouteImport } from './routes/admin/gallery/$id.edit'
@@ -144,16 +142,6 @@ const AdminGalleryIndexRoute = AdminGalleryIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminGalleryRouteRoute,
 } as any)
-const ApiUploadthingSplatRoute = ApiUploadthingSplatRouteImport.update({
-  id: '/api/uploadthing/$',
-  path: '/api/uploadthing/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminGalleryCreateRoute = AdminGalleryCreateRouteImport.update({
   id: '/create',
   path: '/create',
@@ -191,8 +179,6 @@ export interface FileRoutesByFullPath {
   '/chat/$orderId': typeof ChatOrderIdRoute
   '/request/$id': typeof ProtectedRequestIdRoute
   '/admin/gallery/create': typeof AdminGalleryCreateRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
   '/admin/gallery/': typeof AdminGalleryIndexRoute
   '/admin/gallery/$id/edit': typeof AdminGalleryIdEditRoute
 }
@@ -216,8 +202,6 @@ export interface FileRoutesByTo {
   '/chat/$orderId': typeof ChatOrderIdRoute
   '/request/$id': typeof ProtectedRequestIdRoute
   '/admin/gallery/create': typeof AdminGalleryCreateRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
   '/admin/gallery': typeof AdminGalleryIndexRoute
   '/admin/gallery/$id/edit': typeof AdminGalleryIdEditRoute
 }
@@ -246,8 +230,6 @@ export interface FileRoutesById {
   '/_public/': typeof PublicIndexRoute
   '/_protected/request/$id': typeof ProtectedRequestIdRoute
   '/admin/gallery/create': typeof AdminGalleryCreateRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
   '/admin/gallery/': typeof AdminGalleryIndexRoute
   '/admin/gallery/$id/edit': typeof AdminGalleryIdEditRoute
 }
@@ -274,8 +256,6 @@ export interface FileRouteTypes {
     | '/chat/$orderId'
     | '/request/$id'
     | '/admin/gallery/create'
-    | '/api/auth/$'
-    | '/api/uploadthing/$'
     | '/admin/gallery/'
     | '/admin/gallery/$id/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -299,8 +279,6 @@ export interface FileRouteTypes {
     | '/chat/$orderId'
     | '/request/$id'
     | '/admin/gallery/create'
-    | '/api/auth/$'
-    | '/api/uploadthing/$'
     | '/admin/gallery'
     | '/admin/gallery/$id/edit'
   id:
@@ -328,8 +306,6 @@ export interface FileRouteTypes {
     | '/_public/'
     | '/_protected/request/$id'
     | '/admin/gallery/create'
-    | '/api/auth/$'
-    | '/api/uploadthing/$'
     | '/admin/gallery/'
     | '/admin/gallery/$id/edit'
   fileRoutesById: FileRoutesById
@@ -341,8 +317,6 @@ export interface RootRouteChildren {
   ChatRouteRoute: typeof ChatRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
   AuthRoute: typeof AuthRouteWithChildren
-  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  ApiUploadthingSplatRoute: typeof ApiUploadthingSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -501,20 +475,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGalleryIndexRouteImport
       parentRoute: typeof AdminGalleryRouteRoute
     }
-    '/api/uploadthing/$': {
-      id: '/api/uploadthing/$'
-      path: '/api/uploadthing/$'
-      fullPath: '/api/uploadthing/$'
-      preLoaderRoute: typeof ApiUploadthingSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/gallery/create': {
       id: '/admin/gallery/create'
       path: '/create'
@@ -641,8 +601,6 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRouteRoute: ChatRouteRouteWithChildren,
   SplatRoute: SplatRoute,
   AuthRoute: AuthRouteWithChildren,
-  ApiAuthSplatRoute: ApiAuthSplatRoute,
-  ApiUploadthingSplatRoute: ApiUploadthingSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

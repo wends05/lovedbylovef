@@ -1,13 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
 import z from "zod";
 import { RequestStatus } from "@/generated/prisma/enums";
 import type {
 	RequestUpdateInput,
 	RequestWhereInput,
 } from "@/generated/prisma/models";
-import { utapi } from "@/integrations/uploadthing/api";
-import { auth } from "@/lib/auth";
+import { getSupabaseServerClient } from "@/integrations/supabase/server";
+import { deleteImageFromStorage } from "@/integrations/supabase/storage-server";
 import { prisma } from "@/lib/prisma-client";
 import { tryCatch } from "@/lib/try-catch";
 import { adminMiddleware } from "../auth/middleware";
@@ -25,12 +24,10 @@ interface GetUserRequestsInput {
 export const getUserRequests = createServerFn()
 	.inputValidator((input: GetUserRequestsInput) => input)
 	.handler(async ({ data }) => {
-		const headers = await getRequestHeaders();
-		const session = await auth.api.getSession({
-			headers,
-		});
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
 
-		if (!session?.user?.id) {
+		if (!authData.user?.id) {
 			throw new Error("Unauthorized");
 		}
 
@@ -38,7 +35,7 @@ export const getUserRequests = createServerFn()
 
 		const requests = await prisma.request.findMany({
 			where: {
-				userId: session.user.id,
+				userId: authData.user.id,
 				...(data.status && data.status !== "ALL"
 					? { status: data.status }
 					: {}),
@@ -67,19 +64,17 @@ export const getUserRequests = createServerFn()
 export const getRequestById = createServerFn()
 	.inputValidator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
-		const headers = await getRequestHeaders();
-		const session = await auth.api.getSession({
-			headers,
-		});
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
 
-		if (!session?.user?.id) {
+		if (!authData.user?.id) {
 			throw new Error("Unauthorized");
 		}
 
 		const request = await prisma.request.findFirst({
 			where: {
 				id: data.id,
-				userId: session.user.id,
+				userId: authData.user.id,
 			},
 		});
 
@@ -93,19 +88,17 @@ export const getRequestById = createServerFn()
 export const cancelRequest = createServerFn({ method: "POST" })
 	.inputValidator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
-		const headers = await getRequestHeaders();
-		const session = await auth.api.getSession({
-			headers,
-		});
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
 
-		if (!session?.user?.id) {
+		if (!authData.user?.id) {
 			throw new Error("Unauthorized");
 		}
 
 		const request = await prisma.request.findFirst({
 			where: {
 				id: data.id,
-				userId: session.user.id,
+				userId: authData.user.id,
 				status: "PENDING",
 			},
 		});
@@ -129,13 +122,11 @@ export const submitRequest = createServerFn({ method: "POST" })
 	.handler(async ({ data }) => {
 		console.log("Submitting request with data:", data);
 
-		const headers = await getRequestHeaders();
-		const session = await auth.api.getSession({
-			headers,
-		});
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
 
-		console.log("Authenticated user:", session);
-		if (!session) {
+		console.log("Authenticated user:", authData.user);
+		if (!authData.user) {
 			throw new Error("Unauthorized");
 		}
 
@@ -144,7 +135,7 @@ export const submitRequest = createServerFn({ method: "POST" })
 			prisma.request.create({
 				data: {
 					...data,
-					userId: session.user.id,
+					userId: authData.user.id,
 				},
 			}),
 		);
@@ -161,9 +152,8 @@ export const deleteImage = createServerFn({ method: "POST" })
 	.inputValidator(z.string())
 	.handler(async ({ data }) => {
 		console.log("image to be deleted:", data);
-		const res = await utapi.deleteFiles(data);
-
-		return { success: res.success, deletedCount: res.deletedCount };
+		await deleteImageFromStorage(data);
+		return { success: true };
 	});
 
 export const getAllRequests = createServerFn()
@@ -235,15 +225,6 @@ export const updateRequestStatus = createServerFn({ method: "POST" })
 	.middleware([adminMiddleware])
 	.inputValidator(UpdateRequestStatusSchema)
 	.handler(async ({ data }) => {
-		const headers = await getRequestHeaders();
-		const session = await auth.api.getSession({
-			headers,
-		});
-
-		if (!session) {
-			throw new Error("Unauthorized");
-		}
-
 		// check if the request exists and if the request is to be approved.
 
 		if (data.status === RequestStatus.APPROVED) {

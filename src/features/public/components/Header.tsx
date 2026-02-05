@@ -4,10 +4,10 @@ import { Link } from "@tanstack/react-router";
 import { Heart, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
+import { useSupabaseSession } from "@/integrations/supabase/use-session";
 
 export default function Header() {
-	const { data: session } = authClient.useSession();
+	const { session } = useSupabaseSession();
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 	const navLinks = [

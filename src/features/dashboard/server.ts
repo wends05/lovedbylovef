@@ -1,19 +1,16 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
-import { auth } from "@/lib/auth";
+import { getSupabaseServerClient } from "@/integrations/supabase/server";
 import { prisma } from "@/lib/prisma-client";
 
 export const getDashboardData = createServerFn().handler(async () => {
-	const headers = await getRequestHeaders();
-	const session = await auth.api.getSession({
-		headers,
-	});
+	const supabase = getSupabaseServerClient();
+	const { data: authData } = await supabase.auth.getUser();
 	const dashboardData = await prisma.$transaction([
 		prisma.order.count({
-			where: { requestorId: session?.user?.id },
+			where: { requestorId: authData.user?.id },
 		}),
 		prisma.request.count({
-			where: { userId: session?.user?.id },
+			where: { userId: authData.user?.id },
 		}),
 	]);
 

@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { nonAdminMiddleware } from "@/features/auth/middleware";
 import { UserLayout } from "@/features/dashboard/UserLayout";
-import { authClient } from "@/lib/auth-client";
+import { getCurrentUserRole } from "@/features/auth/server";
 
 export const Route = createFileRoute("/_protected")({
 	server: {
@@ -9,8 +9,8 @@ export const Route = createFileRoute("/_protected")({
 	},
 	// extra validation
 	loader: async () => {
-		const session = await authClient.getSession();
-		if (session.data?.user.role === "ADMIN") {
+		const roleData = await getCurrentUserRole();
+		if (roleData.role === "ADMIN") {
 			throw redirect({ to: "/admin/dashboard" });
 		}
 	},
