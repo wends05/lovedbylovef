@@ -226,7 +226,7 @@ export type OrderWhereInput = {
   OR?: Prisma.OrderWhereInput[]
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   id?: Prisma.StringFilter<"Order"> | string
-  requestorId?: Prisma.StringFilter<"Order"> | string
+  requestorId?: Prisma.UuidFilter<"Order"> | string
   requestId?: Prisma.StringFilter<"Order"> | string
   totalPrice?: Prisma.FloatNullableFilter<"Order"> | number | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
@@ -256,7 +256,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   OR?: Prisma.OrderWhereInput[]
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
-  requestorId?: Prisma.StringFilter<"Order"> | string
+  requestorId?: Prisma.UuidFilter<"Order"> | string
   totalPrice?: Prisma.FloatNullableFilter<"Order"> | number | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -286,7 +286,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   OR?: Prisma.OrderScalarWhereWithAggregatesInput[]
   NOT?: Prisma.OrderScalarWhereWithAggregatesInput | Prisma.OrderScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Order"> | string
-  requestorId?: Prisma.StringWithAggregatesFilter<"Order"> | string
+  requestorId?: Prisma.UuidWithAggregatesFilter<"Order"> | string
   requestId?: Prisma.StringWithAggregatesFilter<"Order"> | string
   totalPrice?: Prisma.FloatNullableWithAggregatesFilter<"Order"> | number | null
   status?: Prisma.EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
@@ -623,7 +623,7 @@ export type OrderScalarWhereInput = {
   OR?: Prisma.OrderScalarWhereInput[]
   NOT?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
   id?: Prisma.StringFilter<"Order"> | string
-  requestorId?: Prisma.StringFilter<"Order"> | string
+  requestorId?: Prisma.UuidFilter<"Order"> | string
   requestId?: Prisma.StringFilter<"Order"> | string
   totalPrice?: Prisma.FloatNullableFilter<"Order"> | number | null
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus

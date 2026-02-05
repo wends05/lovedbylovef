@@ -23,7 +23,7 @@ model Crochet {
 
 model Order {
   id          String      @id @default(cuid())
-  requestorId String
+  requestorId String      @db.Uuid
   requestId   String      @unique
   totalPrice  Float?
   status      OrderStatus
@@ -51,10 +51,9 @@ enum Category {
 }
 
 // Request model for custom order requests with approval flow
-
 model Request {
   id          String        @id @default(cuid())
-  userId      String
+  userId      String        @db.Uuid
   user        User          @relation(name: "RequestUser", fields: [userId], references: [id], onDelete: Cascade)
   title       String
   description String
@@ -73,6 +72,7 @@ model Request {
   @@index([status])
 }
 
+// Enum to track the status of custom order requests through the admin review process
 enum RequestStatus {
   PENDING // Waiting for admin review
   APPROVED // Admin approved, user can proceed
@@ -81,35 +81,28 @@ enum RequestStatus {
   CANCELLED // User cancelled the request
 }
 
+// User model with role-based access control and ban functionality
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  requests      Request[] @relation(name: "RequestUser") // User's custom order requests
+  id        String   @id @db.Uuid
+  name      String
+  email     String
+  image     String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  role       Role      @default(USER)
-  banned     Boolean?  @default(false)
-  banReason  String?
-  banExpires DateTime?
-
+  requests     Request[]     @relation(name: "RequestUser") // User's custom order requests
   orders       Order[]
   orderChats   OrderChat[]
   chatMessages ChatMessage[]
 
   @@unique([email])
-  @@map("user")
 }
 
 model OrderChat {
   id        String   @id @default(cuid())
   orderId   String   @unique
-  userId    String
+  userId    String   @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -121,7 +114,7 @@ model OrderChat {
 model ChatMessage {
   id          String   @id @default(cuid())
   orderChatId String
-  authorId    String
+  authorId    String   @db.Uuid
   content     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -133,54 +126,4 @@ model ChatMessage {
 enum Role {
   USER
   ADMIN
-}
-
-model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  impersonatedBy String?
-
-  @@unique([token])
-  @@index([userId])
-  @@map("session")
-}
-
-model Account {
-  id                    String    @id
-  accountId             String
-  providerId            String
-  userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-
-  @@index([userId])
-  @@map("account")
-}
-
-model Verification {
-  id         String   @id
-  identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@index([identifier])
-  @@map("verification")
 }

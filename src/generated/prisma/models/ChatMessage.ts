@@ -186,7 +186,7 @@ export type ChatMessageWhereInput = {
   NOT?: Prisma.ChatMessageWhereInput | Prisma.ChatMessageWhereInput[]
   id?: Prisma.StringFilter<"ChatMessage"> | string
   orderChatId?: Prisma.StringFilter<"ChatMessage"> | string
-  authorId?: Prisma.StringFilter<"ChatMessage"> | string
+  authorId?: Prisma.UuidFilter<"ChatMessage"> | string
   content?: Prisma.StringFilter<"ChatMessage"> | string
   createdAt?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string
@@ -211,7 +211,7 @@ export type ChatMessageWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ChatMessageWhereInput[]
   NOT?: Prisma.ChatMessageWhereInput | Prisma.ChatMessageWhereInput[]
   orderChatId?: Prisma.StringFilter<"ChatMessage"> | string
-  authorId?: Prisma.StringFilter<"ChatMessage"> | string
+  authorId?: Prisma.UuidFilter<"ChatMessage"> | string
   content?: Prisma.StringFilter<"ChatMessage"> | string
   createdAt?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string
@@ -237,7 +237,7 @@ export type ChatMessageScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ChatMessageScalarWhereWithAggregatesInput | Prisma.ChatMessageScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ChatMessage"> | string
   orderChatId?: Prisma.StringWithAggregatesFilter<"ChatMessage"> | string
-  authorId?: Prisma.StringWithAggregatesFilter<"ChatMessage"> | string
+  authorId?: Prisma.UuidWithAggregatesFilter<"ChatMessage"> | string
   content?: Prisma.StringWithAggregatesFilter<"ChatMessage"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ChatMessage"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ChatMessage"> | Date | string
@@ -473,7 +473,7 @@ export type ChatMessageScalarWhereInput = {
   NOT?: Prisma.ChatMessageScalarWhereInput | Prisma.ChatMessageScalarWhereInput[]
   id?: Prisma.StringFilter<"ChatMessage"> | string
   orderChatId?: Prisma.StringFilter<"ChatMessage"> | string
-  authorId?: Prisma.StringFilter<"ChatMessage"> | string
+  authorId?: Prisma.UuidFilter<"ChatMessage"> | string
   content?: Prisma.StringFilter<"ChatMessage"> | string
   createdAt?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ChatMessage"> | Date | string

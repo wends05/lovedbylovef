@@ -21,7 +21,6 @@ export const getChatData = createServerFn()
 					select: {
 						name: true,
 						email: true,
-						image: true,
 					},
 				},
 			},

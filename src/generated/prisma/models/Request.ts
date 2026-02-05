@@ -220,7 +220,7 @@ export type RequestWhereInput = {
   OR?: Prisma.RequestWhereInput[]
   NOT?: Prisma.RequestWhereInput | Prisma.RequestWhereInput[]
   id?: Prisma.StringFilter<"Request"> | string
-  userId?: Prisma.StringFilter<"Request"> | string
+  userId?: Prisma.UuidFilter<"Request"> | string
   title?: Prisma.StringFilter<"Request"> | string
   description?: Prisma.StringFilter<"Request"> | string
   imageUrl?: Prisma.StringNullableFilter<"Request"> | string | null
@@ -255,7 +255,7 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.RequestWhereInput | Prisma.RequestWhereInput[]
   OR?: Prisma.RequestWhereInput[]
   NOT?: Prisma.RequestWhereInput | Prisma.RequestWhereInput[]
-  userId?: Prisma.StringFilter<"Request"> | string
+  userId?: Prisma.UuidFilter<"Request"> | string
   title?: Prisma.StringFilter<"Request"> | string
   description?: Prisma.StringFilter<"Request"> | string
   imageUrl?: Prisma.StringNullableFilter<"Request"> | string | null
@@ -291,7 +291,7 @@ export type RequestScalarWhereWithAggregatesInput = {
   OR?: Prisma.RequestScalarWhereWithAggregatesInput[]
   NOT?: Prisma.RequestScalarWhereWithAggregatesInput | Prisma.RequestScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Request"> | string
-  userId?: Prisma.StringWithAggregatesFilter<"Request"> | string
+  userId?: Prisma.UuidWithAggregatesFilter<"Request"> | string
   title?: Prisma.StringWithAggregatesFilter<"Request"> | string
   description?: Prisma.StringWithAggregatesFilter<"Request"> | string
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
@@ -656,7 +656,7 @@ export type RequestScalarWhereInput = {
   OR?: Prisma.RequestScalarWhereInput[]
   NOT?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
   id?: Prisma.StringFilter<"Request"> | string
-  userId?: Prisma.StringFilter<"Request"> | string
+  userId?: Prisma.UuidFilter<"Request"> | string
   title?: Prisma.StringFilter<"Request"> | string
   description?: Prisma.StringFilter<"Request"> | string
   imageUrl?: Prisma.StringNullableFilter<"Request"> | string | null

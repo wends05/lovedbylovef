@@ -24,13 +24,13 @@ const useSignIn = () => {
 		},
 		validators: { onSubmit: SignInSchema },
 		onSubmit: async ({ value }) => {
-			const { error, success, data } = await tryCatch(() =>
+			const { error, success, data } = await tryCatch(
 				signInMutation.mutateAsync({ data: value }),
 			);
 
 			if (success) {
 				toast.success("Signed in successfully. Redirecting...");
-				const role = data.role;
+				const role = data?.role;
 				if (role === "ADMIN") {
 					navigate({ to: "/admin/dashboard" });
 				} else {

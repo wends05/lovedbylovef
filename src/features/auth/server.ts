@@ -26,17 +26,22 @@ export const signUpServer = createServerFn({ method: "POST" })
 			throw new Error("Failed to create user session");
 		}
 
+		const image =
+			(authData.user.user_metadata as { avatar_url?: string } | null)
+				?.avatar_url ?? null;
+
 		const dbUser = await prisma.user.upsert({
 			where: { id: userId },
 			create: {
 				id: userId,
 				email: data.email,
 				name: data.name,
-				emailVerified: false,
+				image,
 			},
 			update: {
 				email: data.email,
 				name: data.name,
+				image,
 			},
 		});
 
@@ -64,6 +69,9 @@ export const signInServer = createServerFn({ method: "POST" })
 		const name =
 			(authData.user.user_metadata as { name?: string } | null)?.name ??
 			data.email.split("@")[0];
+		const image =
+			(authData.user.user_metadata as { avatar_url?: string } | null)
+				?.avatar_url ?? null;
 
 		const dbUser = await prisma.user.upsert({
 			where: { id: userId },
@@ -71,12 +79,12 @@ export const signInServer = createServerFn({ method: "POST" })
 				id: userId,
 				email: data.email,
 				name,
-				emailVerified: authData.user.email_confirmed_at != null,
+				image,
 			},
 			update: {
 				email: data.email,
 				name,
-				emailVerified: authData.user.email_confirmed_at != null,
+				image,
 			},
 		});
 

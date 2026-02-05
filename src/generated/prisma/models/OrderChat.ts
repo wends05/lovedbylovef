@@ -179,7 +179,7 @@ export type OrderChatWhereInput = {
   NOT?: Prisma.OrderChatWhereInput | Prisma.OrderChatWhereInput[]
   id?: Prisma.StringFilter<"OrderChat"> | string
   orderId?: Prisma.StringFilter<"OrderChat"> | string
-  userId?: Prisma.StringFilter<"OrderChat"> | string
+  userId?: Prisma.UuidFilter<"OrderChat"> | string
   createdAt?: Prisma.DateTimeFilter<"OrderChat"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderChat"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
@@ -204,7 +204,7 @@ export type OrderChatWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.OrderChatWhereInput | Prisma.OrderChatWhereInput[]
   OR?: Prisma.OrderChatWhereInput[]
   NOT?: Prisma.OrderChatWhereInput | Prisma.OrderChatWhereInput[]
-  userId?: Prisma.StringFilter<"OrderChat"> | string
+  userId?: Prisma.UuidFilter<"OrderChat"> | string
   createdAt?: Prisma.DateTimeFilter<"OrderChat"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderChat"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
@@ -229,7 +229,7 @@ export type OrderChatScalarWhereWithAggregatesInput = {
   NOT?: Prisma.OrderChatScalarWhereWithAggregatesInput | Prisma.OrderChatScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"OrderChat"> | string
   orderId?: Prisma.StringWithAggregatesFilter<"OrderChat"> | string
-  userId?: Prisma.StringWithAggregatesFilter<"OrderChat"> | string
+  userId?: Prisma.UuidWithAggregatesFilter<"OrderChat"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"OrderChat"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"OrderChat"> | Date | string
 }
@@ -520,7 +520,7 @@ export type OrderChatScalarWhereInput = {
   NOT?: Prisma.OrderChatScalarWhereInput | Prisma.OrderChatScalarWhereInput[]
   id?: Prisma.StringFilter<"OrderChat"> | string
   orderId?: Prisma.StringFilter<"OrderChat"> | string
-  userId?: Prisma.StringFilter<"OrderChat"> | string
+  userId?: Prisma.UuidFilter<"OrderChat"> | string
   createdAt?: Prisma.DateTimeFilter<"OrderChat"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderChat"> | Date | string
 }
