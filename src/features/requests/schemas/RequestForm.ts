@@ -7,6 +7,7 @@ export const RequestFormSchema = z.object({
 });
 
 export type RequestFormInput = z.infer<typeof RequestFormSchema>;
+
 export const RequestFormSubmission = z.object({
 	title: z.string(),
 	description: z.string(),
