@@ -129,6 +129,12 @@ export default function RequestsPage() {
 										params: { id: request.id },
 									})
 								}
+								onChat={(orderId) =>
+									navigate({
+										to: "/chat/$orderId",
+										params: { orderId },
+									})
+								}
 							/>
 						))}
 					</div>

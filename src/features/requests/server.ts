@@ -48,6 +48,13 @@ export const getUserRequests = createServerFn()
 						cursor: { id: data.cursor },
 					}
 				: {}),
+			include: {
+				order: {
+					select: {
+						id: true,
+					},
+				},
+			},
 		});
 
 		const hasMore = requests.length > pageSize;
@@ -229,7 +236,11 @@ export const updateRequestStatus = createServerFn({ method: "POST" })
 
 		if (data.status === RequestStatus.APPROVED) {
 			// Handle initiating a conversation for the admin.
-			const { data: order, error, success } = await tryCatch(
+			const {
+				data: order,
+				error,
+				success,
+			} = await tryCatch(
 				initiateOrder({ data: { requestId: data.requestId } }),
 			);
 
