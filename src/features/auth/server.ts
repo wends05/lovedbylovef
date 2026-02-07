@@ -27,7 +27,7 @@ export const signUpServer = createServerFn({ method: "POST" })
 		}
 
 		const image =
-			(authData.user.user_metadata as { avatar_url?: string } | null)
+			(authData.user?.user_metadata as { avatar_url?: string } | null)
 				?.avatar_url ?? null;
 
 		const dbUser = await prisma.user.upsert({

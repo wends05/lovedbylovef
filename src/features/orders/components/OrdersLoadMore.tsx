@@ -1,16 +1,16 @@
 import { Button } from "@/components/ui/button";
 
-interface OrderLoadMoreProps {
+interface OrdersLoadMoreProps {
 	hasNextPage: boolean;
 	isFetching: boolean;
 	onLoadMore: () => void;
 }
 
-export function OrderLoadMore({
+export function OrdersLoadMore({
 	hasNextPage,
 	isFetching,
 	onLoadMore,
-}: OrderLoadMoreProps) {
+}: OrdersLoadMoreProps) {
 	if (!hasNextPage) return null;
 
 	return (
