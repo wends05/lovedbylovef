@@ -1,12 +1,10 @@
 import { revalidateLogic } from "@tanstack/react-form";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-	type UpdateRequestStatusInput,
-	UpdateRequestStatusSchema,
-} from "@/features/requests/schemas/UpdateRequestStatus";
+import { requestsMutationOptions } from "@/features/requests/options";
+import { UpdateRequestStatusSchema } from "@/features/requests/schemas/UpdateRequestStatus";
 import { RequestStatus } from "@/generated/prisma/enums";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
 import { tryCatch } from "@/lib/try-catch";
@@ -16,10 +14,10 @@ import {
 	AdminResponseSchema,
 } from "../schemas/AdminResponse";
 
-const useAdminResponseForm = (options: {
-	requestId: string;
-	onSubmit: (data: UpdateRequestStatusInput) => Promise<void>;
-}) => {
+const useAdminResponseForm = (options: { requestId: string }) => {
+	const updateRequestStatusMutation = useMutation(
+		requestsMutationOptions.updateRequestStatus,
+	);
 	const defaultValues: AdminResponseFormData = {
 		response: undefined,
 		action: undefined,
@@ -33,24 +31,32 @@ const useAdminResponseForm = (options: {
 		},
 		onSubmit: async ({ value, formApi }) => {
 			const parsedData = UpdateRequestStatusSchema.parse({
-				adminResponse: value.response || undefined,
+				adminResponse: value.response,
 				requestId: options.requestId,
 				status: value.action,
 			});
 
-			const { error } = await tryCatch(options.onSubmit(parsedData));
+			const { error } = await tryCatch(
+				updateRequestStatusMutation.mutateAsync({
+					data: parsedData,
+				}),
+			);
 			if (error) {
-				toast.error("Failed to process request", {
-					description: error,
-				});
+				toast.error(`Failed to process request: ${error}`);
 				return;
 			}
 
-			// invalidate related queries - invalidate all admin request queries
+			toast.success(`Request ${parsedData.status.toLowerCase()} successfully!`);
 
+			// invalidate related queries - invalidate all admin request queries
 			await queryClient.invalidateQueries(
 				adminDashboardQueryOptions.getAdminDashboardData,
 			);
+
+			// cant pass in queryKey with filters here since we dont have access to them, so just invalidate all admin request queries
+			await queryClient.invalidateQueries({
+				queryKey: ["adminRequests"],
+			});
 
 			// Success! Clear the form
 			formApi.reset();
@@ -61,17 +67,14 @@ const useAdminResponseForm = (options: {
 interface RequestResponseFormProps {
 	requestId: string;
 	isSubmitting: boolean;
-	onSubmit: (data: UpdateRequestStatusInput) => Promise<void>;
 }
 
 export function RequestResponseForm({
 	requestId,
 	isSubmitting,
-	onSubmit,
 }: RequestResponseFormProps) {
 	const form = useAdminResponseForm({
 		requestId,
-		onSubmit,
 	});
 
 	const handleReject = () => {
@@ -116,7 +119,7 @@ export function RequestResponseForm({
 						<X className="h-4 w-4 mr-2" />
 						Reject
 					</Button>
-					<Button onClick={handleApprove} disabled={isSubmitting}>
+					<Button type="button" onClick={handleApprove} disabled={isSubmitting}>
 						<Check className="h-4 w-4 mr-2" />
 						Approve
 					</Button>

@@ -16,6 +16,6 @@ export const RequestSearchParamsSchema = z
 		sortBy: z.enum(["createdAt", "updatedAt"]).optional(),
 		sortOrder: z.enum(["asc", "desc"]).optional(),
 	})
-	.catchall(z.any()); // Allow other params to pass through
+	.catchall(z.unknown()); // Allow other params to pass through
 
 export type RequestSearchParams = z.infer<typeof RequestSearchParamsSchema>;

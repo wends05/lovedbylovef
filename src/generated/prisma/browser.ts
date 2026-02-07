@@ -47,18 +47,3 @@ export type OrderChat = Prisma.OrderChatModel
  * 
  */
 export type ChatMessage = Prisma.ChatMessageModel
-/**
- * Model Session
- * 
- */
-export type Session = Prisma.SessionModel
-/**
- * Model Account
- * 
- */
-export type Account = Prisma.AccountModel
-/**
- * Model Verification
- * 
- */
-export type Verification = Prisma.VerificationModel

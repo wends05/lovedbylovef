@@ -10,5 +10,5 @@ function OrderRequestPage() {
 		<div className="flex h-full items-center justify-center w-full">
 			<CreateRequestForm />
 		</div>
-	)
+	);
 }

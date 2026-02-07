@@ -5,6 +5,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { useFieldContext } from "../createFormHooks";
 import { FieldWrapper } from "./FieldWrapper";
 
 interface Item {
@@ -28,10 +29,15 @@ export default function SelectField({
 	className,
 	disabled,
 }: SelectFieldProps) {
+	const field = useFieldContext<string>();
 	return (
 		<FieldWrapper label={label} description={description} className={className}>
-			<Select disabled={disabled}>
-				<SelectTrigger>
+			<Select
+				disabled={disabled}
+				value={field.state.value ?? ""}
+				onValueChange={(value) => field.handleChange(value ?? "")}
+			>
+				<SelectTrigger aria-invalid={field.state.meta.errors.length > 0}>
 					<SelectValue placeholder={placeholder}>
 						{(value) =>
 							items.find((item) => item.value === value)?.label || placeholder

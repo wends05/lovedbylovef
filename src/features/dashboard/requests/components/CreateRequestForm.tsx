@@ -16,15 +16,18 @@ import {
 	Dropzone,
 	DropzoneTrigger,
 } from "@/components/ui/dropzone";
+import { FieldError } from "@/components/ui/field";
 import { ImageZoom } from "@/components/ui/image-zoom";
+import { Label } from "@/components/ui/label";
 import { requestsMutationOptions } from "@/features/requests/options";
 import {
 	type RequestFormInput,
 	RequestFormSchema,
 	RequestFormSubmission,
 } from "@/features/requests/schemas/RequestForm";
+import { storageMutationOptions } from "@/features/storage/options";
+import { useSingleImageUpload } from "@/integrations/supabase/use-single-image-upload";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
-import { useSingleImageUpload } from "@/integrations/uploadthing/use-single-image-upload";
 import { tryCatch } from "@/lib/try-catch";
 
 const defaultValues: RequestFormInput = {
@@ -37,7 +40,9 @@ export default function CreateRequestForm() {
 	const submitRequestMutation = useMutation(
 		requestsMutationOptions.submitRequest,
 	);
-	const deleteImageMutation = useMutation(requestsMutationOptions.deleteImage);
+	const deleteStorageImageMutation = useMutation(
+		storageMutationOptions.deleteStorageImage,
+	);
 	const form = useAppForm({
 		defaultValues,
 		validationLogic: revalidateLogic(),
@@ -45,8 +50,7 @@ export default function CreateRequestForm() {
 			onDynamic: RequestFormSchema,
 		},
 		onSubmit: async ({ value, formApi }) => {
-			let url: string | undefined;
-			let key: string | undefined;
+			let imagePath: string | undefined;
 
 			if (value.file) {
 				if (imageUpload.isUploading) {
@@ -55,15 +59,13 @@ export default function CreateRequestForm() {
 
 				const uploadedFile = await imageUpload.uploadFile();
 				if (uploadedFile) {
-					url = uploadedFile.ufsUrl;
-					key = `${uploadedFile.key}`;
+					imagePath = uploadedFile.path;
 				}
 			}
 			const finalData = RequestFormSubmission.parse({
 				title: value.title,
 				description: value.description,
-				imageUrl: url,
-				imageKey: key,
+				imagePath,
 			});
 
 			const { error } = await tryCatch(
@@ -73,9 +75,11 @@ export default function CreateRequestForm() {
 				toast.error("Submission failed. Please try again.");
 
 				// Delete the uploaded file if submission fails
-				if (finalData.imageKey) {
+				if (finalData.imagePath) {
 					const { error: deleteError } = await tryCatch(
-						deleteImageMutation.mutateAsync({ data: finalData.imageKey }),
+						deleteStorageImageMutation.mutateAsync({
+							data: { path: finalData.imagePath, scope: "requests" },
+						}),
 					);
 					if (deleteError) {
 						console.error(
@@ -95,6 +99,7 @@ export default function CreateRequestForm() {
 	});
 
 	const imageUpload = useSingleImageUpload({
+		pathPrefix: "requests",
 		onFileChange: (file) => {
 			form.setFieldValue("file", file);
 		},
@@ -153,8 +158,9 @@ export default function CreateRequestForm() {
 						)}
 					</form.AppField>
 					<form.AppField name="file">
-						{() => (
+						{(field) => (
 							<div className="space-y-4">
+								<Label>Upload Reference Image (optional)</Label>
 								<Dropzone {...dropzone}>
 									<DropZoneArea className="flex flex-col items-center justify-center gap-4 p-8 border-2 border-dashed border-border rounded-lg hover:border-primary/50 transition-colors">
 										<DropzoneTrigger className="flex flex-col items-center gap-2 cursor-pointer">
@@ -195,6 +201,9 @@ export default function CreateRequestForm() {
 											Clear Image
 										</Button>
 									</>
+								)}
+								{field.state.meta.errors && (
+									<FieldError errors={field.state.meta.errors} />
 								)}
 							</div>
 						)}

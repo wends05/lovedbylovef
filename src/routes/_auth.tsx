@@ -1,13 +1,14 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { authClient } from "@/lib/auth-client";
+import { getCurrentUserRole } from "@/features/auth/server";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_auth")({
 	loader: async () => {
-		const { data: session } = await authClient.getSession();
+		const { data } = await supabase.auth.getSession();
 
-		if (session) {
-			const userRole = session.user.role;
-			if (userRole === "ADMIN") {
+		if (data.session) {
+			const roleData = await getCurrentUserRole();
+			if (roleData.role === "ADMIN") {
 				throw redirect({ to: "/admin/dashboard" });
 			} else {
 				throw redirect({ to: "/dashboard" });

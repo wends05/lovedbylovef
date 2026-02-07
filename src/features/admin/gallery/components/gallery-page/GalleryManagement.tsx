@@ -8,7 +8,6 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import type { Crochet } from "@/generated/prisma/client";
 import { tryCatch } from "@/lib/try-catch";
 import { adminDashboardQueryOptions } from "../../../options";
 import { galleryMutationOptions } from "../../options";
@@ -16,6 +15,7 @@ import { GallerySkeleton } from "../GallerySkeleton";
 import { DeleteGalleryItemDialog } from "./GalleryDeleteDialog";
 import { GalleryFilters } from "./GalleryFilters";
 import { GalleryGrid } from "./GalleryGrid";
+import type { CrochetListItem } from "./GalleryGrid";
 import { GalleryHeader } from "./GalleryHeader";
 
 export default function GalleryManagement() {
@@ -33,7 +33,9 @@ export default function GalleryManagement() {
 	const [visibilityFilter, setVisibilityFilter] = useState<string>("ALL");
 	const [sortOption, setSortOption] = useState<string>("newest");
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-	const [itemToDelete, setItemToDelete] = useState<Crochet | null>(null);
+	const [itemToDelete, setItemToDelete] = useState<CrochetListItem | null>(
+		null,
+	);
 
 	const { data: crochets, isLoading } = useSuspenseQuery(
 		adminDashboardQueryOptions.getAllCrochets,
@@ -90,7 +92,7 @@ export default function GalleryManagement() {
 		return result;
 	}, [crochets, searchQuery, categoryFilter, visibilityFilter, sortOption]);
 
-	const handleToggleVisibility = async (item: Crochet) => {
+	const handleToggleVisibility = async (item: CrochetListItem) => {
 		const { success, error } = await tryCatch(
 			toggleVisibilityMutation.mutateAsync({
 				data: {
@@ -136,7 +138,7 @@ export default function GalleryManagement() {
 		setItemToDelete(null);
 	};
 
-	const openDeleteDialog = (item: Crochet) => {
+	const openDeleteDialog = (item: CrochetListItem) => {
 		setItemToDelete(item);
 		setDeleteDialogOpen(true);
 	};

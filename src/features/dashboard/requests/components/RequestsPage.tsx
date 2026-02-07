@@ -15,6 +15,7 @@ import {
 import type { RequestStatus } from "@/generated/prisma/enums";
 import { tryCatch } from "@/lib/try-catch";
 import { CancelDialog } from "./CancelDialog";
+import { DeleteDialog } from "./DeleteDialog";
 import { EmptyState } from "./EmptyState";
 import { RequestCard } from "./RequestCard";
 import { RequestSkeleton } from "./RequestSkeleton";
@@ -26,10 +27,15 @@ export default function RequestsPage() {
 	);
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 	const [requestToCancel, setRequestToCancel] = useState<string | null>(null);
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+	const [requestToDelete, setRequestToDelete] = useState<string | null>(null);
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const cancelRequestMutation = useMutation(
 		requestsMutationOptions.cancelRequest,
+	);
+	const deleteRequestMutation = useMutation(
+		requestsMutationOptions.deleteUserRequest,
 	);
 
 	const {
@@ -50,6 +56,11 @@ export default function RequestsPage() {
 		setCancelDialogOpen(true);
 	};
 
+	const handleDeleteClick = (id: string) => {
+		setRequestToDelete(id);
+		setDeleteDialogOpen(true);
+	};
+
 	const handleConfirmCancel = async () => {
 		if (!requestToCancel) return;
 
@@ -60,9 +71,7 @@ export default function RequestsPage() {
 		if (!success) {
 			toast.error(error);
 		} else {
-			toast.success("Request cancelled", {
-				description: "Your request has been cancelled successfully.",
-			});
+			toast.success("Request cancelled");
 			queryClient.invalidateQueries({
 				queryKey: ["userRequests", "infinite"],
 			});
@@ -70,6 +79,26 @@ export default function RequestsPage() {
 
 		setCancelDialogOpen(false);
 		setRequestToCancel(null);
+	};
+
+	const handleConfirmDelete = async () => {
+		if (!requestToDelete) return;
+
+		const { success, error } = await tryCatch(
+			deleteRequestMutation.mutateAsync({ data: { id: requestToDelete } }),
+		);
+
+		if (!success) {
+			toast.error(error || "Failed to delete request");
+		} else {
+			toast.success("Request deleted");
+			queryClient.invalidateQueries({
+				queryKey: ["userRequests", "infinite"],
+			});
+		}
+
+		setDeleteDialogOpen(false);
+		setRequestToDelete(null);
 	};
 
 	return (
@@ -123,10 +152,24 @@ export default function RequestsPage() {
 								key={request.id}
 								request={request}
 								onCancel={() => handleCancelClick(request.id)}
+								onDelete={() => handleDeleteClick(request.id)}
+								onEdit={() =>
+									navigate({
+										to: "/request/$id",
+										params: { id: request.id },
+										search: { edit: true },
+									})
+								}
 								onView={() =>
 									navigate({
 										to: "/request/$id",
 										params: { id: request.id },
+									})
+								}
+								onChat={(orderId) =>
+									navigate({
+										to: "/chat/$orderId",
+										params: { orderId },
 									})
 								}
 							/>
@@ -160,6 +203,11 @@ export default function RequestsPage() {
 				isOpen={cancelDialogOpen}
 				onOpenChange={setCancelDialogOpen}
 				onConfirm={handleConfirmCancel}
+			/>
+			<DeleteDialog
+				isOpen={deleteDialogOpen}
+				onOpenChange={setDeleteDialogOpen}
+				onConfirm={handleConfirmDelete}
 			/>
 		</div>
 	);

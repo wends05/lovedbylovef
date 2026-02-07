@@ -1,8 +1,11 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { Heart, Home, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
+	const router = useRouter();
+	const handleBack = () => router.history.back();
+
 	return (
 		<div className="min-h-screen bg-gradient-soft-pink flex items-center justify-center px-4">
 			{/* Decorative background elements */}
@@ -44,6 +47,13 @@ export default function NotFound() {
 
 				{/* Actions */}
 				<div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+					<Button
+						size={"lg"}
+						onClick={handleBack}
+						className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 glow-pink"
+					>
+						Back
+					</Button>
 					<Link to="/">
 						<Button
 							size="lg"

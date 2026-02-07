@@ -6,11 +6,10 @@ export const CreateCrochetFormSchema = z.object({
 	description: z.string().min(1, "Description is required"),
 	category: z.enum(Category),
 	price: z.number().nullable(),
-	imageURL: z.string().optional(),
-	imageKey: z.string().optional(),
+	imagePath: z.string().optional(),
 	imageHash: z.string().optional(),
 	isVisible: z.boolean(),
-	file: z.file(),
+	file: z.file("Image file is required"),
 });
 
 export type CreateCrochetFormInput = z.infer<typeof CreateCrochetFormSchema>;
@@ -20,8 +19,7 @@ export const CreateCrochetSchema = z.object({
 	description: z.string().min(1, "Description is required"),
 	category: z.enum(Category),
 	price: z.number().nullable(),
-	imageURL: z.string().min(1, "Image is required"),
-	imageKey: z.string().optional(),
+	imagePath: z.string().min(1, "Image is required"),
 	imageHash: z.string().optional(),
 	isVisible: z.boolean(),
 });
@@ -34,8 +32,7 @@ export const UpdateCrochetSchema = z.object({
 	description: z.string().min(1, "Description is required").optional(),
 	category: z.enum(Category),
 	price: z.number().nullable(),
-	imageURL: z.string().optional(),
-	imageKey: z.string().optional(),
+	imagePath: z.string().optional(),
 	imageHash: z.string().optional(),
 	isVisible: z.boolean().optional(),
 });

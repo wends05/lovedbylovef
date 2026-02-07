@@ -1,9 +1,17 @@
 import { createServerFn } from "@tanstack/react-start";
 import type { Category } from "@/generated/prisma/client";
+import { getStoragePublicUrl } from "@/integrations/supabase/storage-server";
 import { prisma } from "@/lib/prisma-client";
 
 interface GetVisibleCrochetsInput {
 	category?: Category;
+}
+
+function withImageUrl<T extends { imagePath: string }>(crochet: T) {
+	return {
+		...crochet,
+		imageUrl: getStoragePublicUrl(crochet.imagePath),
+	};
 }
 
 export const getVisibleCrochets = createServerFn({ method: "GET" })
@@ -16,7 +24,7 @@ export const getVisibleCrochets = createServerFn({ method: "GET" })
 			},
 			orderBy: { createdAt: "desc" },
 		});
-		return crochets;
+		return crochets.map(withImageUrl);
 	});
 
 export const getCategories = createServerFn({ method: "GET" }).handler(

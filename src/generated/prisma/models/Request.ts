@@ -29,8 +29,7 @@ export type RequestMinAggregateOutputType = {
   userId: string | null
   title: string | null
   description: string | null
-  imageUrl: string | null
-  imageKey: string | null
+  imagePath: string | null
   status: $Enums.RequestStatus | null
   adminResponse: string | null
   approvedAt: Date | null
@@ -43,8 +42,7 @@ export type RequestMaxAggregateOutputType = {
   userId: string | null
   title: string | null
   description: string | null
-  imageUrl: string | null
-  imageKey: string | null
+  imagePath: string | null
   status: $Enums.RequestStatus | null
   adminResponse: string | null
   approvedAt: Date | null
@@ -57,8 +55,7 @@ export type RequestCountAggregateOutputType = {
   userId: number
   title: number
   description: number
-  imageUrl: number
-  imageKey: number
+  imagePath: number
   status: number
   adminResponse: number
   approvedAt: number
@@ -73,8 +70,7 @@ export type RequestMinAggregateInputType = {
   userId?: true
   title?: true
   description?: true
-  imageUrl?: true
-  imageKey?: true
+  imagePath?: true
   status?: true
   adminResponse?: true
   approvedAt?: true
@@ -87,8 +83,7 @@ export type RequestMaxAggregateInputType = {
   userId?: true
   title?: true
   description?: true
-  imageUrl?: true
-  imageKey?: true
+  imagePath?: true
   status?: true
   adminResponse?: true
   approvedAt?: true
@@ -101,8 +96,7 @@ export type RequestCountAggregateInputType = {
   userId?: true
   title?: true
   description?: true
-  imageUrl?: true
-  imageKey?: true
+  imagePath?: true
   status?: true
   adminResponse?: true
   approvedAt?: true
@@ -188,8 +182,7 @@ export type RequestGroupByOutputType = {
   userId: string
   title: string
   description: string
-  imageUrl: string | null
-  imageKey: string | null
+  imagePath: string | null
   status: $Enums.RequestStatus
   adminResponse: string | null
   approvedAt: Date | null
@@ -220,11 +213,10 @@ export type RequestWhereInput = {
   OR?: Prisma.RequestWhereInput[]
   NOT?: Prisma.RequestWhereInput | Prisma.RequestWhereInput[]
   id?: Prisma.StringFilter<"Request"> | string
-  userId?: Prisma.StringFilter<"Request"> | string
+  userId?: Prisma.UuidFilter<"Request"> | string
   title?: Prisma.StringFilter<"Request"> | string
   description?: Prisma.StringFilter<"Request"> | string
-  imageUrl?: Prisma.StringNullableFilter<"Request"> | string | null
-  imageKey?: Prisma.StringNullableFilter<"Request"> | string | null
+  imagePath?: Prisma.StringNullableFilter<"Request"> | string | null
   status?: Prisma.EnumRequestStatusFilter<"Request"> | $Enums.RequestStatus
   adminResponse?: Prisma.StringNullableFilter<"Request"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"Request"> | Date | string | null
@@ -239,8 +231,7 @@ export type RequestOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  imageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  imagePath?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   adminResponse?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -255,11 +246,10 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.RequestWhereInput | Prisma.RequestWhereInput[]
   OR?: Prisma.RequestWhereInput[]
   NOT?: Prisma.RequestWhereInput | Prisma.RequestWhereInput[]
-  userId?: Prisma.StringFilter<"Request"> | string
+  userId?: Prisma.UuidFilter<"Request"> | string
   title?: Prisma.StringFilter<"Request"> | string
   description?: Prisma.StringFilter<"Request"> | string
-  imageUrl?: Prisma.StringNullableFilter<"Request"> | string | null
-  imageKey?: Prisma.StringNullableFilter<"Request"> | string | null
+  imagePath?: Prisma.StringNullableFilter<"Request"> | string | null
   status?: Prisma.EnumRequestStatusFilter<"Request"> | $Enums.RequestStatus
   adminResponse?: Prisma.StringNullableFilter<"Request"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"Request"> | Date | string | null
@@ -267,15 +257,14 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
-}, "id">
+}, "id" | "id">
 
 export type RequestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  imageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  imagePath?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   adminResponse?: Prisma.SortOrderInput | Prisma.SortOrder
   approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -291,11 +280,10 @@ export type RequestScalarWhereWithAggregatesInput = {
   OR?: Prisma.RequestScalarWhereWithAggregatesInput[]
   NOT?: Prisma.RequestScalarWhereWithAggregatesInput | Prisma.RequestScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Request"> | string
-  userId?: Prisma.StringWithAggregatesFilter<"Request"> | string
+  userId?: Prisma.UuidWithAggregatesFilter<"Request"> | string
   title?: Prisma.StringWithAggregatesFilter<"Request"> | string
   description?: Prisma.StringWithAggregatesFilter<"Request"> | string
-  imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
-  imageKey?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
+  imagePath?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
   status?: Prisma.EnumRequestStatusWithAggregatesFilter<"Request"> | $Enums.RequestStatus
   adminResponse?: Prisma.StringNullableWithAggregatesFilter<"Request"> | string | null
   approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Request"> | Date | string | null
@@ -307,8 +295,7 @@ export type RequestCreateInput = {
   id?: string
   title: string
   description: string
-  imageUrl?: string | null
-  imageKey?: string | null
+  imagePath?: string | null
   status?: $Enums.RequestStatus
   adminResponse?: string | null
   approvedAt?: Date | string | null
@@ -323,8 +310,7 @@ export type RequestUncheckedCreateInput = {
   userId: string
   title: string
   description: string
-  imageUrl?: string | null
-  imageKey?: string | null
+  imagePath?: string | null
   status?: $Enums.RequestStatus
   adminResponse?: string | null
   approvedAt?: Date | string | null
@@ -337,8 +323,7 @@ export type RequestUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -353,8 +338,7 @@ export type RequestUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -368,8 +352,7 @@ export type RequestCreateManyInput = {
   userId: string
   title: string
   description: string
-  imageUrl?: string | null
-  imageKey?: string | null
+  imagePath?: string | null
   status?: $Enums.RequestStatus
   adminResponse?: string | null
   approvedAt?: Date | string | null
@@ -381,8 +364,7 @@ export type RequestUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -395,8 +377,7 @@ export type RequestUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -414,8 +395,7 @@ export type RequestCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  imageUrl?: Prisma.SortOrder
-  imageKey?: Prisma.SortOrder
+  imagePath?: Prisma.SortOrder
   status?: Prisma.SortOrder
   adminResponse?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
@@ -428,8 +408,7 @@ export type RequestMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  imageUrl?: Prisma.SortOrder
-  imageKey?: Prisma.SortOrder
+  imagePath?: Prisma.SortOrder
   status?: Prisma.SortOrder
   adminResponse?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
@@ -442,8 +421,7 @@ export type RequestMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  imageUrl?: Prisma.SortOrder
-  imageKey?: Prisma.SortOrder
+  imagePath?: Prisma.SortOrder
   status?: Prisma.SortOrder
   adminResponse?: Prisma.SortOrder
   approvedAt?: Prisma.SortOrder
@@ -529,8 +507,7 @@ export type RequestCreateWithoutOrderInput = {
   id?: string
   title: string
   description: string
-  imageUrl?: string | null
-  imageKey?: string | null
+  imagePath?: string | null
   status?: $Enums.RequestStatus
   adminResponse?: string | null
   approvedAt?: Date | string | null
@@ -544,8 +521,7 @@ export type RequestUncheckedCreateWithoutOrderInput = {
   userId: string
   title: string
   description: string
-  imageUrl?: string | null
-  imageKey?: string | null
+  imagePath?: string | null
   status?: $Enums.RequestStatus
   adminResponse?: string | null
   approvedAt?: Date | string | null
@@ -573,8 +549,7 @@ export type RequestUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -588,8 +563,7 @@ export type RequestUncheckedUpdateWithoutOrderInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -601,8 +575,7 @@ export type RequestCreateWithoutUserInput = {
   id?: string
   title: string
   description: string
-  imageUrl?: string | null
-  imageKey?: string | null
+  imagePath?: string | null
   status?: $Enums.RequestStatus
   adminResponse?: string | null
   approvedAt?: Date | string | null
@@ -615,8 +588,7 @@ export type RequestUncheckedCreateWithoutUserInput = {
   id?: string
   title: string
   description: string
-  imageUrl?: string | null
-  imageKey?: string | null
+  imagePath?: string | null
   status?: $Enums.RequestStatus
   adminResponse?: string | null
   approvedAt?: Date | string | null
@@ -656,11 +628,10 @@ export type RequestScalarWhereInput = {
   OR?: Prisma.RequestScalarWhereInput[]
   NOT?: Prisma.RequestScalarWhereInput | Prisma.RequestScalarWhereInput[]
   id?: Prisma.StringFilter<"Request"> | string
-  userId?: Prisma.StringFilter<"Request"> | string
+  userId?: Prisma.UuidFilter<"Request"> | string
   title?: Prisma.StringFilter<"Request"> | string
   description?: Prisma.StringFilter<"Request"> | string
-  imageUrl?: Prisma.StringNullableFilter<"Request"> | string | null
-  imageKey?: Prisma.StringNullableFilter<"Request"> | string | null
+  imagePath?: Prisma.StringNullableFilter<"Request"> | string | null
   status?: Prisma.EnumRequestStatusFilter<"Request"> | $Enums.RequestStatus
   adminResponse?: Prisma.StringNullableFilter<"Request"> | string | null
   approvedAt?: Prisma.DateTimeNullableFilter<"Request"> | Date | string | null
@@ -672,8 +643,7 @@ export type RequestCreateManyUserInput = {
   id?: string
   title: string
   description: string
-  imageUrl?: string | null
-  imageKey?: string | null
+  imagePath?: string | null
   status?: $Enums.RequestStatus
   adminResponse?: string | null
   approvedAt?: Date | string | null
@@ -685,8 +655,7 @@ export type RequestUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -699,8 +668,7 @@ export type RequestUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -713,8 +681,7 @@ export type RequestUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
   adminResponse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -729,8 +696,7 @@ export type RequestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   userId?: boolean
   title?: boolean
   description?: boolean
-  imageUrl?: boolean
-  imageKey?: boolean
+  imagePath?: boolean
   status?: boolean
   adminResponse?: boolean
   approvedAt?: boolean
@@ -745,8 +711,7 @@ export type RequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   userId?: boolean
   title?: boolean
   description?: boolean
-  imageUrl?: boolean
-  imageKey?: boolean
+  imagePath?: boolean
   status?: boolean
   adminResponse?: boolean
   approvedAt?: boolean
@@ -760,8 +725,7 @@ export type RequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   userId?: boolean
   title?: boolean
   description?: boolean
-  imageUrl?: boolean
-  imageKey?: boolean
+  imagePath?: boolean
   status?: boolean
   adminResponse?: boolean
   approvedAt?: boolean
@@ -775,8 +739,7 @@ export type RequestSelectScalar = {
   userId?: boolean
   title?: boolean
   description?: boolean
-  imageUrl?: boolean
-  imageKey?: boolean
+  imagePath?: boolean
   status?: boolean
   adminResponse?: boolean
   approvedAt?: boolean
@@ -784,7 +747,7 @@ export type RequestSelectScalar = {
   updatedAt?: boolean
 }
 
-export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "imageUrl" | "imageKey" | "status" | "adminResponse" | "approvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
+export type RequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "imagePath" | "status" | "adminResponse" | "approvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["request"]>
 export type RequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   order?: boolean | Prisma.Request$orderArgs<ExtArgs>
@@ -807,8 +770,7 @@ export type $RequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     userId: string
     title: string
     description: string
-    imageUrl: string | null
-    imageKey: string | null
+    imagePath: string | null
     status: $Enums.RequestStatus
     adminResponse: string | null
     approvedAt: Date | null
@@ -1243,8 +1205,7 @@ export interface RequestFieldRefs {
   readonly userId: Prisma.FieldRef<"Request", 'String'>
   readonly title: Prisma.FieldRef<"Request", 'String'>
   readonly description: Prisma.FieldRef<"Request", 'String'>
-  readonly imageUrl: Prisma.FieldRef<"Request", 'String'>
-  readonly imageKey: Prisma.FieldRef<"Request", 'String'>
+  readonly imagePath: Prisma.FieldRef<"Request", 'String'>
   readonly status: Prisma.FieldRef<"Request", 'RequestStatus'>
   readonly adminResponse: Prisma.FieldRef<"Request", 'String'>
   readonly approvedAt: Prisma.FieldRef<"Request", 'DateTime'>

@@ -1,19 +1,23 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
 import z from "zod";
+import { initiateOrder } from "@/features/orders/admin/server";
 import { RequestStatus } from "@/generated/prisma/enums";
 import type {
 	RequestUpdateInput,
 	RequestWhereInput,
 } from "@/generated/prisma/models";
-import { utapi } from "@/integrations/uploadthing/api";
-import { auth } from "@/lib/auth";
+import { getSupabaseServerClient } from "@/integrations/supabase/server";
+import { getStoragePublicUrl } from "@/integrations/supabase/storage-server";
 import { prisma } from "@/lib/prisma-client";
 import { tryCatch } from "@/lib/try-catch";
-import { adminMiddleware } from "../auth/middleware";
-import { initiateOrder } from "../order/admin/server";
+import { adminMiddleware, authMiddleware } from "../auth/middleware";
+import { replaceImageWithCleanupOrThrow } from "../storage/replace-image";
+import { deleteStorageImageServerOnly } from "../storage/server-only";
 import { GetRequestsQuerySchema } from "./schemas/GetRequestsQuery";
-import { RequestFormSubmission } from "./schemas/RequestForm";
+import {
+	RequestFormSubmission,
+	UpdateRequestSubmissionSchema,
+} from "./schemas/RequestForm";
 import { UpdateRequestStatusSchema } from "./schemas/UpdateRequestStatus";
 
 interface GetUserRequestsInput {
@@ -22,15 +26,20 @@ interface GetUserRequestsInput {
 	pageSize?: number;
 }
 
+function withImageUrl<T extends { imagePath: string | null }>(request: T) {
+	return {
+		...request,
+		imageUrl: getStoragePublicUrl(request.imagePath),
+	};
+}
+
 export const getUserRequests = createServerFn()
 	.inputValidator((input: GetUserRequestsInput) => input)
 	.handler(async ({ data }) => {
-		const headers = await getRequestHeaders();
-		const session = await auth.api.getSession({
-			headers,
-		});
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
 
-		if (!session?.user?.id) {
+		if (!authData.user?.id) {
 			throw new Error("Unauthorized");
 		}
 
@@ -38,7 +47,7 @@ export const getUserRequests = createServerFn()
 
 		const requests = await prisma.request.findMany({
 			where: {
-				userId: session.user.id,
+				userId: authData.user.id,
 				...(data.status && data.status !== "ALL"
 					? { status: data.status }
 					: {}),
@@ -51,6 +60,13 @@ export const getUserRequests = createServerFn()
 						cursor: { id: data.cursor },
 					}
 				: {}),
+			include: {
+				order: {
+					select: {
+						id: true,
+					},
+				},
+			},
 		});
 
 		const hasMore = requests.length > pageSize;
@@ -58,54 +74,74 @@ export const getUserRequests = createServerFn()
 		const nextCursor = hasMore ? items[items.length - 1]?.id : undefined;
 
 		return {
-			items,
+			items: items.map(withImageUrl),
 			nextCursor,
 			hasMore,
 		};
 	});
 
 export const getRequestById = createServerFn()
+	.middleware([authMiddleware])
 	.inputValidator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
-		const headers = await getRequestHeaders();
-		const session = await auth.api.getSession({
-			headers,
-		});
 
-		if (!session?.user?.id) {
+		// For simplicity, we allow both admins and regular users to use the same endpoint to fetch request details,
+		// and determine permissions (edit/cancel/delete) based on the request status and user role.
+		// Admins can view all requests but cannot edit/cancel/delete.
+		// Regular users can only view their own requests and can edit/cancel/delete based on the request status.
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
+
+		if (!authData.user?.id) {
 			throw new Error("Unauthorized");
 		}
 
+		const viewer = await prisma.user.findUnique({
+			where: { id: authData.user.id },
+			select: { role: true },
+		});
+
+		const isAdmin = viewer?.role === "ADMIN";
+
 		const request = await prisma.request.findFirst({
-			where: {
-				id: data.id,
-				userId: session.user.id,
-			},
+			where: isAdmin
+				? { id: data.id }
+				: { id: data.id, userId: authData.user.id },
 		});
 
 		if (!request) {
 			throw new Error("Request not found");
 		}
 
-		return request;
+		const canEdit = !isAdmin && request.status === RequestStatus.PENDING;
+		const canCancel = !isAdmin && request.status === RequestStatus.PENDING;
+		const canDelete =
+			!isAdmin &&
+			(request.status === RequestStatus.CANCELLED ||
+				request.status === RequestStatus.REJECTED);
+
+		return {
+			...withImageUrl(request),
+			canEdit,
+			canCancel,
+			canDelete,
+		};
 	});
 
 export const cancelRequest = createServerFn({ method: "POST" })
 	.inputValidator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
-		const headers = await getRequestHeaders();
-		const session = await auth.api.getSession({
-			headers,
-		});
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
 
-		if (!session?.user?.id) {
+		if (!authData.user?.id) {
 			throw new Error("Unauthorized");
 		}
 
 		const request = await prisma.request.findFirst({
 			where: {
 				id: data.id,
-				userId: session.user.id,
+				userId: authData.user.id,
 				status: "PENDING",
 			},
 		});
@@ -124,18 +160,62 @@ export const cancelRequest = createServerFn({ method: "POST" })
 		return updatedRequest;
 	});
 
-export const submitRequest = createServerFn({ method: "POST" })
-	.inputValidator(RequestFormSubmission)
+export const deleteUserRequest = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.inputValidator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
-		console.log("Submitting request with data:", data);
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
 
-		const headers = await getRequestHeaders();
-		const session = await auth.api.getSession({
-			headers,
+		if (!authData.user?.id) {
+			throw new Error("Unauthorized");
+		}
+
+		const request = await prisma.request.findFirst({
+			where: {
+				id: data.id,
+				userId: authData.user.id,
+				status: { in: [RequestStatus.CANCELLED, RequestStatus.REJECTED] },
+			},
 		});
 
-		console.log("Authenticated user:", session);
-		if (!session) {
+		if (!request) {
+			throw new Error(
+				"Request not found or cannot be deleted (only cancelled or rejected requests can be deleted)",
+			);
+		}
+
+		if (request.imagePath) {
+			const { error } = await tryCatch(
+				deleteStorageImageServerOnly({
+					path: request.imagePath,
+					scope: "requests",
+				}),
+			);
+			if (error) {
+				console.error("Failed to delete request image during user delete", {
+					requestId: request.id,
+					error,
+				});
+			}
+		}
+
+		await prisma.request.delete({
+			where: { id: data.id },
+		});
+
+		return { success: true };
+	});
+
+export const submitRequest = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.inputValidator(RequestFormSubmission)
+	.handler(async ({ data }) => {
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
+
+		console.log("Authenticated user:", authData.user);
+		if (!authData.user) {
 			throw new Error("Unauthorized");
 		}
 
@@ -144,7 +224,7 @@ export const submitRequest = createServerFn({ method: "POST" })
 			prisma.request.create({
 				data: {
 					...data,
-					userId: session.user.id,
+					userId: authData.user.id,
 				},
 			}),
 		);
@@ -157,13 +237,63 @@ export const submitRequest = createServerFn({ method: "POST" })
 		return request.data;
 	});
 
-export const deleteImage = createServerFn({ method: "POST" })
-	.inputValidator(z.string())
+export const updateUserRequest = createServerFn({ method: "POST" })
+	.inputValidator(UpdateRequestSubmissionSchema)
 	.handler(async ({ data }) => {
-		console.log("image to be deleted:", data);
-		const res = await utapi.deleteFiles(data);
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
 
-		return { success: res.success, deletedCount: res.deletedCount };
+		if (!authData.user?.id) {
+			throw new Error("Unauthorized");
+		}
+
+		const existingRequest = await prisma.request.findFirst({
+			where: {
+				id: data.id,
+				userId: authData.user.id,
+				status: "PENDING",
+			},
+		});
+
+		if (!existingRequest) {
+			throw new Error(
+				"Request not found or cannot be edited (only pending requests can be edited)",
+			);
+		}
+
+		const previousRequestState = {
+			title: existingRequest.title,
+			description: existingRequest.description,
+			imagePath: existingRequest.imagePath,
+		};
+		const nextImagePath = data.imagePath ?? existingRequest.imagePath;
+		const updateData: RequestUpdateInput = {
+			title: data.title,
+			description: data.description,
+			...(data.imagePath !== undefined ? { imagePath: data.imagePath } : {}),
+		};
+
+		const { record, replacedImage } = await replaceImageWithCleanupOrThrow({
+			scope: "requests",
+			previousPath: existingRequest.imagePath,
+			nextPath: nextImagePath,
+			applyRecordUpdate: () =>
+				prisma.request.update({
+					where: { id: data.id },
+					data: updateData,
+				}),
+			rollbackRecordUpdate: () =>
+				prisma.request.update({
+					where: { id: data.id },
+					data: previousRequestState,
+				}),
+			cleanupNewPathOnRollback: true,
+		});
+
+		return {
+			request: withImageUrl(record),
+			replacedImage,
+		};
 	});
 
 export const getAllRequests = createServerFn()
@@ -225,7 +355,7 @@ export const getAllRequests = createServerFn()
 		const nextCursor = hasMore ? items[items.length - 1]?.id : undefined;
 
 		return {
-			items,
+			items: items.map(withImageUrl),
 			nextCursor,
 			hasMore,
 		};
@@ -235,21 +365,21 @@ export const updateRequestStatus = createServerFn({ method: "POST" })
 	.middleware([adminMiddleware])
 	.inputValidator(UpdateRequestStatusSchema)
 	.handler(async ({ data }) => {
-		const headers = await getRequestHeaders();
-		const session = await auth.api.getSession({
-			headers,
-		});
-
-		if (!session) {
-			throw new Error("Unauthorized");
-		}
-
 		// check if the request exists and if the request is to be approved.
 
 		if (data.status === RequestStatus.APPROVED) {
 			// Handle initiating a conversation for the admin.
-			const { data: order, error, success } = await tryCatch(
-				initiateOrder({ data: { requestId: data.requestId } }),
+			const {
+				data: order,
+				error,
+				success,
+			} = await tryCatch(
+				initiateOrder({
+					data: {
+						requestId: data.requestId,
+						adminResponse: data.adminResponse,
+					},
+				}),
 			);
 
 			if (!success) {
