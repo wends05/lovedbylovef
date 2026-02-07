@@ -8,20 +8,15 @@ import {
 } from "@/components/ui/card";
 import { ImageZoom } from "@/components/ui/image-zoom";
 import { Separator } from "@/components/ui/separator";
-import type { UpdateRequestStatusInput } from "@/features/requests/schemas/UpdateRequestStatus";
 import type { AdminRequestItem } from "@/features/requests/types";
 import { RequestResponseForm } from "../RequestResponseForm";
 import { StatusBadge } from "../shared/StatusBadge";
 
 interface PendingRequestCardProps {
 	request: AdminRequestItem;
-	onProcess: (data: UpdateRequestStatusInput) => Promise<void>;
 }
 
-export function PendingRequestCard({
-	request,
-	onProcess,
-}: PendingRequestCardProps) {
+export function PendingRequestCard({ request }: PendingRequestCardProps) {
 	return (
 		<Card>
 			<CardHeader className="pb-3">
@@ -64,11 +59,7 @@ export function PendingRequestCard({
 
 				<Separator />
 
-				<RequestResponseForm
-					requestId={request.id}
-					isSubmitting={false}
-					onSubmit={onProcess}
-				/>
+				<RequestResponseForm requestId={request.id} isSubmitting={false} />
 
 				{request.adminResponse && (
 					<div className="pt-4 border-t">

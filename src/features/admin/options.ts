@@ -19,7 +19,7 @@ export const adminDashboardQueryOptions = {
 				getAllRequests({
 					data: {
 						...filters,
-						cursor: pageParam as string | undefined,
+						cursor: pageParam,
 					},
 				}),
 			initialPageParam: undefined as string | undefined,

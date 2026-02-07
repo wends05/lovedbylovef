@@ -60,6 +60,15 @@ export const REQUEST_STATUS_DETAIL_CONFIG = {
 	},
 } as const;
 
+export const REQUEST_STATUSES_FOR_INVALIDATION: Array<RequestStatus | "ALL"> = [
+	"ALL",
+	RequestStatus.PENDING,
+	RequestStatus.APPROVED,
+	RequestStatus.REJECTED,
+	RequestStatus.COMPLETED,
+	RequestStatus.CANCELLED,
+];
+
 export const ADMIN_REQUEST_STATUS_TABS = [
 	{ value: RequestStatus.APPROVED, label: "Approved" },
 	{ value: RequestStatus.REJECTED, label: "Rejected" },

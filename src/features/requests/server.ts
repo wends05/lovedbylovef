@@ -10,8 +10,9 @@ import { getSupabaseServerClient } from "@/integrations/supabase/server";
 import { getStoragePublicUrl } from "@/integrations/supabase/storage-server";
 import { prisma } from "@/lib/prisma-client";
 import { tryCatch } from "@/lib/try-catch";
-import { adminMiddleware } from "../auth/middleware";
+import { adminMiddleware, authMiddleware } from "../auth/middleware";
 import { replaceImageWithCleanupOrThrow } from "../storage/replace-image";
+import { deleteStorageImageServerOnly } from "../storage/server-only";
 import { GetRequestsQuerySchema } from "./schemas/GetRequestsQuery";
 import {
 	RequestFormSubmission,
@@ -135,11 +136,57 @@ export const cancelRequest = createServerFn({ method: "POST" })
 		return updatedRequest;
 	});
 
+export const deleteUserRequest = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.inputValidator(z.object({ id: z.string() }))
+	.handler(async ({ data }) => {
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
+
+		if (!authData.user?.id) {
+			throw new Error("Unauthorized");
+		}
+
+		const request = await prisma.request.findFirst({
+			where: {
+				id: data.id,
+				userId: authData.user.id,
+				status: { in: [RequestStatus.CANCELLED, RequestStatus.REJECTED] },
+			},
+		});
+
+		if (!request) {
+			throw new Error(
+				"Request not found or cannot be deleted (only cancelled or rejected requests can be deleted)",
+			);
+		}
+
+		if (request.imagePath) {
+			const { error } = await tryCatch(
+				deleteStorageImageServerOnly({
+					path: request.imagePath,
+					scope: "requests",
+				}),
+			);
+			if (error) {
+				console.error("Failed to delete request image during user delete", {
+					requestId: request.id,
+					error,
+				});
+			}
+		}
+
+		await prisma.request.delete({
+			where: { id: data.id },
+		});
+
+		return { success: true };
+	});
+
 export const submitRequest = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
 	.inputValidator(RequestFormSubmission)
 	.handler(async ({ data }) => {
-		console.log("Submitting request with data:", data);
-
 		const supabase = getSupabaseServerClient();
 		const { data: authData } = await supabase.auth.getUser();
 
@@ -303,7 +350,7 @@ export const updateRequestStatus = createServerFn({ method: "POST" })
 				error,
 				success,
 			} = await tryCatch(
-				initiateOrder({ data: { requestId: data.requestId } }),
+				initiateOrder({ data: { requestId: data.requestId, adminResponse: data.adminResponse } }),
 			);
 
 			if (!success) {

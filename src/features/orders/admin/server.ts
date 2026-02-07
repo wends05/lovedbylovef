@@ -50,7 +50,11 @@ export const initiateOrder = createServerFn({ method: "POST" })
 		const result = await prisma.$transaction(async (tx) => {
 			const approvedRequest = await tx.request.update({
 				where: { id: data.requestId, status: "PENDING" },
-				data: { status: "APPROVED", approvedAt: new Date() },
+				data: {
+					status: "APPROVED",
+					approvedAt: new Date(),
+					adminResponse: data.adminResponse || null,
+				},
 			});
 
 			const order = await tx.order.create({

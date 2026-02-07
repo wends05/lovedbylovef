@@ -1,7 +1,3 @@
-/**
- * Requests Query Options
- */
-
 import {
 	infiniteQueryOptions,
 	mutationOptions,
@@ -10,11 +6,12 @@ import {
 import type { RequestStatus } from "@/generated/prisma/enums";
 import {
 	cancelRequest,
+	deleteUserRequest,
 	getRequestById,
 	getUserRequests,
 	submitRequest,
-	updateUserRequest,
 	updateRequestStatus,
+	updateUserRequest,
 } from "./server";
 
 const REQUESTS_PAGE_SIZE = 10;
@@ -54,6 +51,10 @@ export const requestsMutationOptions = {
 	cancelRequest: mutationOptions({
 		mutationKey: ["requests", "cancel"],
 		mutationFn: cancelRequest,
+	}),
+	deleteUserRequest: mutationOptions({
+		mutationKey: ["requests", "deleteUser"],
+		mutationFn: deleteUserRequest,
 	}),
 	updateRequestStatus: mutationOptions({
 		mutationKey: ["requests", "updateStatus"],

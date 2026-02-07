@@ -5,6 +5,7 @@ import {
 	MoreVertical,
 	Package,
 	Pencil,
+	Trash2,
 	X,
 } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -38,6 +39,7 @@ type RequestWithOrder = {
 interface RequestCardProps {
 	request: RequestWithOrder;
 	onCancel: () => void;
+	onDelete: () => void;
 	onEdit: () => void;
 	onView: () => void;
 	onChat: (orderId: string) => void;
@@ -46,6 +48,7 @@ interface RequestCardProps {
 export function RequestCard({
 	request,
 	onCancel,
+	onDelete,
 	onEdit,
 	onView,
 	onChat,
@@ -113,6 +116,16 @@ export function RequestCard({
 								>
 									<X className="w-4 h-4 mr-2" />
 									Cancel Request
+								</DropdownMenuItem>
+							)}
+							{(request.status === "CANCELLED" ||
+								request.status === "REJECTED") && (
+								<DropdownMenuItem
+									onClick={onDelete}
+									className="text-destructive focus:text-destructive"
+								>
+									<Trash2 className="w-4 h-4 mr-2" />
+									Delete Request
 								</DropdownMenuItem>
 							)}
 						</DropdownMenuContent>

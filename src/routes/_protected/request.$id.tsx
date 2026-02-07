@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import z from "zod";
-import RequestDetailPage from "@/features/requests/components/RequestDetailPage";
+import RequestDetailPage from "@/features/requests/components/request-detail/RequestDetailPage";
 import { requestsQueryOptions } from "@/features/requests/options";
 
 export const Route = createFileRoute("/_protected/request/$id")({

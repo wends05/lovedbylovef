@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Crochet {
-  id          String   @id @default(cuid())
+  id          String   @id @default(cuid()) @unique
   name        String
   imagePath   String
   imageHash   String?
@@ -21,7 +21,7 @@ model Crochet {
 }
 
 model Order {
-  id          String      @id @default(cuid())
+  id          String      @id @default(cuid()) @unique
   requestorId String      @db.Uuid
   requestId   String      @unique
   totalPrice  Float?
@@ -51,7 +51,7 @@ enum Category {
 
 // Request model for custom order requests with approval flow
 model Request {
-  id          String        @id @default(cuid())
+  id          String        @id @default(cuid()) @unique
   userId      String        @db.Uuid
   user        User          @relation(name: "RequestUser", fields: [userId], references: [id], onDelete: Cascade)
   title       String

@@ -37,7 +37,7 @@ import { CreateCrochetFormSchema } from "../../schemas/CrochetSchemas";
 const defaultValues: CreateCrochetFormInput = {
 	name: "",
 	description: "",
-	category: Category.TOY,
+	category: Category.OTHERS,
 	price: null,
 	imagePath: undefined,
 	isVisible: true,
