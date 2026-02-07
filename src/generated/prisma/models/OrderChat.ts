@@ -210,7 +210,7 @@ export type OrderChatWhereUniqueInput = Prisma.AtLeast<{
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   messages?: Prisma.ChatMessageListRelationFilter
-}, "id" | "orderId">
+}, "id" | "id" | "orderId">
 
 export type OrderChatOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

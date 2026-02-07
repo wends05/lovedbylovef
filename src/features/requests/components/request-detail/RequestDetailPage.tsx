@@ -14,7 +14,7 @@ import {
 
 import { Separator } from "@/components/ui/separator";
 import { DeleteDialog } from "@/features/dashboard/requests/components/DeleteDialog";
-import { Route } from "@/routes/_protected/request.$id";
+import { Route } from "@/routes/request.$id";
 import { requestsQueryOptions } from "../../options";
 import { REQUEST_STATUS_DETAIL_CONFIG } from "../../schemas/RequestOptions";
 import {
@@ -29,7 +29,7 @@ import { RequestEditForm } from "./RequestEditForm";
 import { RequestImageCard } from "./RequestImageCard";
 
 export default function RequestDetailPage() {
-	const { id } = useParams({ from: "/_protected/request/$id" });
+	const { id } = useParams({ from: "/request/$id" });
 
 	const router = useRouter();
 	const { data: request } = useSuspenseQuery(
@@ -37,11 +37,12 @@ export default function RequestDetailPage() {
 	);
 	const search = Route.useSearch();
 	const isPendingRequest = request.status === "PENDING";
-	const isDeletableRequest =
-		request.status === "CANCELLED" || request.status === "REJECTED";
-	const [isEditing, setIsEditing] = useState(
-		Boolean(search.edit) && isPendingRequest,
-	);
+	const canEdit = request.canEdit ?? isPendingRequest;
+	const canCancel = request.canCancel ?? isPendingRequest;
+	const canDelete =
+		request.canDelete ??
+		(request.status === "CANCELLED" || request.status === "REJECTED");
+	const [isEditing, setIsEditing] = useState(Boolean(search.edit) && canEdit);
 
 	const status = REQUEST_STATUS_DETAIL_CONFIG[request.status];
 	const StatusIcon = status.icon;
@@ -125,7 +126,7 @@ export default function RequestDetailPage() {
 							<Separator />
 
 							{/* Action Buttons */}
-							{isPendingRequest && (
+							{canEdit && (
 								<div className="space-y-2">
 									<Button
 										variant="outline"
@@ -135,27 +136,29 @@ export default function RequestDetailPage() {
 									>
 										{isEditing ? "Close Edit" : "Edit Request"}
 									</Button>
-									<Button
-										variant="destructive"
-										className="w-full"
-										onClick={() => setCancelDialogOpen(true)}
-										disabled={isCancelling}
-									>
-										{isCancelling ? (
-											<>
-												<Loader2 className="w-4 h-4 mr-2 animate-spin" />
-												Cancelling...
-											</>
-										) : (
-											<>
-												<X className="w-4 h-4 mr-2" />
-												Cancel Request
-											</>
-										)}
-									</Button>
+									{canCancel && (
+										<Button
+											variant="destructive"
+											className="w-full"
+											onClick={() => setCancelDialogOpen(true)}
+											disabled={isCancelling}
+										>
+											{isCancelling ? (
+												<>
+													<Loader2 className="w-4 h-4 mr-2 animate-spin" />
+													Cancelling...
+												</>
+											) : (
+												<>
+													<X className="w-4 h-4 mr-2" />
+													Cancel Request
+												</>
+											)}
+										</Button>
+									)}
 								</div>
 							)}
-							{isDeletableRequest && (
+							{canDelete && (
 								<div className="space-y-2">
 									<Button
 										variant="destructive"

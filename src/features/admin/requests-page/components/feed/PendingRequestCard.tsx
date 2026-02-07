@@ -1,4 +1,6 @@
+import { Link } from "@tanstack/react-router";
 import { MessageSquare } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -31,6 +33,13 @@ export function PendingRequestCard({ request }: PendingRequestCardProps) {
 							{new Date(request.createdAt).toLocaleDateString()}
 						</CardDescription>
 					</div>
+					<Link
+						to="/request/$id"
+						params={{ id: request.id }}
+						className={buttonVariants({ variant: "outline", size: "sm" })}
+					>
+						View Details
+					</Link>
 				</div>
 			</CardHeader>
 

@@ -21,7 +21,13 @@ export const REQUEST_STATUS_FILTER_CONFIG = {
 	...REQUEST_STATUS_BADGE_CONFIG,
 } as const;
 
-export const REQUEST_STATUS_DETAIL_CONFIG = {
+export const REQUEST_STATUS_DETAIL_CONFIG : Record<RequestStatus, {
+	label: string;
+	color: string;
+	bgColor: string;
+	icon: React.ComponentType;
+	description: string;
+}> = {
 	PENDING: {
 		label: "Pending",
 		color: "text-yellow-600",
@@ -56,7 +62,7 @@ export const REQUEST_STATUS_DETAIL_CONFIG = {
 		color: "text-gray-600",
 		bgColor: "bg-gray-50",
 		icon: AlertCircle,
-		description: "You have cancelled this request",
+		description: "This request has been cancelled and will not be processed",
 	},
 } as const;
 

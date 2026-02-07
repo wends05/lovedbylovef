@@ -16,6 +16,7 @@ import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as RequestIdRouteImport } from './routes/request.$id'
 import { Route as ChatOrderIdRouteImport } from './routes/chat/$orderId'
 import { Route as AdminRequestsRouteImport } from './routes/admin/requests'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
@@ -32,7 +33,6 @@ import { Route as AuthSigninRouteImport } from './routes/_auth/signin'
 import { Route as AdminGalleryRouteRouteImport } from './routes/admin/gallery/route'
 import { Route as AdminGalleryIndexRouteImport } from './routes/admin/gallery/index'
 import { Route as AdminGalleryCreateRouteImport } from './routes/admin/gallery/create'
-import { Route as ProtectedRequestIdRouteImport } from './routes/_protected/request.$id'
 import { Route as AdminGalleryIdEditRouteImport } from './routes/admin/gallery/$id.edit'
 
 const AuthRoute = AuthRouteImport.update({
@@ -66,6 +66,11 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PublicRouteRoute,
+} as any)
+const RequestIdRoute = RequestIdRouteImport.update({
+  id: '/request/$id',
+  path: '/request/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ChatOrderIdRoute = ChatOrderIdRouteImport.update({
   id: '/$orderId',
@@ -147,11 +152,6 @@ const AdminGalleryCreateRoute = AdminGalleryCreateRouteImport.update({
   path: '/create',
   getParentRoute: () => AdminGalleryRouteRoute,
 } as any)
-const ProtectedRequestIdRoute = ProtectedRequestIdRouteImport.update({
-  id: '/request/$id',
-  path: '/request/$id',
-  getParentRoute: () => ProtectedRouteRoute,
-} as any)
 const AdminGalleryIdEditRoute = AdminGalleryIdEditRouteImport.update({
   id: '/$id/edit',
   path: '/$id/edit',
@@ -177,7 +177,7 @@ export interface FileRoutesByFullPath {
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/chat/$orderId': typeof ChatOrderIdRoute
-  '/request/$id': typeof ProtectedRequestIdRoute
+  '/request/$id': typeof RequestIdRoute
   '/admin/gallery/create': typeof AdminGalleryCreateRoute
   '/admin/gallery/': typeof AdminGalleryIndexRoute
   '/admin/gallery/$id/edit': typeof AdminGalleryIdEditRoute
@@ -200,7 +200,7 @@ export interface FileRoutesByTo {
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/chat/$orderId': typeof ChatOrderIdRoute
-  '/request/$id': typeof ProtectedRequestIdRoute
+  '/request/$id': typeof RequestIdRoute
   '/admin/gallery/create': typeof AdminGalleryCreateRoute
   '/admin/gallery': typeof AdminGalleryIndexRoute
   '/admin/gallery/$id/edit': typeof AdminGalleryIdEditRoute
@@ -227,8 +227,8 @@ export interface FileRoutesById {
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/chat/$orderId': typeof ChatOrderIdRoute
+  '/request/$id': typeof RequestIdRoute
   '/_public/': typeof PublicIndexRoute
-  '/_protected/request/$id': typeof ProtectedRequestIdRoute
   '/admin/gallery/create': typeof AdminGalleryCreateRoute
   '/admin/gallery/': typeof AdminGalleryIndexRoute
   '/admin/gallery/$id/edit': typeof AdminGalleryIdEditRoute
@@ -303,8 +303,8 @@ export interface FileRouteTypes {
     | '/admin/orders'
     | '/admin/requests'
     | '/chat/$orderId'
+    | '/request/$id'
     | '/_public/'
-    | '/_protected/request/$id'
     | '/admin/gallery/create'
     | '/admin/gallery/'
     | '/admin/gallery/$id/edit'
@@ -317,6 +317,7 @@ export interface RootRouteChildren {
   ChatRouteRoute: typeof ChatRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
   AuthRoute: typeof AuthRouteWithChildren
+  RequestIdRoute: typeof RequestIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -369,6 +370,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRouteRoute
+    }
+    '/request/$id': {
+      id: '/request/$id'
+      path: '/request/$id'
+      fullPath: '/request/$id'
+      preLoaderRoute: typeof RequestIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/chat/$orderId': {
       id: '/chat/$orderId'
@@ -482,13 +490,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGalleryCreateRouteImport
       parentRoute: typeof AdminGalleryRouteRoute
     }
-    '/_protected/request/$id': {
-      id: '/_protected/request/$id'
-      path: '/request/$id'
-      fullPath: '/request/$id'
-      preLoaderRoute: typeof ProtectedRequestIdRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
     '/admin/gallery/$id/edit': {
       id: '/admin/gallery/$id/edit'
       path: '/$id/edit'
@@ -504,7 +505,6 @@ interface ProtectedRouteRouteChildren {
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
   ProtectedOrdersRoute: typeof ProtectedOrdersRoute
   ProtectedRequestsRoute: typeof ProtectedRequestsRoute
-  ProtectedRequestIdRoute: typeof ProtectedRequestIdRoute
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
@@ -512,7 +512,6 @@ const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
   ProtectedDashboardRoute: ProtectedDashboardRoute,
   ProtectedOrdersRoute: ProtectedOrdersRoute,
   ProtectedRequestsRoute: ProtectedRequestsRoute,
-  ProtectedRequestIdRoute: ProtectedRequestIdRoute,
 }
 
 const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
@@ -601,6 +600,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRouteRoute: ChatRouteRouteWithChildren,
   SplatRoute: SplatRoute,
   AuthRoute: AuthRouteWithChildren,
+  RequestIdRoute: RequestIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

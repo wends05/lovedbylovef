@@ -285,7 +285,7 @@ export type CrochetWhereUniqueInput = Prisma.AtLeast<{
   isVisible?: Prisma.BoolFilter<"Crochet"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Crochet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Crochet"> | Date | string
-}, "id">
+}, "id" | "id">
 
 export type CrochetOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

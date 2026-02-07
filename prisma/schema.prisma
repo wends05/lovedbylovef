@@ -98,7 +98,7 @@ model User {
 }
 
 model OrderChat {
-  id        String   @id @default(cuid())
+  id        String   @id @default(cuid()) @unique
   orderId   String   @unique
   userId    String   @db.Uuid
   createdAt DateTime @default(now())
@@ -110,7 +110,7 @@ model OrderChat {
 }
 
 model ChatMessage {
-  id          String   @id @default(cuid())
+  id          String   @id @default(cuid()) @unique
   orderChatId String
   authorId    String   @db.Uuid
   content     String

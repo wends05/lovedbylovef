@@ -21,13 +21,22 @@ export function OrderCard({ order }: OrderCardProps) {
 				</div>
 			}
 			actions={
-				<Link
-					to="/chat/$orderId"
-					params={{ orderId: order.id }}
-					className={buttonVariants({ variant: "outline", size: "sm" })}
-				>
-					Chat
-				</Link>
+				<div className="flex flex-wrap gap-2">
+					<Link
+						to="/request/$id"
+						params={{ id: order.requestId }}
+						className={buttonVariants({ variant: "outline", size: "sm" })}
+					>
+						View Request
+					</Link>
+					<Link
+						to="/chat/$orderId"
+						params={{ orderId: order.id }}
+						className={buttonVariants({ variant: "outline", size: "sm" })}
+					>
+						Chat
+					</Link>
+				</div>
 			}
 		/>
 	);

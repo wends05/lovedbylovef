@@ -264,7 +264,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   request?: Prisma.XOR<Prisma.RequestScalarRelationFilter, Prisma.RequestWhereInput>
   orderChat?: Prisma.XOR<Prisma.OrderChatNullableScalarRelationFilter, Prisma.OrderChatWhereInput> | null
-}, "id" | "requestId">
+}, "id" | "id" | "requestId">
 
 export type OrderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

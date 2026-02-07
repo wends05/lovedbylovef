@@ -81,8 +81,14 @@ export const getUserRequests = createServerFn()
 	});
 
 export const getRequestById = createServerFn()
+	.middleware([authMiddleware])
 	.inputValidator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
+
+		// For simplicity, we allow both admins and regular users to use the same endpoint to fetch request details,
+		// and determine permissions (edit/cancel/delete) based on the request status and user role.
+		// Admins can view all requests but cannot edit/cancel/delete.
+		// Regular users can only view their own requests and can edit/cancel/delete based on the request status.
 		const supabase = getSupabaseServerClient();
 		const { data: authData } = await supabase.auth.getUser();
 
@@ -90,18 +96,36 @@ export const getRequestById = createServerFn()
 			throw new Error("Unauthorized");
 		}
 
+		const viewer = await prisma.user.findUnique({
+			where: { id: authData.user.id },
+			select: { role: true },
+		});
+
+		const isAdmin = viewer?.role === "ADMIN";
+
 		const request = await prisma.request.findFirst({
-			where: {
-				id: data.id,
-				userId: authData.user.id,
-			},
+			where: isAdmin
+				? { id: data.id }
+				: { id: data.id, userId: authData.user.id },
 		});
 
 		if (!request) {
 			throw new Error("Request not found");
 		}
 
-		return withImageUrl(request);
+		const canEdit = !isAdmin && request.status === RequestStatus.PENDING;
+		const canCancel = !isAdmin && request.status === RequestStatus.PENDING;
+		const canDelete =
+			!isAdmin &&
+			(request.status === RequestStatus.CANCELLED ||
+				request.status === RequestStatus.REJECTED);
+
+		return {
+			...withImageUrl(request),
+			canEdit,
+			canCancel,
+			canDelete,
+		};
 	});
 
 export const cancelRequest = createServerFn({ method: "POST" })
@@ -350,7 +374,12 @@ export const updateRequestStatus = createServerFn({ method: "POST" })
 				error,
 				success,
 			} = await tryCatch(
-				initiateOrder({ data: { requestId: data.requestId, adminResponse: data.adminResponse } }),
+				initiateOrder({
+					data: {
+						requestId: data.requestId,
+						adminResponse: data.adminResponse,
+					},
+				}),
 			);
 
 			if (!success) {

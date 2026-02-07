@@ -257,7 +257,7 @@ export type RequestWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Request"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
-}, "id">
+}, "id" | "id">
 
 export type RequestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
