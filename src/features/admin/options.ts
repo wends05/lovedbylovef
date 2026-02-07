@@ -1,10 +1,10 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import type { GetRequestsQueryInput } from "../requests/schemas/GetRequestsQuery";
-import type { GetOrdersQueryInput } from "./orders/schemas/GetOrdersQuery";
+import type { GetOrdersQueryInput } from "@/features/orders/admin/schemas/GetOrdersQuery";
 import { getAllRequests } from "../requests/server";
 import { getAdminDashboardData } from "./dashboard/server";
 import { getAllCrochetsAdmin, getCrochetById } from "./gallery/server";
-import { getAllOrders } from "./orders/server";
+import { getAllOrders } from "@/features/orders/admin/server";
 
 export const adminDashboardQueryOptions = {
 	getAdminDashboardData: queryOptions({

@@ -1,18 +1,30 @@
 import { createServerFn } from "@tanstack/react-start";
-import { adminMiddleware } from "@/features/auth/middleware";
+import { authMiddleware } from "@/features/auth/middleware";
+import { getSupabaseServerClient } from "@/integrations/supabase/server";
 import { prisma } from "@/lib/prisma-client";
-import { GetOrdersQuerySchema } from "./schemas/GetOrdersQuery";
+import { GetUserOrdersSchema } from "./schemas/GetUserOrders";
 
-export const getAllOrders = createServerFn()
-	.middleware([adminMiddleware])
-	.inputValidator(GetOrdersQuerySchema)
+export const getUserOrders = createServerFn()
+	.middleware([authMiddleware])
+	.inputValidator(GetUserOrdersSchema)
 	.handler(async ({ data }) => {
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
+
+		if (!authData.user?.id) {
+			throw new Error("Unauthorized");
+		}
+
 		const pageSize = data.pageSize;
+
 		const orders = await prisma.order.findMany({
+			where: {
+				requestorId: authData.user.id,
+				status: {
+					not: "CANCELED",
+				},
+			},
 			orderBy: { createdAt: "desc" },
-			...(data.status && data.status !== "ALL"
-				? { where: { status: data.status } }
-				: {}),
 			take: pageSize + 1,
 			...(data.cursor
 				? {
@@ -21,11 +33,10 @@ export const getAllOrders = createServerFn()
 					}
 				: {}),
 			include: {
-				user: {
+				request: {
 					select: {
-						id: true,
-						name: true,
-						email: true,
+						title: true,
+						description: true,
 					},
 				},
 			},
