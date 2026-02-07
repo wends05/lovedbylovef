@@ -123,6 +123,13 @@ export default function RequestsPage() {
 								key={request.id}
 								request={request}
 								onCancel={() => handleCancelClick(request.id)}
+								onEdit={() =>
+									navigate({
+										to: "/request/$id",
+										params: { id: request.id },
+										search: { edit: true },
+									})
+								}
 								onView={() =>
 									navigate({
 										to: "/request/$id",

@@ -14,6 +14,7 @@ import {
 	getRequestById,
 	getUserRequests,
 	submitRequest,
+	updateUserRequest,
 	updateRequestStatus,
 } from "./server";
 
@@ -46,6 +47,10 @@ export const requestsMutationOptions = {
 	submitRequest: mutationOptions({
 		mutationKey: ["requests", "submit"],
 		mutationFn: submitRequest,
+	}),
+	updateUserRequest: mutationOptions({
+		mutationKey: ["requests", "updateUser"],
+		mutationFn: updateUserRequest,
 	}),
 	cancelRequest: mutationOptions({
 		mutationKey: ["requests", "cancel"],

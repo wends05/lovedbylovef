@@ -10,7 +10,7 @@ export const CreateCrochetFormSchema = z.object({
 	imageKey: z.string().optional(),
 	imageHash: z.string().optional(),
 	isVisible: z.boolean(),
-	file: z.file(),
+	file: z.file("Image file is required"),
 });
 
 export type CreateCrochetFormInput = z.infer<typeof CreateCrochetFormSchema>;

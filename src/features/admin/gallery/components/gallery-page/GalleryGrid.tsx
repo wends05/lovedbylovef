@@ -92,7 +92,7 @@ export function GalleryGrid({
 							{item.description}
 						</p>
 						<p className="font-semibold text-lg">
-							{item.price ? `$${item.price.toFixed(2)}` : "No price set"}
+							{item.price ? `₱${item.price.toFixed(2)}` : "No price set"}
 						</p>
 					</CardContent>
 				</Card>

@@ -1,11 +1,17 @@
 import { formatDistanceToNow } from "date-fns";
-import { Eye, MessageCircleMore, MoreVertical, Package, X } from "lucide-react";
+import {
+	Eye,
+	MessageCircleMore,
+	MoreVertical,
+	Package,
+	Pencil,
+	X,
+} from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
-	CardDescription,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
@@ -27,6 +33,7 @@ type RequestWithOrder = Request & {
 interface RequestCardProps {
 	request: RequestWithOrder;
 	onCancel: () => void;
+	onEdit: () => void;
 	onView: () => void;
 	onChat: (orderId: string) => void;
 }
@@ -34,6 +41,7 @@ interface RequestCardProps {
 export function RequestCard({
 	request,
 	onCancel,
+	onEdit,
 	onView,
 	onChat,
 }: RequestCardProps) {
@@ -61,7 +69,7 @@ export function RequestCard({
 			</button>
 
 			{/* Content */}
-			<CardHeader className="pb-3">
+			<CardHeader className="pb-3 h-full">
 				<div className="flex items-start justify-between gap-2">
 					<div className="flex-1 min-w-0">
 						<CardTitle className="text-lg font-semibold line-clamp-1">
@@ -88,6 +96,12 @@ export function RequestCard({
 								View Details
 							</DropdownMenuItem>
 							{request.status === "PENDING" && (
+								<DropdownMenuItem onClick={onEdit}>
+									<Pencil className="w-4 h-4 mr-2" />
+									Edit Request
+								</DropdownMenuItem>
+							)}
+							{request.status === "PENDING" && (
 								<DropdownMenuItem
 									onClick={onCancel}
 									className="text-destructive focus:text-destructive"
@@ -99,10 +113,6 @@ export function RequestCard({
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
-
-				<CardDescription className="line-clamp-2 mt-2">
-					{request.description}
-				</CardDescription>
 			</CardHeader>
 
 			<CardContent className="pt-0">

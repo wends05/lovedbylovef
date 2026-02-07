@@ -251,7 +251,7 @@ export default function OrderChatPage({ orderId }: OrderChatPageProps) {
 													{format(message.createdAt, "MMM d • h:mm a")}
 												</span>
 											</div>
-											<p className="text-sm leading-relaxed break-words">
+											<p className="text-sm leading-relaxed wrap-break-word">
 												{message.content}
 											</p>
 										</div>

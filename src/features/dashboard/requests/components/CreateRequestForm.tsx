@@ -16,7 +16,9 @@ import {
 	Dropzone,
 	DropzoneTrigger,
 } from "@/components/ui/dropzone";
+import { FieldError } from "@/components/ui/field";
 import { ImageZoom } from "@/components/ui/image-zoom";
+import { Label } from "@/components/ui/label";
 import { requestsMutationOptions } from "@/features/requests/options";
 import {
 	type RequestFormInput,
@@ -154,8 +156,9 @@ export default function CreateRequestForm() {
 						)}
 					</form.AppField>
 					<form.AppField name="file">
-						{() => (
+						{(field) => (
 							<div className="space-y-4">
+								<Label>Upload Reference Image (optional)</Label>
 								<Dropzone {...dropzone}>
 									<DropZoneArea className="flex flex-col items-center justify-center gap-4 p-8 border-2 border-dashed border-border rounded-lg hover:border-primary/50 transition-colors">
 										<DropzoneTrigger className="flex flex-col items-center gap-2 cursor-pointer">
@@ -196,6 +199,9 @@ export default function CreateRequestForm() {
 											Clear Image
 										</Button>
 									</>
+								)}
+								{field.state.meta.errors && (
+									<FieldError errors={field.state.meta.errors} />
 								)}
 							</div>
 						)}

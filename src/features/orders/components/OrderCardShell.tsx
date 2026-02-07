@@ -22,8 +22,8 @@ export function OrderCardShell({
 }: OrderCardShellProps) {
 	return (
 		<Card>
-			<CardHeader className="pb-3">
-				<CardTitle className="text-lg">Order #{orderId}</CardTitle>
+			<CardHeader className="pb-3 h-full">
+				<CardTitle className="text-lg">#{orderId}</CardTitle>
 				<p className="text-sm text-muted-foreground">
 					{format(new Date(createdAt), "MMM d, yyyy")}
 				</p>
@@ -36,7 +36,7 @@ export function OrderCardShell({
 				<div className="text-sm text-muted-foreground">
 					Total:{" "}
 					<span className="font-medium">
-						{totalPrice ? `$${totalPrice.toFixed(2)}` : "—"}
+						{totalPrice ? `₱${totalPrice.toFixed(2)}` : "—"}
 					</span>
 				</div>
 				{actions ? <div className="pt-2">{actions}</div> : null}

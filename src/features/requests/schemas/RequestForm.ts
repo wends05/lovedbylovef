@@ -15,3 +15,17 @@ export const RequestFormSubmission = z.object({
 	imageKey: z.string().optional(),
 });
 export type RequestFormSubmission = z.infer<typeof RequestFormSubmission>;
+
+export const UpdateRequestFormSchema = RequestFormSchema.extend({
+	id: z.string(),
+});
+
+export type UpdateRequestFormInput = z.infer<typeof UpdateRequestFormSchema>;
+
+export const UpdateRequestSubmissionSchema = RequestFormSubmission.extend({
+	id: z.string(),
+});
+
+export type UpdateRequestSubmission = z.infer<
+	typeof UpdateRequestSubmissionSchema
+>;

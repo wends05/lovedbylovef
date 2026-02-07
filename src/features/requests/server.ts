@@ -12,7 +12,10 @@ import { prisma } from "@/lib/prisma-client";
 import { tryCatch } from "@/lib/try-catch";
 import { adminMiddleware } from "../auth/middleware";
 import { GetRequestsQuerySchema } from "./schemas/GetRequestsQuery";
-import { RequestFormSubmission } from "./schemas/RequestForm";
+import {
+	RequestFormSubmission,
+	UpdateRequestSubmissionSchema,
+} from "./schemas/RequestForm";
 import { UpdateRequestStatusSchema } from "./schemas/UpdateRequestStatus";
 
 interface GetUserRequestsInput {
@@ -153,6 +156,45 @@ export const submitRequest = createServerFn({ method: "POST" })
 
 		console.log("Request created:", request);
 		return request.data;
+	});
+
+export const updateUserRequest = createServerFn({ method: "POST" })
+	.inputValidator(UpdateRequestSubmissionSchema)
+	.handler(async ({ data }) => {
+		const supabase = getSupabaseServerClient();
+		const { data: authData } = await supabase.auth.getUser();
+
+		if (!authData.user?.id) {
+			throw new Error("Unauthorized");
+		}
+
+		const existingRequest = await prisma.request.findFirst({
+			where: {
+				id: data.id,
+				userId: authData.user.id,
+				status: "PENDING",
+			},
+		});
+
+		if (!existingRequest) {
+			throw new Error(
+				"Request not found or cannot be edited (only pending requests can be edited)",
+			);
+		}
+
+		const updateData: RequestUpdateInput = {
+			title: data.title,
+			description: data.description,
+			...(data.imageUrl !== undefined ? { imageUrl: data.imageUrl } : {}),
+			...(data.imageKey !== undefined ? { imageKey: data.imageKey } : {}),
+		};
+
+		const updatedRequest = await prisma.request.update({
+			where: { id: data.id },
+			data: updateData,
+		});
+
+		return updatedRequest;
 	});
 
 export const deleteImage = createServerFn({ method: "POST" })
