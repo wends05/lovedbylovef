@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { REQUEST_STATUS_FILTER_CONFIG } from "@/features/requests/schemas/RequestOptions";
 import type { RequestStatus } from "@/generated/prisma/enums";
 
@@ -22,7 +23,7 @@ export function StatusFilters({
 				const isActive = activeFilter === status;
 
 				return (
-					<button
+					<Button
 						key={status}
 						onClick={() => onFilterChange(status)}
 						className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
@@ -33,7 +34,7 @@ export function StatusFilters({
 					>
 						<Icon className="w-4 h-4" />
 						{config.label}
-					</button>
+					</Button>
 				);
 			})}
 		</div>

@@ -1,21 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
-import { requestsMutationOptions } from "@/features/requests/options";
-import type { UpdateRequestStatusInput } from "@/features/requests/schemas/UpdateRequestStatus";
 import { RequestStatus } from "@/generated/prisma/enums";
-import { tryCatch } from "@/lib/try-catch";
 // Import the route to get typed search params
 import { Route } from "@/routes/admin/requests";
 import { PendingRequestsFeed } from "./feed/PendingRequestsFeed";
 import { OtherStatusesView } from "./status-sections/OtherStatusesView";
 
 export default function RequestManagement() {
-	const queryClient = useQueryClient();
-	const updateRequestStatusMutation = useMutation(
-		requestsMutationOptions.updateRequestStatus,
-	);
-
 	// Use typed search params from the route (validated by Zod schema)
 	const search = Route.useSearch();
 
@@ -25,26 +15,6 @@ export default function RequestManagement() {
 		RequestStatus,
 		"PENDING"
 	>;
-
-	const handleProcessRequest = async (data: UpdateRequestStatusInput) => {
-		// handle updates to the request status.
-		const { success, error } = await tryCatch(
-			updateRequestStatusMutation.mutateAsync({ data }),
-		);
-
-		if (!success) {
-			toast.error("Failed to update request status", {
-				description: error || "An error occurred while updating the request",
-			});
-		} else {
-			toast.success(`Request ${data.status.toLowerCase()} successfully`);
-
-			// Invalidate and refetch pending requests
-			await queryClient.invalidateQueries({
-				queryKey: ["adminRequests"],
-			});
-		}
-	};
 
 	return (
 		<div className="space-y-8">
@@ -59,7 +29,7 @@ export default function RequestManagement() {
 			</div>
 
 			{/* Pending Requests Feed */}
-			<PendingRequestsFeed onProcess={handleProcessRequest} />
+			<PendingRequestsFeed />
 
 			<Separator className="my-8" />
 

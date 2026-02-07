@@ -19,14 +19,18 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { authClient } from "@/lib/auth-client";
+import { supabase } from "@/integrations/supabase/client";
+import { useSupabaseSession } from "@/integrations/supabase/use-session";
 
 export function UserSidebar() {
 	const router = useRouter();
-	const { data: session } = authClient.useSession();
+	const { session } = useSupabaseSession();
 
 	const user = session?.user;
-	const userName = user?.name || user?.email?.split("@")[0] || "User";
+	const userName =
+		(user?.user_metadata as { name?: string } | null)?.name ||
+		user?.email?.split("@")[0] ||
+		"User";
 	const initials = userName
 		.split(" ")
 		.map((n) => n[0])
@@ -35,7 +39,7 @@ export function UserSidebar() {
 		.slice(0, 2);
 
 	const handleSignOut = async () => {
-		await authClient.signOut();
+		await supabase.auth.signOut();
 		router.navigate({ to: "/" });
 	};
 

@@ -10,11 +10,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import type { RequestStatus } from "@/generated/prisma/enums";
 import {
 	ADMIN_REQUEST_ORDER_OPTIONS,
 	ADMIN_REQUEST_SORT_OPTIONS,
 } from "@/features/requests/schemas/RequestOptions";
+import type { RequestStatus } from "@/generated/prisma/enums";
 
 interface FilterState {
 	status?: string | RequestStatus;

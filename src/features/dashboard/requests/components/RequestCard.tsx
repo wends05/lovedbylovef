@@ -1,11 +1,18 @@
 import { formatDistanceToNow } from "date-fns";
-import { Eye, MoreVertical, Package, X } from "lucide-react";
+import {
+	Eye,
+	MessageCircleMore,
+	MoreVertical,
+	Package,
+	Pencil,
+	Trash2,
+	X,
+} from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
-	CardDescription,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
@@ -16,17 +23,39 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { REQUEST_STATUS_BADGE_CONFIG } from "@/features/requests/schemas/RequestOptions";
-import type { Request } from "@/generated/prisma/client";
+import type { RequestStatus } from "@/generated/prisma/enums";
+
+type RequestWithOrder = {
+	id: string;
+	title: string;
+	status: RequestStatus;
+	createdAt: Date;
+	imageUrl: string | null;
+	order?: {
+		id: string;
+	} | null;
+};
 
 interface RequestCardProps {
-	request: Request;
+	request: RequestWithOrder;
 	onCancel: () => void;
+	onDelete: () => void;
+	onEdit: () => void;
 	onView: () => void;
+	onChat: (orderId: string) => void;
 }
 
-export function RequestCard({ request, onCancel, onView }: RequestCardProps) {
+export function RequestCard({
+	request,
+	onCancel,
+	onDelete,
+	onEdit,
+	onView,
+	onChat,
+}: RequestCardProps) {
 	const status = REQUEST_STATUS_BADGE_CONFIG[request.status];
 	const StatusIcon = status.icon;
+	const orderId = request.order?.id;
 
 	return (
 		<Card className="group overflow-hidden hover:shadow-lg transition-all duration-300">
@@ -48,7 +77,7 @@ export function RequestCard({ request, onCancel, onView }: RequestCardProps) {
 			</button>
 
 			{/* Content */}
-			<CardHeader className="pb-3">
+			<CardHeader className="pb-3 h-full">
 				<div className="flex items-start justify-between gap-2">
 					<div className="flex-1 min-w-0">
 						<CardTitle className="text-lg font-semibold line-clamp-1">
@@ -75,6 +104,12 @@ export function RequestCard({ request, onCancel, onView }: RequestCardProps) {
 								View Details
 							</DropdownMenuItem>
 							{request.status === "PENDING" && (
+								<DropdownMenuItem onClick={onEdit}>
+									<Pencil className="w-4 h-4 mr-2" />
+									Edit Request
+								</DropdownMenuItem>
+							)}
+							{request.status === "PENDING" && (
 								<DropdownMenuItem
 									onClick={onCancel}
 									className="text-destructive focus:text-destructive"
@@ -83,29 +118,48 @@ export function RequestCard({ request, onCancel, onView }: RequestCardProps) {
 									Cancel Request
 								</DropdownMenuItem>
 							)}
+							{(request.status === "CANCELLED" ||
+								request.status === "REJECTED") && (
+								<DropdownMenuItem
+									onClick={onDelete}
+									className="text-destructive focus:text-destructive"
+								>
+									<Trash2 className="w-4 h-4 mr-2" />
+									Delete Request
+								</DropdownMenuItem>
+							)}
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
-
-				<CardDescription className="line-clamp-2 mt-2">
-					{request.description}
-				</CardDescription>
 			</CardHeader>
 
 			<CardContent className="pt-0">
 				{/* Status Badge */}
-				<div className="flex items-center justify-between">
-					<div
-						className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${status.color} text-white`}
-					>
-						<StatusIcon className="w-3 h-3" />
-						{status.label}
+				<div className="flex flex-col gap-3">
+					<div className="flex items-center justify-between">
+						<div
+							className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${status.color} text-white`}
+						>
+							<StatusIcon className="w-3 h-3" />
+							{status.label}
+						</div>
+						<span className="text-xs text-muted-foreground">
+							{formatDistanceToNow(new Date(request.createdAt), {
+								addSuffix: true,
+							})}
+						</span>
 					</div>
-					<span className="text-xs text-muted-foreground">
-						{formatDistanceToNow(new Date(request.createdAt), {
-							addSuffix: true,
-						})}
-					</span>
+					{orderId && (
+						<Button
+							variant="outline"
+							size="sm"
+							className="w-full"
+							onClick={() => onChat(orderId)}
+						>
+							<MessageCircleMore className="w-4 h-4 mr-2" />
+							Chat
+						</Button>
+					)}
 				</div>
 			</CardContent>
 		</Card>

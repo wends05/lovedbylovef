@@ -1,8 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
-import z from "zod";
 import { adminMiddleware } from "@/features/auth/middleware";
-import { utapi } from "@/integrations/uploadthing/api";
+import {
+	getStoragePublicUrl,
+} from "@/integrations/supabase/storage-server";
 import { prisma } from "@/lib/prisma-client";
+import { replaceImageWithCleanupOrThrow } from "@/features/storage/replace-image";
+import { deleteStorageImageServerOnly } from "@/features/storage/server-only";
 import {
 	CreateCrochetSchema,
 	DeleteCrochetSchema,
@@ -11,6 +14,13 @@ import {
 	UpdateCrochetSchema,
 } from "./schemas/CrochetSchemas";
 
+function withImageUrl<T extends { imagePath: string }>(crochet: T) {
+	return {
+		...crochet,
+		imageUrl: getStoragePublicUrl(crochet.imagePath),
+	};
+}
+
 // Get all crochets for admin (including hidden)
 export const getAllCrochetsAdmin = createServerFn()
 	.middleware([adminMiddleware])
@@ -18,7 +28,7 @@ export const getAllCrochetsAdmin = createServerFn()
 		const crochets = await prisma.crochet.findMany({
 			orderBy: { createdAt: "desc" },
 		});
-		return crochets;
+		return crochets.map(withImageUrl);
 	});
 
 // Get crochet by ID
@@ -32,7 +42,7 @@ export const getCrochetById = createServerFn()
 		if (!crochet) {
 			throw new Error("Crochet not found");
 		}
-		return crochet;
+		return withImageUrl(crochet);
 	});
 
 // Create new crochet
@@ -46,13 +56,12 @@ export const createCrochet = createServerFn({ method: "POST" })
 				description: data.description,
 				category: data.category,
 				price: data.price ?? null,
-				imageURL: data.imageURL,
-				imageKey: data.imageKey ?? null,
+				imagePath: data.imagePath,
 				imageHash: data.imageHash ?? null,
 				isVisible: data.isVisible ?? true,
 			},
 		});
-		return crochet;
+		return withImageUrl(crochet);
 	});
 
 // Update crochet
@@ -61,19 +70,46 @@ export const updateCrochet = createServerFn({ method: "POST" })
 	.inputValidator(UpdateCrochetSchema)
 	.handler(async ({ data }) => {
 		const { id, ...updateData } = data;
-		const crochet = await prisma.crochet.update({
+		const existingCrochet = await prisma.crochet.findUnique({
 			where: { id },
-			data: updateData,
 		});
-		return crochet;
-	});
 
-export const deleteCrochetImage = createServerFn({ method: "POST" })
-	.middleware([adminMiddleware])
-	.inputValidator(z.string())
-	.handler(async ({ data }) => {
-		const res = await utapi.deleteFiles(data);
-		return { success: res.success, deletedCount: res.deletedCount };
+		if (!existingCrochet) {
+			throw new Error("Crochet not found");
+		}
+
+		const previousCrochetState = {
+			name: existingCrochet.name,
+			description: existingCrochet.description,
+			category: existingCrochet.category,
+			price: existingCrochet.price,
+			imagePath: existingCrochet.imagePath,
+			imageHash: existingCrochet.imageHash,
+			isVisible: existingCrochet.isVisible,
+		};
+
+		const nextImagePath = data.imagePath ?? existingCrochet.imagePath;
+		const { record, replacedImage } = await replaceImageWithCleanupOrThrow({
+			scope: "crochets",
+			previousPath: existingCrochet.imagePath,
+			nextPath: nextImagePath,
+			applyRecordUpdate: () =>
+				prisma.crochet.update({
+					where: { id },
+					data: updateData,
+				}),
+			rollbackRecordUpdate: () =>
+				prisma.crochet.update({
+					where: { id },
+					data: previousCrochetState,
+				}),
+			cleanupNewPathOnRollback: true,
+		});
+
+		return {
+			crochet: withImageUrl(record),
+			replacedImage,
+		};
 	});
 
 // Delete crochet (hard delete)
@@ -85,8 +121,11 @@ export const deleteCrochet = createServerFn({ method: "POST" })
 		const crochet = await prisma.crochet.findUnique({
 			where: { id: data.id },
 		});
-		if (crochet?.imageKey) {
-			await utapi.deleteFiles([crochet.imageKey]);
+		if (crochet?.imagePath) {
+			await deleteStorageImageServerOnly({
+				path: crochet.imagePath,
+				scope: "crochets",
+			});
 		}
 		await prisma.crochet.delete({
 			where: { id: data.id },
@@ -103,5 +142,5 @@ export const toggleCrochetVisibility = createServerFn({ method: "POST" })
 			where: { id: data.id },
 			data: { isVisible: data.isVisible },
 		});
-		return crochet;
+		return withImageUrl(crochet);
 	});

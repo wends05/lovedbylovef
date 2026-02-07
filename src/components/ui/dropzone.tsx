@@ -388,9 +388,9 @@ const useDropzone = <TUploadRes, TUploadError = string>(
 	};
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// biome-ignore lint/suspicious/noExplicitAny: Creating a generic context
-const DropZoneContext = createContext<UseDropzoneReturn<any, any>>({
+type DropzoneContextValue = UseDropzoneReturn<unknown, unknown>;
+
+const DropZoneContext = createContext<DropzoneContextValue>({
 	getRootProps: () => ({}) as never,
 	getInputProps: () => ({}) as never,
 	onRemoveFile: async () => {},

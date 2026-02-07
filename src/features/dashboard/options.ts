@@ -8,6 +8,6 @@ import { getDashboardData } from "./server";
 export const dashboardQueryOptions = {
 	getDashboardData: queryOptions({
 		queryKey: ["dashboardData"],
-		queryFn: getDashboardData
+		queryFn: getDashboardData,
 	}),
 };

@@ -9,11 +9,11 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RequestStatus } from "@/generated/prisma/enums";
 import {
 	ADMIN_REQUEST_DEFAULT_FILTERS,
 	ADMIN_REQUEST_STATUS_TABS,
 } from "@/features/requests/schemas/RequestOptions";
+import { RequestStatus } from "@/generated/prisma/enums";
 import type { RequestSearchParams } from "../../schemas/RequestSearchParams";
 import { StatusFilters } from "./StatusFilters";
 import { StatusSection } from "./StatusSection";
@@ -23,7 +23,6 @@ const routeApi = getRouteApi("/admin/requests");
 
 // Type for non-pending statuses (used in this component)
 type NonPendingStatus = Exclude<RequestStatus, "PENDING">;
-
 
 interface OtherStatusesViewProps {
 	initialStatus: NonPendingStatus;

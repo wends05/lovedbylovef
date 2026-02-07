@@ -24,8 +24,8 @@ export const GetRequestsQuerySchema = PaginationSchema.extend({
 	sortOrder: z.enum(["asc", "desc"]).default("desc"),
 
 	// Date range (ISO strings)
-	dateFrom: z.string().datetime().optional(),
-	dateTo: z.string().datetime().optional(),
+	dateFrom: z.iso.datetime().optional(),
+	dateTo: z.iso.datetime().optional(),
 });
 
 export type GetRequestsQueryInput = z.infer<typeof GetRequestsQuerySchema>;

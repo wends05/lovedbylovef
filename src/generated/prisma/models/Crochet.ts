@@ -37,8 +37,7 @@ export type CrochetSumAggregateOutputType = {
 export type CrochetMinAggregateOutputType = {
   id: string | null
   name: string | null
-  imageURL: string | null
-  imageKey: string | null
+  imagePath: string | null
   imageHash: string | null
   description: string | null
   category: $Enums.Category | null
@@ -51,8 +50,7 @@ export type CrochetMinAggregateOutputType = {
 export type CrochetMaxAggregateOutputType = {
   id: string | null
   name: string | null
-  imageURL: string | null
-  imageKey: string | null
+  imagePath: string | null
   imageHash: string | null
   description: string | null
   category: $Enums.Category | null
@@ -65,8 +63,7 @@ export type CrochetMaxAggregateOutputType = {
 export type CrochetCountAggregateOutputType = {
   id: number
   name: number
-  imageURL: number
-  imageKey: number
+  imagePath: number
   imageHash: number
   description: number
   category: number
@@ -89,8 +86,7 @@ export type CrochetSumAggregateInputType = {
 export type CrochetMinAggregateInputType = {
   id?: true
   name?: true
-  imageURL?: true
-  imageKey?: true
+  imagePath?: true
   imageHash?: true
   description?: true
   category?: true
@@ -103,8 +99,7 @@ export type CrochetMinAggregateInputType = {
 export type CrochetMaxAggregateInputType = {
   id?: true
   name?: true
-  imageURL?: true
-  imageKey?: true
+  imagePath?: true
   imageHash?: true
   description?: true
   category?: true
@@ -117,8 +112,7 @@ export type CrochetMaxAggregateInputType = {
 export type CrochetCountAggregateInputType = {
   id?: true
   name?: true
-  imageURL?: true
-  imageKey?: true
+  imagePath?: true
   imageHash?: true
   description?: true
   category?: true
@@ -218,8 +212,7 @@ export type CrochetGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type CrochetGroupByOutputType = {
   id: string
   name: string
-  imageURL: string
-  imageKey: string | null
+  imagePath: string
   imageHash: string | null
   description: string
   category: $Enums.Category
@@ -255,8 +248,7 @@ export type CrochetWhereInput = {
   NOT?: Prisma.CrochetWhereInput | Prisma.CrochetWhereInput[]
   id?: Prisma.StringFilter<"Crochet"> | string
   name?: Prisma.StringFilter<"Crochet"> | string
-  imageURL?: Prisma.StringFilter<"Crochet"> | string
-  imageKey?: Prisma.StringNullableFilter<"Crochet"> | string | null
+  imagePath?: Prisma.StringFilter<"Crochet"> | string
   imageHash?: Prisma.StringNullableFilter<"Crochet"> | string | null
   description?: Prisma.StringFilter<"Crochet"> | string
   category?: Prisma.EnumCategoryFilter<"Crochet"> | $Enums.Category
@@ -269,8 +261,7 @@ export type CrochetWhereInput = {
 export type CrochetOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  imageURL?: Prisma.SortOrder
-  imageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  imagePath?: Prisma.SortOrder
   imageHash?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
@@ -286,8 +277,7 @@ export type CrochetWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.CrochetWhereInput[]
   NOT?: Prisma.CrochetWhereInput | Prisma.CrochetWhereInput[]
   name?: Prisma.StringFilter<"Crochet"> | string
-  imageURL?: Prisma.StringFilter<"Crochet"> | string
-  imageKey?: Prisma.StringNullableFilter<"Crochet"> | string | null
+  imagePath?: Prisma.StringFilter<"Crochet"> | string
   imageHash?: Prisma.StringNullableFilter<"Crochet"> | string | null
   description?: Prisma.StringFilter<"Crochet"> | string
   category?: Prisma.EnumCategoryFilter<"Crochet"> | $Enums.Category
@@ -295,13 +285,12 @@ export type CrochetWhereUniqueInput = Prisma.AtLeast<{
   isVisible?: Prisma.BoolFilter<"Crochet"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Crochet"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Crochet"> | Date | string
-}, "id">
+}, "id" | "id">
 
 export type CrochetOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  imageURL?: Prisma.SortOrder
-  imageKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  imagePath?: Prisma.SortOrder
   imageHash?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
@@ -322,8 +311,7 @@ export type CrochetScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CrochetScalarWhereWithAggregatesInput | Prisma.CrochetScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Crochet"> | string
   name?: Prisma.StringWithAggregatesFilter<"Crochet"> | string
-  imageURL?: Prisma.StringWithAggregatesFilter<"Crochet"> | string
-  imageKey?: Prisma.StringNullableWithAggregatesFilter<"Crochet"> | string | null
+  imagePath?: Prisma.StringWithAggregatesFilter<"Crochet"> | string
   imageHash?: Prisma.StringNullableWithAggregatesFilter<"Crochet"> | string | null
   description?: Prisma.StringWithAggregatesFilter<"Crochet"> | string
   category?: Prisma.EnumCategoryWithAggregatesFilter<"Crochet"> | $Enums.Category
@@ -336,8 +324,7 @@ export type CrochetScalarWhereWithAggregatesInput = {
 export type CrochetCreateInput = {
   id?: string
   name: string
-  imageURL: string
-  imageKey?: string | null
+  imagePath: string
   imageHash?: string | null
   description: string
   category: $Enums.Category
@@ -350,8 +337,7 @@ export type CrochetCreateInput = {
 export type CrochetUncheckedCreateInput = {
   id?: string
   name: string
-  imageURL: string
-  imageKey?: string | null
+  imagePath: string
   imageHash?: string | null
   description: string
   category: $Enums.Category
@@ -364,8 +350,7 @@ export type CrochetUncheckedCreateInput = {
 export type CrochetUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  imageURL?: Prisma.StringFieldUpdateOperationsInput | string
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.StringFieldUpdateOperationsInput | string
   imageHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
@@ -378,8 +363,7 @@ export type CrochetUpdateInput = {
 export type CrochetUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  imageURL?: Prisma.StringFieldUpdateOperationsInput | string
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.StringFieldUpdateOperationsInput | string
   imageHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
@@ -392,8 +376,7 @@ export type CrochetUncheckedUpdateInput = {
 export type CrochetCreateManyInput = {
   id?: string
   name: string
-  imageURL: string
-  imageKey?: string | null
+  imagePath: string
   imageHash?: string | null
   description: string
   category: $Enums.Category
@@ -406,8 +389,7 @@ export type CrochetCreateManyInput = {
 export type CrochetUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  imageURL?: Prisma.StringFieldUpdateOperationsInput | string
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.StringFieldUpdateOperationsInput | string
   imageHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
@@ -420,8 +402,7 @@ export type CrochetUpdateManyMutationInput = {
 export type CrochetUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  imageURL?: Prisma.StringFieldUpdateOperationsInput | string
-  imageKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imagePath?: Prisma.StringFieldUpdateOperationsInput | string
   imageHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.EnumCategoryFieldUpdateOperationsInput | $Enums.Category
@@ -434,8 +415,7 @@ export type CrochetUncheckedUpdateManyInput = {
 export type CrochetCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  imageURL?: Prisma.SortOrder
-  imageKey?: Prisma.SortOrder
+  imagePath?: Prisma.SortOrder
   imageHash?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
@@ -452,8 +432,7 @@ export type CrochetAvgOrderByAggregateInput = {
 export type CrochetMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  imageURL?: Prisma.SortOrder
-  imageKey?: Prisma.SortOrder
+  imagePath?: Prisma.SortOrder
   imageHash?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
@@ -466,8 +445,7 @@ export type CrochetMaxOrderByAggregateInput = {
 export type CrochetMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  imageURL?: Prisma.SortOrder
-  imageKey?: Prisma.SortOrder
+  imagePath?: Prisma.SortOrder
   imageHash?: Prisma.SortOrder
   description?: Prisma.SortOrder
   category?: Prisma.SortOrder
@@ -514,8 +492,7 @@ export type DateTimeFieldUpdateOperationsInput = {
 export type CrochetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  imageURL?: boolean
-  imageKey?: boolean
+  imagePath?: boolean
   imageHash?: boolean
   description?: boolean
   category?: boolean
@@ -528,8 +505,7 @@ export type CrochetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type CrochetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  imageURL?: boolean
-  imageKey?: boolean
+  imagePath?: boolean
   imageHash?: boolean
   description?: boolean
   category?: boolean
@@ -542,8 +518,7 @@ export type CrochetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type CrochetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  imageURL?: boolean
-  imageKey?: boolean
+  imagePath?: boolean
   imageHash?: boolean
   description?: boolean
   category?: boolean
@@ -556,8 +531,7 @@ export type CrochetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type CrochetSelectScalar = {
   id?: boolean
   name?: boolean
-  imageURL?: boolean
-  imageKey?: boolean
+  imagePath?: boolean
   imageHash?: boolean
   description?: boolean
   category?: boolean
@@ -567,7 +541,7 @@ export type CrochetSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CrochetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "imageURL" | "imageKey" | "imageHash" | "description" | "category" | "price" | "isVisible" | "createdAt" | "updatedAt", ExtArgs["result"]["crochet"]>
+export type CrochetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "imagePath" | "imageHash" | "description" | "category" | "price" | "isVisible" | "createdAt" | "updatedAt", ExtArgs["result"]["crochet"]>
 
 export type $CrochetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Crochet"
@@ -575,8 +549,7 @@ export type $CrochetPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
-    imageURL: string
-    imageKey: string | null
+    imagePath: string
     imageHash: string | null
     description: string
     category: $Enums.Category
@@ -1009,8 +982,7 @@ export interface Prisma__CrochetClient<T, Null = never, ExtArgs extends runtime.
 export interface CrochetFieldRefs {
   readonly id: Prisma.FieldRef<"Crochet", 'String'>
   readonly name: Prisma.FieldRef<"Crochet", 'String'>
-  readonly imageURL: Prisma.FieldRef<"Crochet", 'String'>
-  readonly imageKey: Prisma.FieldRef<"Crochet", 'String'>
+  readonly imagePath: Prisma.FieldRef<"Crochet", 'String'>
   readonly imageHash: Prisma.FieldRef<"Crochet", 'String'>
   readonly description: Prisma.FieldRef<"Crochet", 'String'>
   readonly category: Prisma.FieldRef<"Crochet", 'Category'>

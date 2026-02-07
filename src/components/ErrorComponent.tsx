@@ -19,6 +19,8 @@ export default function ErrorComponent({ error, reset }: ErrorComponentProps) {
 		}
 	};
 
+	const handleBack = () => router.history.back();
+
 	return (
 		<div className="min-h-screen bg-gradient-soft-pink flex items-center justify-center px-4">
 			{/* Decorative background elements */}
@@ -83,6 +85,13 @@ export default function ErrorComponent({ error, reset }: ErrorComponentProps) {
 							Back Home
 						</Button>
 					</Link>
+					<Button
+						size={"lg"}
+						onClick={handleBack}
+						className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 glow-pink"
+					>
+						Back
+					</Button>
 				</div>
 
 				{/* Support message */}
