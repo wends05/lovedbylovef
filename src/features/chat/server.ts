@@ -146,8 +146,10 @@ export const getChatData = createServerFn()
 					order: {
 						select: {
 							id: true,
+							requestId: true,
 							requestorId: true,
 							status: true,
+							totalPrice: true,
 							orderChat: {
 								select: {
 									id: true,

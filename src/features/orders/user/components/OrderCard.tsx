@@ -1,8 +1,6 @@
-import { Link } from "@tanstack/react-router";
-import { MessageCircleMore } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { OrderCardShell } from "@/features/orders/components/OrderCardShell";
 import type { Order } from "@/generated/prisma/client";
+import { UserOrderActionsSheet } from "@/features/orders/components/sheets/UserOrderActionsSheet";
 
 interface OrderCardProps {
 	order: Order & { request: { title: string; description: string } | null };
@@ -26,28 +24,11 @@ export function OrderCard({ order }: OrderCardProps) {
 				</div>
 			}
 			actions={
-				<div className="flex gap-2">
-					<Button
-						size="sm"
-						className="flex-1"
-						render={
-							<Link to="/chat/$orderId" params={{ orderId: order.id }}>
-								<MessageCircleMore className="w-4 h-4 mr-2" />
-								Chat
-							</Link>
-						}
-					/>
-					<Button
-						variant="outline"
-						size="sm"
-						className="flex-1"
-						render={
-							<Link to="/request/$id" params={{ id: order.requestId }}>
-								View
-							</Link>
-						}
-					/>
-				</div>
+				<UserOrderActionsSheet
+					orderId={order.id}
+					requestId={order.requestId}
+					status={order.status}
+				/>
 			}
 		/>
 	);

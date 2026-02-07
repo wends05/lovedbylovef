@@ -20,9 +20,9 @@ export const getUserOrders = createServerFn()
 		const orders = await prisma.order.findMany({
 			where: {
 				requestorId: authData.user.id,
-				status: {
-					not: "CANCELED",
-				},
+				...(data.status && data.status !== "ALL"
+					? { status: data.status }
+					: {}),
 			},
 			orderBy: { createdAt: "desc" },
 			take: pageSize + 1,
