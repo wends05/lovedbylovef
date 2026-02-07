@@ -6,6 +6,7 @@ import {
 	Package,
 	XCircle,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { RequestStatus } from "@/generated/prisma/enums";
 
 export const REQUEST_STATUS_BADGE_CONFIG = {
@@ -21,11 +22,11 @@ export const REQUEST_STATUS_FILTER_CONFIG = {
 	...REQUEST_STATUS_BADGE_CONFIG,
 } as const;
 
-export const REQUEST_STATUS_DETAIL_CONFIG : Record<RequestStatus, {
+export const REQUEST_STATUS_DETAIL_CONFIG: Record<RequestStatus, {
 	label: string;
 	color: string;
 	bgColor: string;
-	icon: React.ComponentType;
+	icon: LucideIcon;
 	description: string;
 }> = {
 	PENDING: {

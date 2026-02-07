@@ -1,7 +1,6 @@
-import { Link } from "@tanstack/react-router";
-import { buttonVariants } from "@/components/ui/button";
 import { OrderCardShell } from "@/features/orders/components/OrderCardShell";
 import type { Order } from "@/generated/prisma/client";
+import { AdminOrderActionsSheet } from "@/features/orders/components/sheets/AdminOrderActionsSheet";
 
 interface OrderCardProps {
 	order: Order & { user: { name: string | null; email: string } };
@@ -21,22 +20,12 @@ export function OrderCard({ order }: OrderCardProps) {
 				</div>
 			}
 			actions={
-				<div className="flex flex-wrap gap-2">
-					<Link
-						to="/request/$id"
-						params={{ id: order.requestId }}
-						className={buttonVariants({ variant: "outline", size: "sm" })}
-					>
-						View Request
-					</Link>
-					<Link
-						to="/chat/$orderId"
-						params={{ orderId: order.id }}
-						className={buttonVariants({ variant: "outline", size: "sm" })}
-					>
-						Chat
-					</Link>
-				</div>
+				<AdminOrderActionsSheet
+					orderId={order.id}
+					requestId={order.requestId}
+					status={order.status}
+					totalPrice={order.totalPrice}
+				/>
 			}
 		/>
 	);

@@ -7,10 +7,16 @@ import { OrdersLayout } from "@/features/orders/components/OrdersLayout";
 import { OrdersLoadMore } from "@/features/orders/components/OrdersLoadMore";
 import { OrdersSkeleton } from "@/features/orders/components/OrdersSkeleton";
 import { ORDERS_PAGE_SIZE } from "@/features/orders/constants";
+import { Route } from "@/routes/_protected/orders";
 import { OrderCard } from "./components/OrderCard";
+import { OrderStatusTabs } from "./components/OrderStatusTabs";
 import { userOrdersQueryOptions } from "./options";
 
 export default function OrdersPage() {
+	const search = Route.useSearch();
+	const navigate = Route.useNavigate();
+	const activeStatus = search.status;
+
 	const {
 		data,
 		isLoading,
@@ -22,6 +28,7 @@ export default function OrdersPage() {
 	} = useInfiniteQuery(
 		userOrdersQueryOptions.getUserOrdersInfinite({
 			pageSize: ORDERS_PAGE_SIZE,
+			status: activeStatus,
 		}),
 	);
 
@@ -31,7 +38,7 @@ export default function OrdersPage() {
 		<OrdersLayout>
 			<OrdersHeader
 				title="Your Orders"
-				subtitle="Upcoming orders currently in progress or completed."
+				subtitle={`Track and manage your order lifecycle (${orders.length})`}
 				actions={
 					<Button
 						variant="outline"
@@ -43,11 +50,22 @@ export default function OrdersPage() {
 					</Button>
 				}
 			/>
+			<OrderStatusTabs
+				value={activeStatus}
+				onValueChange={(value) =>
+					navigate({
+						search: (previous) => ({
+							...previous,
+							status: value,
+						}),
+					})
+				}
+			/>
 
 			{isLoading ? (
 				<OrdersSkeleton />
 			) : orders.length === 0 ? (
-				<OrdersEmptyState message="No upcoming orders found." />
+				<OrdersEmptyState message="No orders found for this status." />
 			) : (
 				<>
 					<OrdersGrid>

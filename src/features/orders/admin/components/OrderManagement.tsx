@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { Route } from "@/routes/admin/orders";
 import { adminDashboardQueryOptions } from "@/features/admin/options";
 import { OrdersEmptyState } from "@/features/orders/components/OrdersEmptyState";
 import { OrdersGrid } from "@/features/orders/components/OrdersGrid";
@@ -8,14 +8,15 @@ import { OrdersLayout } from "@/features/orders/components/OrdersLayout";
 import { OrdersLoadMore } from "@/features/orders/components/OrdersLoadMore";
 import { OrdersSkeleton } from "@/features/orders/components/OrdersSkeleton";
 import { ORDERS_PAGE_SIZE } from "@/features/orders/constants";
-import type { OrderStatus } from "@/generated/prisma/browser";
+import type { GetOrdersQueryInput } from "../schemas/GetOrdersQuery";
 import { OrderCard } from "./OrderCard";
 import { OrderStatusTabs } from "./OrderStatusTabs";
 
 export default function OrderManagement() {
-	const [activeStatus, setActiveStatus] = useState<
-		keyof typeof OrderStatus | "ALL"
-	>("ALL");
+	const search = Route.useSearch();
+	const navigate = Route.useNavigate();
+	const activeStatus: GetOrdersQueryInput["status"] = search.status;
+
 	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
 		useInfiniteQuery(
 			adminDashboardQueryOptions.getOrders({
@@ -34,7 +35,14 @@ export default function OrderManagement() {
 			/>
 			<OrderStatusTabs
 				value={activeStatus}
-				onValueChange={(value) => setActiveStatus(value)}
+				onValueChange={(value) =>
+					navigate({
+						search: (previous) => ({
+							...previous,
+							status: value,
+						}),
+					})
+				}
 			/>
 
 			{isLoading ? (

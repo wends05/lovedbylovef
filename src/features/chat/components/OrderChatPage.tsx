@@ -5,6 +5,9 @@ import { Shield, User } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { OrderStatus } from "@/generated/prisma/enums";
+import { AdminOrderActionsSheet } from "@/features/orders/components/sheets/AdminOrderActionsSheet";
+import { UserOrderActionsSheet } from "@/features/orders/components/sheets/UserOrderActionsSheet";
 import {
 	Card,
 	CardAction,
@@ -40,6 +43,7 @@ export default function OrderChatPage({ orderId }: OrderChatPageProps) {
 	});
 
 	const isAdmin = roleData?.role === "ADMIN";
+	const isRoleKnown = roleData?.role === "ADMIN" || roleData?.role === "USER";
 	const ownerId = chatData?.order.requestorId ?? chatData?.user.id ?? null;
 	const isOwner = Boolean(viewerId && ownerId && viewerId === ownerId);
 	const isAllowed = Boolean(isAdmin || isOwner);
@@ -64,6 +68,8 @@ export default function OrderChatPage({ orderId }: OrderChatPageProps) {
 	});
 
 	const orderStatus = chatData?.order?.status;
+	const requestId = chatData?.order?.requestId;
+	const orderTotalPrice = chatData?.order?.totalPrice ?? null;
 	const viewerRoleLabel = isAdmin ? "Admin" : "Customer";
 	const connectionLabel = isConnected ? "Live" : "Reconnecting";
 	const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -99,7 +105,7 @@ export default function OrderChatPage({ orderId }: OrderChatPageProps) {
 			});
 		} else if (session) {
 			router.navigate({
-				to: "/requests",
+				to: "/orders",
 			});
 		} else {
 			router.navigate({ to: "/" });
@@ -149,9 +155,30 @@ export default function OrderChatPage({ orderId }: OrderChatPageProps) {
 		<Card className="h-full overflow-hidden py-0">
 			<CardHeader className="border-b border-primary/10 bg-card/70 backdrop-blur-sm pt-5">
 				<div className="flex flex-wrap items-center justify-between gap-3">
-					<Button onClick={handleBack} className="rounded-full">
-						Back
-					</Button>
+					<div className="flex items-center gap-2">
+						<Button onClick={handleBack} className="rounded-full">
+							Back
+						</Button>
+						{isRoleKnown && orderId && requestId ? (
+							isAdmin ? (
+								<AdminOrderActionsSheet
+									orderId={orderId}
+									requestId={requestId}
+									status={orderStatus ?? OrderStatus.PENDING}
+									totalPrice={orderTotalPrice}
+									showChatLink={false}
+								/>
+							) : (
+								<UserOrderActionsSheet
+									orderId={orderId}
+									requestId={requestId}
+									status={orderStatus ?? OrderStatus.PENDING}
+									canMarkDelivered={isOwner}
+									showChatLink={false}
+								/>
+							)
+						) : null}
+					</div>
 					<div className="flex flex-wrap items-center gap-2">
 						{orderStatus && (
 							<Badge
