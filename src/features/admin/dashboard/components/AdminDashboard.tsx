@@ -14,15 +14,6 @@ export default function AdminDashboard() {
 
 	return (
 		<div className="space-y-8">
-			<div>
-				<h1 className="text-3xl font-bold text-foreground font-display">
-					Admin Dashboard
-				</h1>
-				<p className="text-muted-foreground mt-1">
-					Overview of order flow, requests, and store health.
-				</p>
-			</div>
-
 			<AdminKpiGrid kpis={data.kpis} />
 
 			<Card>

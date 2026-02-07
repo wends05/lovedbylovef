@@ -103,16 +103,7 @@ export default function RequestsPage() {
 
 	return (
 		<div className="container mx-auto px-4 py-8">
-			{/* Header */}
-			<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
-				<div>
-					<h1 className="text-3xl font-bold text-foreground mb-2 font-display">
-						Your Requests
-					</h1>
-					<p className="text-muted-foreground">
-						Track and manage your crochet order requests
-					</p>
-				</div>
+			<div className="mb-8 flex justify-end">
 				<Button
 					variant="outline"
 					size="sm"

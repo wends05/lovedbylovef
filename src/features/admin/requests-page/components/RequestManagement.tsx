@@ -18,16 +18,6 @@ export default function RequestManagement() {
 
 	return (
 		<div className="space-y-8">
-			{/* Header */}
-			<div>
-				<h1 className="text-3xl font-bold text-foreground font-display">
-					Request Management
-				</h1>
-				<p className="text-muted-foreground mt-1">
-					Review and manage custom order requests from users
-				</p>
-			</div>
-
 			{/* Pending Requests Feed */}
 			<PendingRequestsFeed />
 

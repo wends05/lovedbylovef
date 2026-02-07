@@ -2,7 +2,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { OrdersEmptyState } from "@/features/orders/components/OrdersEmptyState";
 import { OrdersGrid } from "@/features/orders/components/OrdersGrid";
-import { OrdersHeader } from "@/features/orders/components/OrdersHeader";
 import { OrdersLayout } from "@/features/orders/components/OrdersLayout";
 import { OrdersLoadMore } from "@/features/orders/components/OrdersLoadMore";
 import { OrdersSkeleton } from "@/features/orders/components/OrdersSkeleton";
@@ -36,20 +35,16 @@ export default function OrdersPage() {
 
 	return (
 		<OrdersLayout>
-			<OrdersHeader
-				title="Your Orders"
-				subtitle={`Track and manage your order lifecycle (${orders.length})`}
-				actions={
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => refetch()}
-						disabled={isFetching}
-					>
-						Refresh
-					</Button>
-				}
-			/>
+			<div className="flex justify-end">
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={() => refetch()}
+					disabled={isFetching}
+				>
+					Refresh
+				</Button>
+			</div>
 			<OrderStatusTabs
 				value={activeStatus}
 				onValueChange={(value) =>

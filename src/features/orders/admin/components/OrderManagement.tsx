@@ -1,13 +1,12 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Route } from "@/routes/admin/orders";
 import { adminDashboardQueryOptions } from "@/features/admin/options";
 import { OrdersEmptyState } from "@/features/orders/components/OrdersEmptyState";
 import { OrdersGrid } from "@/features/orders/components/OrdersGrid";
-import { OrdersHeader } from "@/features/orders/components/OrdersHeader";
 import { OrdersLayout } from "@/features/orders/components/OrdersLayout";
 import { OrdersLoadMore } from "@/features/orders/components/OrdersLoadMore";
 import { OrdersSkeleton } from "@/features/orders/components/OrdersSkeleton";
 import { ORDERS_PAGE_SIZE } from "@/features/orders/constants";
+import { Route } from "@/routes/admin/orders";
 import type { GetOrdersQueryInput } from "../schemas/GetOrdersQuery";
 import { OrderCard } from "./OrderCard";
 import { OrderStatusTabs } from "./OrderStatusTabs";
@@ -29,10 +28,6 @@ export default function OrderManagement() {
 
 	return (
 		<OrdersLayout>
-			<OrdersHeader
-				title="Order Management"
-				subtitle={`Manage and track all customer orders (${orders.length})`}
-			/>
 			<OrderStatusTabs
 				value={activeStatus}
 				onValueChange={(value) =>

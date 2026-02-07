@@ -8,15 +8,15 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { tryCatch } from "@/lib/try-catch";
 import { adminDashboardQueryOptions } from "../../../options";
 import { galleryMutationOptions } from "../../options";
 import { GallerySkeleton } from "../GallerySkeleton";
 import { DeleteGalleryItemDialog } from "./GalleryDeleteDialog";
 import { GalleryFilters } from "./GalleryFilters";
-import { GalleryGrid } from "./GalleryGrid";
 import type { CrochetListItem } from "./GalleryGrid";
-import { GalleryHeader } from "./GalleryHeader";
+import { GalleryGrid } from "./GalleryGrid";
 
 export default function GalleryManagement() {
 	const navigate = useNavigate();
@@ -149,11 +149,11 @@ export default function GalleryManagement() {
 
 	return (
 		<div className="space-y-6">
-			<GalleryHeader
-				itemCount={filteredCrochets.length}
-				totalCount={crochets.length}
-				onCreate={() => navigate({ to: "/admin/gallery/create" })}
-			/>
+			<div className="flex justify-end">
+				<Button onClick={() => navigate({ to: "/admin/gallery/create" })}>
+					Create Item
+				</Button>
+			</div>
 
 			<GalleryFilters
 				categoryFilter={categoryFilter}
