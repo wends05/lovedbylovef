@@ -1,12 +1,12 @@
 import { useNavigate } from "@tanstack/react-router";
 import {
 	ArrowRight,
+	Handshake,
 	Heart,
 	MessageCircle,
 	Palette,
 	Search,
 	Sparkles,
-	Truck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,9 +37,10 @@ export default function AboutPage() {
 			description: "Handcrafted with care and attention to every stitch",
 		},
 		{
-			icon: Truck,
-			title: "Deliver",
-			description: "Carefully packaged and sent to your doorstep",
+			icon: Handshake,
+			title: "Meet Up",
+			description:
+				"We coordinate a safe, convenient meet-up where you receive your order",
 		},
 	];
 
