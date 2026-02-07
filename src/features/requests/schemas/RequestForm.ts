@@ -11,8 +11,7 @@ export type RequestFormInput = z.infer<typeof RequestFormSchema>;
 export const RequestFormSubmission = z.object({
 	title: z.string(),
 	description: z.string(),
-	imageUrl: z.string().optional(),
-	imageKey: z.string().optional(),
+	imagePath: z.string().optional(),
 });
 export type RequestFormSubmission = z.infer<typeof RequestFormSubmission>;
 

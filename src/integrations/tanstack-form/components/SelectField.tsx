@@ -35,7 +35,7 @@ export default function SelectField({
 			<Select
 				disabled={disabled}
 				value={field.state.value ?? ""}
-				onValueChange={(value) => field.handleChange(value)}
+				onValueChange={(value) => field.handleChange(value ?? "")}
 			>
 				<SelectTrigger aria-invalid={field.state.meta.errors.length > 0}>
 					<SelectValue placeholder={placeholder}>

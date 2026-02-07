@@ -7,10 +7,11 @@ import type {
 	RequestWhereInput,
 } from "@/generated/prisma/models";
 import { getSupabaseServerClient } from "@/integrations/supabase/server";
-import { deleteImageFromStorage } from "@/integrations/supabase/storage-server";
+import { getStoragePublicUrl } from "@/integrations/supabase/storage-server";
 import { prisma } from "@/lib/prisma-client";
 import { tryCatch } from "@/lib/try-catch";
 import { adminMiddleware } from "../auth/middleware";
+import { replaceImageWithCleanupOrThrow } from "../storage/replace-image";
 import { GetRequestsQuerySchema } from "./schemas/GetRequestsQuery";
 import {
 	RequestFormSubmission,
@@ -22,6 +23,13 @@ interface GetUserRequestsInput {
 	status?: RequestStatus | "ALL";
 	cursor?: string;
 	pageSize?: number;
+}
+
+function withImageUrl<T extends { imagePath: string | null }>(request: T) {
+	return {
+		...request,
+		imageUrl: getStoragePublicUrl(request.imagePath),
+	};
 }
 
 export const getUserRequests = createServerFn()
@@ -65,7 +73,7 @@ export const getUserRequests = createServerFn()
 		const nextCursor = hasMore ? items[items.length - 1]?.id : undefined;
 
 		return {
-			items,
+			items: items.map(withImageUrl),
 			nextCursor,
 			hasMore,
 		};
@@ -92,7 +100,7 @@ export const getRequestById = createServerFn()
 			throw new Error("Request not found");
 		}
 
-		return request;
+		return withImageUrl(request);
 	});
 
 export const cancelRequest = createServerFn({ method: "POST" })
@@ -182,27 +190,39 @@ export const updateUserRequest = createServerFn({ method: "POST" })
 			);
 		}
 
+		const previousRequestState = {
+			title: existingRequest.title,
+			description: existingRequest.description,
+			imagePath: existingRequest.imagePath,
+		};
+		const nextImagePath = data.imagePath ?? existingRequest.imagePath;
 		const updateData: RequestUpdateInput = {
 			title: data.title,
 			description: data.description,
-			...(data.imageUrl !== undefined ? { imageUrl: data.imageUrl } : {}),
-			...(data.imageKey !== undefined ? { imageKey: data.imageKey } : {}),
+			...(data.imagePath !== undefined ? { imagePath: data.imagePath } : {}),
 		};
 
-		const updatedRequest = await prisma.request.update({
-			where: { id: data.id },
-			data: updateData,
+		const { record, replacedImage } = await replaceImageWithCleanupOrThrow({
+			scope: "requests",
+			previousPath: existingRequest.imagePath,
+			nextPath: nextImagePath,
+			applyRecordUpdate: () =>
+				prisma.request.update({
+					where: { id: data.id },
+					data: updateData,
+				}),
+			rollbackRecordUpdate: () =>
+				prisma.request.update({
+					where: { id: data.id },
+					data: previousRequestState,
+				}),
+			cleanupNewPathOnRollback: true,
 		});
 
-		return updatedRequest;
-	});
-
-export const deleteImage = createServerFn({ method: "POST" })
-	.inputValidator(z.string())
-	.handler(async ({ data }) => {
-		console.log("image to be deleted:", data);
-		await deleteImageFromStorage(data);
-		return { success: true };
+		return {
+			request: withImageUrl(record),
+			replacedImage,
+		};
 	});
 
 export const getAllRequests = createServerFn()
@@ -264,7 +284,7 @@ export const getAllRequests = createServerFn()
 		const nextCursor = hasMore ? items[items.length - 1]?.id : undefined;
 
 		return {
-			items,
+			items: items.map(withImageUrl),
 			nextCursor,
 			hasMore,
 		};

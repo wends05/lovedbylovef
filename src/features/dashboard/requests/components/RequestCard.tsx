@@ -22,9 +22,14 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { REQUEST_STATUS_BADGE_CONFIG } from "@/features/requests/schemas/RequestOptions";
-import type { Request } from "@/generated/prisma/client";
+import type { RequestStatus } from "@/generated/prisma/enums";
 
-type RequestWithOrder = Request & {
+type RequestWithOrder = {
+	id: string;
+	title: string;
+	status: RequestStatus;
+	createdAt: Date;
+	imageUrl: string | null;
 	order?: {
 		id: string;
 	} | null;

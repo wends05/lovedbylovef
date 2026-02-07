@@ -23,6 +23,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { CATEGORY_OPTIONS } from "@/features/admin/gallery/schemas/GalleryOptions";
+import { storageMutationOptions } from "@/features/storage/options";
 import { Category } from "@/generated/prisma/enums";
 import { useSingleImageUpload } from "@/integrations/supabase/use-single-image-upload";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
@@ -38,7 +39,7 @@ const defaultValues: CreateCrochetFormInput = {
 	description: "",
 	category: Category.TOY,
 	price: null,
-	imageURL: undefined,
+	imagePath: undefined,
 	isVisible: true,
 	file: undefined as unknown as File,
 };
@@ -47,6 +48,9 @@ export default function CreateCrochetForm() {
 	const queryClient = useQueryClient();
 	const createCrochetMutation = useMutation(
 		galleryMutationOptions.createCrochet,
+	);
+	const deleteStorageImageMutation = useMutation(
+		storageMutationOptions.deleteStorageImage,
 	);
 
 	const form = useAppForm({
@@ -72,8 +76,7 @@ export default function CreateCrochetForm() {
 				description: value.description,
 				category: value.category,
 				price: value.price,
-				imageURL: uploadedFile.publicUrl,
-				imageKey: uploadedFile.path,
+				imagePath: uploadedFile.path,
 				imageHash: await hashFile(value.file),
 				isVisible: value.isVisible,
 			};
@@ -86,6 +89,18 @@ export default function CreateCrochetForm() {
 				toast.error("Failed to create crochet", {
 					description: error || "Something went wrong",
 				});
+
+				const { error: deleteError } = await tryCatch(
+					deleteStorageImageMutation.mutateAsync({
+						data: { path: uploadedFile.path, scope: "crochets" },
+					}),
+				);
+				if (deleteError) {
+					console.error(
+						"Error deleting uploaded crochet image after failed create:",
+						deleteError,
+					);
+				}
 			} else {
 				toast.success("Crochet created successfully!");
 

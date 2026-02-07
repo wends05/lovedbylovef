@@ -8,13 +8,24 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { ImageZoom } from "@/components/ui/image-zoom";
-import type { Crochet } from "@/generated/prisma/client";
+
+export type CrochetListItem = {
+	id: string;
+	name: string;
+	description: string;
+	category: string;
+	price: number | null;
+	isVisible: boolean;
+	createdAt: Date;
+	imagePath: string;
+	imageUrl: string | null;
+};
 
 interface GalleryGridProps {
-	items: Crochet[];
-	onToggleVisibility: (item: Crochet) => void;
-	onEdit: (item: Crochet) => void;
-	onDelete: (item: Crochet) => void;
+	items: CrochetListItem[];
+	onToggleVisibility: (item: CrochetListItem) => void | Promise<void>;
+	onEdit: (item: CrochetListItem) => void;
+	onDelete: (item: CrochetListItem) => void;
 }
 
 export function GalleryGrid({
@@ -28,7 +39,7 @@ export function GalleryGrid({
 			<Card>
 				<CardContent className="py-12 text-center">
 					<p className="text-muted-foreground">
-						No items found. Try adjusting your filters or add a new item.
+					No items found. Try adjusting your filters or add a new item.
 					</p>
 				</CardContent>
 			</Card>
@@ -40,13 +51,17 @@ export function GalleryGrid({
 			{items.map((item) => (
 				<Card key={item.id} className={item.isVisible ? "" : "opacity-60"}>
 					<div className="aspect-video relative overflow-hidden rounded-t-lg">
-						<ImageZoom>
-							<img
-								src={item.imageURL}
-								alt={item.name}
-								className="w-full h-full object-cover"
-							/>
-						</ImageZoom>
+						{item.imageUrl ? (
+							<ImageZoom>
+								<img
+									src={item.imageUrl}
+									alt={item.name}
+									className="w-full h-full object-cover"
+								/>
+							</ImageZoom>
+						) : (
+							<div className="w-full h-full bg-muted" />
+						)}
 					</div>
 					<CardHeader className="pb-3">
 						<div className="flex items-start justify-between">

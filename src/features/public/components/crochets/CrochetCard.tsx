@@ -1,20 +1,28 @@
 import { Package } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Crochet } from "@/generated/prisma/client";
 import { categoryLabels } from "./CategoryFilter";
 
+type CrochetCardItem = {
+	id: string;
+	name: string;
+	description: string;
+	category: keyof typeof categoryLabels;
+	price: number | null;
+	imageUrl: string | null;
+};
+
 interface CrochetCardProps {
-	crochet: Crochet;
+	crochet: CrochetCardItem;
 }
 
 export function CrochetCard({ crochet }: CrochetCardProps) {
 	return (
 		<Card className="group overflow-hidden hover:shadow-lg transition-all duration-300">
 			<AspectRatio ratio={4 / 3}>
-				{crochet.imageURL ? (
+				{crochet.imageUrl ? (
 					<img
-						src={crochet.imageURL}
+						src={crochet.imageUrl}
 						alt={crochet.name}
 						className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
 					/>

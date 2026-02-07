@@ -10,7 +10,6 @@ import {
 import type { RequestStatus } from "@/generated/prisma/enums";
 import {
 	cancelRequest,
-	deleteImage,
 	getRequestById,
 	getUserRequests,
 	submitRequest,
@@ -59,9 +58,5 @@ export const requestsMutationOptions = {
 	updateRequestStatus: mutationOptions({
 		mutationKey: ["requests", "updateStatus"],
 		mutationFn: updateRequestStatus,
-	}),
-	deleteImage: mutationOptions({
-		mutationKey: ["requests", "deleteImage"],
-		mutationFn: deleteImage,
 	}),
 };

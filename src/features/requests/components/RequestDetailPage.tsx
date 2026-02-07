@@ -33,12 +33,12 @@ import {
 	DropzoneFileList,
 	DropzoneFileListItem,
 	DropzoneMessage,
-	DropzoneRemoveFile,
 	DropzoneTrigger,
 } from "@/components/ui/dropzone";
 import { ImageZoom } from "@/components/ui/image-zoom";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { storageMutationOptions } from "@/features/storage/options";
 import { RequestStatus } from "@/generated/prisma/enums";
 import { useSingleImageUpload } from "@/integrations/supabase/use-single-image-upload";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
@@ -52,6 +52,15 @@ import {
 } from "../schemas/RequestForm";
 import { REQUEST_STATUS_DETAIL_CONFIG } from "../schemas/RequestOptions";
 
+const REQUEST_STATUSES_FOR_INVALIDATION: Array<RequestStatus | "ALL"> = [
+	"ALL",
+	RequestStatus.PENDING,
+	RequestStatus.APPROVED,
+	RequestStatus.REJECTED,
+	RequestStatus.COMPLETED,
+	RequestStatus.CANCELLED,
+];
+
 export default function RequestDetailPage() {
 	const { id } = useParams({ from: "/_protected/request/$id" });
 
@@ -62,8 +71,9 @@ export default function RequestDetailPage() {
 	const search = Route.useSearch();
 	const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 	const [isCancelling, setIsCancelling] = useState(false);
+	const isPendingRequest = request.status === "PENDING";
 	const [isEditing, setIsEditing] = useState(
-		Boolean(search.edit) && request.status === "PENDING",
+		Boolean(search.edit) && isPendingRequest,
 	);
 	const queryClient = useQueryClient();
 	const cancelRequestMutation = useMutation(
@@ -72,10 +82,47 @@ export default function RequestDetailPage() {
 	const updateRequestMutation = useMutation(
 		requestsMutationOptions.updateUserRequest,
 	);
-	const deleteImageMutation = useMutation(requestsMutationOptions.deleteImage);
+	const deleteStorageImageMutation = useMutation(
+		storageMutationOptions.deleteStorageImage,
+	);
 
 	const status = REQUEST_STATUS_DETAIL_CONFIG[request.status];
 	const StatusIcon = status.icon;
+
+	const invalidateRequestQueries = async () => {
+		await queryClient.invalidateQueries(
+			requestsQueryOptions.getRequestById(id),
+		);
+
+		await Promise.all(
+			REQUEST_STATUSES_FOR_INVALIDATION.map((statusKey) =>
+				queryClient.invalidateQueries(
+					requestsQueryOptions.getUserRequestsInfinite(statusKey),
+				),
+			),
+		);
+	};
+
+	const cleanupUploadedImage = async (uploadedImagePath?: string) => {
+		if (!uploadedImagePath) {
+			return;
+		}
+
+		await tryCatch(
+			deleteStorageImageMutation.mutateAsync({
+				data: { path: uploadedImagePath, scope: "requests" },
+			}),
+		);
+	};
+
+	const navigateBackToRequests = () => {
+		if (router.history.canGoBack()) {
+			router.history.back();
+			return;
+		}
+
+		router.navigate({ to: "/requests" });
+	};
 
 	const defaultValues: UpdateRequestFormInput = {
 		id: request.id,
@@ -91,11 +138,8 @@ export default function RequestDetailPage() {
 			onDynamic: UpdateRequestFormSchema,
 		},
 		onSubmit: async ({ value, formApi }) => {
-			const previousImageKey = request.imageKey ?? undefined;
-			let imageUrl = request.imageUrl ?? undefined;
-			let imageKey = request.imageKey ?? undefined;
-			let didUploadNewImage = false;
-			let uploadedImageKey: string | undefined;
+			let imagePath = request.imagePath ?? undefined;
+			let uploadedImagePath: string | undefined;
 
 			if (value.file) {
 				if (imageUpload.isUploading) {
@@ -108,18 +152,15 @@ export default function RequestDetailPage() {
 					return;
 				}
 
-				imageUrl = uploadedFile.publicUrl;
-				imageKey = uploadedFile.path;
-				uploadedImageKey = uploadedFile.path;
-				didUploadNewImage = true;
+				imagePath = uploadedFile.path;
+				uploadedImagePath = uploadedFile.path;
 			}
 
 			const submitData = UpdateRequestSubmissionSchema.parse({
 				id: value.id,
 				title: value.title,
 				description: value.description,
-				imageUrl,
-				imageKey,
+				imagePath,
 			});
 
 			const { success, error } = await tryCatch(
@@ -131,47 +172,12 @@ export default function RequestDetailPage() {
 					description: error || "Something went wrong",
 				});
 
-				if (uploadedImageKey) {
-					await tryCatch(
-						deleteImageMutation.mutateAsync({ data: uploadedImageKey }),
-					);
-				}
-
+				await cleanupUploadedImage(uploadedImagePath);
 				return;
 			}
 
 			toast.success("Request updated successfully!");
-
-			if (
-				didUploadNewImage &&
-				previousImageKey &&
-				previousImageKey !== imageKey
-			) {
-				await tryCatch(
-					deleteImageMutation.mutateAsync({ data: previousImageKey }),
-				);
-			}
-
-			await queryClient.invalidateQueries(
-				requestsQueryOptions.getRequestById(id),
-			);
-
-			const statuses: Array<RequestStatus | "ALL"> = [
-				"ALL",
-				RequestStatus.PENDING,
-				RequestStatus.APPROVED,
-				RequestStatus.REJECTED,
-				RequestStatus.COMPLETED,
-				RequestStatus.CANCELLED,
-			];
-
-			await Promise.all(
-				statuses.map((statusKey) =>
-					queryClient.invalidateQueries(
-						requestsQueryOptions.getUserRequestsInfinite(statusKey),
-					),
-				),
-			);
+			await invalidateRequestQueries();
 
 			formApi.reset();
 			imageUpload.clear();
@@ -220,27 +226,7 @@ export default function RequestDetailPage() {
 			toast.success("Request cancelled", {
 				description: "Your request has been cancelled successfully.",
 			});
-			// Invalidate queries
-			await queryClient.invalidateQueries(
-				requestsQueryOptions.getRequestById(id),
-			);
-
-			const statuses: Array<RequestStatus | "ALL"> = [
-				"ALL",
-				RequestStatus.PENDING,
-				RequestStatus.APPROVED,
-				RequestStatus.REJECTED,
-				RequestStatus.COMPLETED,
-				RequestStatus.CANCELLED,
-			];
-
-			await Promise.all(
-				statuses.map((statusKey) =>
-					queryClient.invalidateQueries(
-						requestsQueryOptions.getUserRequestsInfinite(statusKey),
-					),
-				),
-			);
+			await invalidateRequestQueries();
 		}
 
 		setIsCancelling(false);
@@ -255,13 +241,7 @@ export default function RequestDetailPage() {
 					variant="ghost"
 					size="sm"
 					className="mb-4 -ml-2"
-					onClick={() => {
-						if (router.history.canGoBack()) {
-							router.history.back();
-						} else {
-							router.navigate({ to: "/requests" });
-						}
-					}}
+					onClick={navigateBackToRequests}
 				>
 					<ArrowLeft className="w-4 h-4 mr-2" />
 					Back
@@ -337,7 +317,7 @@ export default function RequestDetailPage() {
 							<Separator />
 
 							{/* Action Buttons */}
-							{request.status === "PENDING" && (
+							{isPendingRequest && (
 								<div className="space-y-2">
 									<Button
 										variant="outline"
@@ -374,7 +354,7 @@ export default function RequestDetailPage() {
 				{/* Right Column - Details & Admin Response */}
 				<div className="space-y-6">
 					{/* Edit Request */}
-					{request.status === "PENDING" && isEditing && (
+					{isPendingRequest && isEditing && (
 						<Card>
 							<CardHeader>
 								<CardTitle className="text-lg">Edit Request</CardTitle>

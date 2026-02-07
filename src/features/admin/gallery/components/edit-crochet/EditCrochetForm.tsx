@@ -26,6 +26,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { CATEGORY_OPTIONS } from "@/features/admin/gallery/schemas/GalleryOptions";
+import { storageMutationOptions } from "@/features/storage/options";
 import { useSingleImageUpload } from "@/integrations/supabase/use-single-image-upload";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
 import { hashFile } from "@/lib/hash-file";
@@ -45,12 +46,12 @@ export default function EditCrochetForm() {
 	const updateCrochetMutation = useMutation(
 		galleryMutationOptions.updateCrochet,
 	);
-	const deleteCrochetImageMutation = useMutation(
-		galleryMutationOptions.deleteCrochetImage,
+	const deleteStorageImageMutation = useMutation(
+		storageMutationOptions.deleteStorageImage,
 	);
 
 	// Set initial preview to existing image
-	const initialImageUrl = crochet.imageURL;
+	const initialImageUrl = crochet.imageUrl;
 
 	const defaultValues: UpdateCrochetFormInput = {
 		id: crochet.id,
@@ -58,8 +59,7 @@ export default function EditCrochetForm() {
 		description: crochet.description,
 		category: crochet.category,
 		price: crochet.price,
-		imageURL: crochet.imageURL,
-		imageKey: crochet.imageKey ?? undefined,
+		imagePath: crochet.imagePath,
 		imageHash: crochet.imageHash ?? undefined,
 		isVisible: crochet.isVisible,
 		file: undefined as unknown as File | undefined,
@@ -72,9 +72,8 @@ export default function EditCrochetForm() {
 			onDynamic: UpdateCrochetFormSchema,
 		},
 		onSubmit: async ({ value }) => {
-			let didUploadNewImage = false;
-			let imageUrl = value.imageURL;
-			let imageKey = value.imageKey;
+			let uploadedImagePath: string | undefined;
+			let imagePath = value.imagePath;
 			let imageHash = value.imageHash;
 			if (value.file) {
 				if (isUploading) {
@@ -90,10 +89,9 @@ export default function EditCrochetForm() {
 						toast.error("Image upload failed. Please try again.");
 						return;
 					}
-					imageUrl = uploadedFile.publicUrl;
-					imageKey = uploadedFile.path;
+					imagePath = uploadedFile.path;
+					uploadedImagePath = uploadedFile.path;
 					imageHash = nextHash;
-					didUploadNewImage = true;
 				}
 			}
 
@@ -103,8 +101,7 @@ export default function EditCrochetForm() {
 				description: value.description,
 				category: value.category,
 				price: value.price,
-				imageURL: imageUrl,
-				imageKey: imageKey,
+				imagePath,
 				imageHash: imageHash,
 				isVisible: value.isVisible,
 			};
@@ -117,20 +114,16 @@ export default function EditCrochetForm() {
 				toast.error("Failed to update crochet", {
 					description: error || "Something went wrong",
 				});
+
+				if (uploadedImagePath) {
+					await tryCatch(
+						deleteStorageImageMutation.mutateAsync({
+							data: { path: uploadedImagePath, scope: "crochets" },
+						}),
+					);
+				}
 			} else {
 				toast.success("Crochet updated successfully!");
-
-				if (didUploadNewImage && value.imageKey) {
-					const { error: deleteError } = await tryCatch(
-						deleteCrochetImageMutation.mutateAsync({ data: value.imageKey }),
-					);
-					if (deleteError) {
-						console.error(
-							"Error deleting previous image after update:",
-							deleteError,
-						);
-					}
-				}
 
 				// Invalidate gallery query
 				await queryClient.invalidateQueries(

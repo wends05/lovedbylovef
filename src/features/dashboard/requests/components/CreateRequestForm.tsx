@@ -25,6 +25,7 @@ import {
 	RequestFormSchema,
 	RequestFormSubmission,
 } from "@/features/requests/schemas/RequestForm";
+import { storageMutationOptions } from "@/features/storage/options";
 import { useSingleImageUpload } from "@/integrations/supabase/use-single-image-upload";
 import { useAppForm } from "@/integrations/tanstack-form/formHooks";
 import { tryCatch } from "@/lib/try-catch";
@@ -39,7 +40,9 @@ export default function CreateRequestForm() {
 	const submitRequestMutation = useMutation(
 		requestsMutationOptions.submitRequest,
 	);
-	const deleteImageMutation = useMutation(requestsMutationOptions.deleteImage);
+	const deleteStorageImageMutation = useMutation(
+		storageMutationOptions.deleteStorageImage,
+	);
 	const form = useAppForm({
 		defaultValues,
 		validationLogic: revalidateLogic(),
@@ -47,8 +50,7 @@ export default function CreateRequestForm() {
 			onDynamic: RequestFormSchema,
 		},
 		onSubmit: async ({ value, formApi }) => {
-			let url: string | undefined;
-			let key: string | undefined;
+			let imagePath: string | undefined;
 
 			if (value.file) {
 				if (imageUpload.isUploading) {
@@ -57,15 +59,13 @@ export default function CreateRequestForm() {
 
 				const uploadedFile = await imageUpload.uploadFile();
 				if (uploadedFile) {
-					url = uploadedFile.publicUrl;
-					key = `${uploadedFile.path}`;
+					imagePath = uploadedFile.path;
 				}
 			}
 			const finalData = RequestFormSubmission.parse({
 				title: value.title,
 				description: value.description,
-				imageUrl: url,
-				imageKey: key,
+				imagePath,
 			});
 
 			const { error } = await tryCatch(
@@ -75,9 +75,11 @@ export default function CreateRequestForm() {
 				toast.error("Submission failed. Please try again.");
 
 				// Delete the uploaded file if submission fails
-				if (finalData.imageKey) {
+				if (finalData.imagePath) {
 					const { error: deleteError } = await tryCatch(
-						deleteImageMutation.mutateAsync({ data: finalData.imageKey }),
+						deleteStorageImageMutation.mutateAsync({
+							data: { path: finalData.imagePath, scope: "requests" },
+						}),
 					);
 					if (deleteError) {
 						console.error(
