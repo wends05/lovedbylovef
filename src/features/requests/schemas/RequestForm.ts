@@ -3,7 +3,7 @@ import z from "zod";
 export const RequestFormSchema = z.object({
 	title: z.string().min(1, "Title is required"),
 	description: z.string().min(1, "Description is required"),
-	file: z.file().optional()
+	file: z.file().optional(),
 });
 
 export type RequestFormInput = z.infer<typeof RequestFormSchema>;

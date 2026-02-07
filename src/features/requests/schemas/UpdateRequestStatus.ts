@@ -7,4 +7,6 @@ export const UpdateRequestStatusSchema = z.object({
 	adminResponse: z.string().optional(),
 });
 
-export type UpdateRequestStatusInput = z.infer<typeof UpdateRequestStatusSchema>;
+export type UpdateRequestStatusInput = z.infer<
+	typeof UpdateRequestStatusSchema
+>;

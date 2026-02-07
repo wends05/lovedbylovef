@@ -1,19 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RequestStatus } from "@/generated/prisma/enums";
 import type { UpdateRequestStatusInput } from "@/features/requests/schemas/UpdateRequestStatus";
 import type { AdminRequestsPage } from "@/features/requests/types";
-import { useStatusRequests } from "../status-sections/hooks/useStatusRequests";
+import { RequestStatus } from "@/generated/prisma/enums";
 import { EmptyState } from "../shared/EmptyState";
+import { useStatusRequests } from "../status-sections/hooks/useStatusRequests";
 import { PendingRequestCard } from "./PendingRequestCard";
 
 interface PendingRequestsFeedProps {
 	onProcess: (data: UpdateRequestStatusInput) => Promise<void>;
 }
 
-export function PendingRequestsFeed({
-	onProcess,
-}: PendingRequestsFeedProps) {
+export function PendingRequestsFeed({ onProcess }: PendingRequestsFeedProps) {
 	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
 		useStatusRequests({
 			status: RequestStatus.PENDING,

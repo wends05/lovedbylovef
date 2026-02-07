@@ -13,7 +13,9 @@ export default function GalleryPage() {
 			activeCategory === "ALL" ? undefined : activeCategory,
 		),
 	);
-	const { data: categories } = useSuspenseQuery(publicQueryOptions.getCategories());
+	const { data: categories } = useSuspenseQuery(
+		publicQueryOptions.getCategories(),
+	);
 
 	return (
 		<div className="container mx-auto px-4 py-12">

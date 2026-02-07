@@ -6,7 +6,7 @@ export const Route = createFileRoute("/chat")({
 
 function RouteComponent() {
 	return (
-		<div className="h-[100dvh] min-h-0 p-3 sm:p-6 lg:p-10">
+		<div className="h-dvh min-h-0 p-3 sm:p-6 lg:p-10">
 			<Outlet />
 		</div>
 	);

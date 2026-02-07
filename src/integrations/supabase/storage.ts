@@ -17,12 +17,10 @@ export async function uploadImage({
 	const fileName = `${crypto.randomUUID()}.${fileExt}`;
 	const filePath = pathPrefix ? `${pathPrefix}/${fileName}` : fileName;
 
-	const { error } = await supabase.storage
-		.from(bucket)
-		.upload(filePath, file, {
-			cacheControl: "3600",
-			upsert: false,
-		});
+	const { error } = await supabase.storage.from(bucket).upload(filePath, file, {
+		cacheControl: "3600",
+		upsert: false,
+	});
 
 	if (error) {
 		throw error;

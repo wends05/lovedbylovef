@@ -1,9 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/admin/gallery")({
-	component: GalleryLayout,
+	component: Outlet,
 });
-
-function GalleryLayout() {
-	return <Outlet />;
-}

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { RequestStatus } from "@/generated/prisma/enums";
 import type { AdminRequestsPage } from "@/features/requests/types";
+import type { RequestStatus } from "@/generated/prisma/enums";
 import { EmptyState } from "../shared/EmptyState";
 import { useStatusRequests } from "./hooks/useStatusRequests";
 import { StatusRequestCard } from "./StatusRequestCard";
