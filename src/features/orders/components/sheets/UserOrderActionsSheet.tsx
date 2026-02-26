@@ -25,8 +25,7 @@ export function UserOrderActionsSheet({
 }: UserOrderActionsSheetProps) {
 	const [open, setOpen] = useState(false);
 	const { isUpdating, markAsDelivered } = useOrderLifecycleActions();
-	const canDeliver =
-		canMarkDelivered && status === OrderStatus.PROCESSING;
+	const canDeliver = canMarkDelivered && status === OrderStatus.PROCESSING;
 
 	return (
 		<OrderActionsSheet

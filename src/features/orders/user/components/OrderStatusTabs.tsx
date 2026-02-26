@@ -14,7 +14,10 @@ interface OrderStatusTabsProps {
 	onValueChange: (value: GetUserOrdersInput["status"]) => void;
 }
 
-export function OrderStatusTabs({ value, onValueChange }: OrderStatusTabsProps) {
+export function OrderStatusTabs({
+	value,
+	onValueChange,
+}: OrderStatusTabsProps) {
 	return (
 		<>
 			<div className="hidden md:block">

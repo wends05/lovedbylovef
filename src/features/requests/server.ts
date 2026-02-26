@@ -84,7 +84,6 @@ export const getRequestById = createServerFn()
 	.middleware([authMiddleware])
 	.inputValidator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
-
 		// For simplicity, we allow both admins and regular users to use the same endpoint to fetch request details,
 		// and determine permissions (edit/cancel/delete) based on the request status and user role.
 		// Admins can view all requests but cannot edit/cancel/delete.

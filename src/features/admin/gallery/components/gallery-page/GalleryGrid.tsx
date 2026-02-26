@@ -39,7 +39,7 @@ export function GalleryGrid({
 			<Card>
 				<CardContent className="py-12 text-center">
 					<p className="text-muted-foreground">
-					No items found. Try adjusting your filters or add a new item.
+						No items found. Try adjusting your filters or add a new item.
 					</p>
 				</CardContent>
 			</Card>

@@ -24,7 +24,9 @@ export function UserRecentRequests({ requests }: UserRecentRequestsProps) {
 			</CardHeader>
 			<CardContent className="space-y-4">
 				{requests.length === 0 ? (
-					<p className="text-sm text-muted-foreground">No recent requests yet.</p>
+					<p className="text-sm text-muted-foreground">
+						No recent requests yet.
+					</p>
 				) : (
 					requests.map((request) => (
 						<div
@@ -32,7 +34,9 @@ export function UserRecentRequests({ requests }: UserRecentRequestsProps) {
 							className="rounded-lg border border-border p-3 space-y-2"
 						>
 							<div className="flex items-center justify-between gap-2">
-								<p className="text-sm font-medium line-clamp-1">{request.title}</p>
+								<p className="text-sm font-medium line-clamp-1">
+									{request.title}
+								</p>
 								<p
 									className={`text-xs font-semibold ${REQUEST_STATUS_STYLES[request.status] ?? "text-foreground"}`}
 								>

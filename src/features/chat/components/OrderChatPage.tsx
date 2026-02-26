@@ -5,9 +5,6 @@ import { Shield, User } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { OrderStatus } from "@/generated/prisma/enums";
-import { AdminOrderActionsSheet } from "@/features/orders/components/sheets/AdminOrderActionsSheet";
-import { UserOrderActionsSheet } from "@/features/orders/components/sheets/UserOrderActionsSheet";
 import {
 	Card,
 	CardAction,
@@ -21,6 +18,9 @@ import {
 	InputGroupInput,
 } from "@/components/ui/input-group";
 import { authQueryOptions } from "@/features/auth/options";
+import { AdminOrderActionsSheet } from "@/features/orders/components/sheets/AdminOrderActionsSheet";
+import { UserOrderActionsSheet } from "@/features/orders/components/sheets/UserOrderActionsSheet";
+import { OrderStatus } from "@/generated/prisma/enums";
 import { useSupabaseSession } from "@/integrations/supabase/use-session";
 import { cn } from "@/lib/utils";
 import { useRealtimeChat } from "../hooks/useRealtimeChat";

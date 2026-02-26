@@ -24,7 +24,9 @@ export function AdminKpiGrid({ kpis }: AdminKpiGridProps) {
 						<div
 							className={`rounded-lg border p-4 ${ORDER_STATUS_STYLES.PENDING}`}
 						>
-							<p className="text-xs font-medium uppercase tracking-wide">Pending</p>
+							<p className="text-xs font-medium uppercase tracking-wide">
+								Pending
+							</p>
 							<p className="mt-1 text-3xl font-bold">{kpis.pendingOrders}</p>
 						</div>
 						<div
@@ -80,7 +82,9 @@ export function AdminKpiGrid({ kpis }: AdminKpiGridProps) {
 				</Card>
 				<Card>
 					<CardHeader className="pb-2">
-						<CardTitle className="text-sm font-medium">Total Requests</CardTitle>
+						<CardTitle className="text-sm font-medium">
+							Total Requests
+						</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<p className="text-2xl font-bold">{kpis.totalRequests}</p>

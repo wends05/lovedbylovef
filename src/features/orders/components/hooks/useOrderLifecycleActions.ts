@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { adminDashboardQueryOptions } from "@/features/admin/options";
 import { chatQueryOptions } from "@/features/chat/options";
 import { requestsQueryOptions } from "@/features/requests/options";
-import { toast } from "sonner";
 import { OrderStatus } from "@/generated/prisma/enums";
 import { tryCatch } from "@/lib/try-catch";
+import type { GetOrdersQueryInput } from "../../admin/schemas/GetOrdersQuery";
 import { ORDERS_PAGE_SIZE } from "../../constants";
 import { ordersMutationOptions, ordersQueryOptions } from "../../options";
-import type { GetOrdersQueryInput } from "../../admin/schemas/GetOrdersQuery";
-import type { GetUserOrdersInput } from "../../user/schemas/GetUserOrders";
 import { userOrdersQueryOptions } from "../../user/options";
+import type { GetUserOrdersInput } from "../../user/schemas/GetUserOrders";
 
 type BaseActionInput = {
 	orderId: string;
@@ -64,7 +64,9 @@ export function useOrderLifecycleActions() {
 			queryClient.invalidateQueries(
 				adminDashboardQueryOptions.getAdminDashboardData,
 			),
-			queryClient.invalidateQueries(requestsQueryOptions.getRequestById(requestId)),
+			queryClient.invalidateQueries(
+				requestsQueryOptions.getRequestById(requestId),
+			),
 			queryClient.invalidateQueries(ordersQueryOptions.getOrderById(orderId)),
 		]);
 	};

@@ -49,7 +49,9 @@ export function UserKpiGrid({ kpis }: UserKpiGridProps) {
 				{PRIMARY_KPIS.map((item) => (
 					<Card key={item.key} className="border-primary/20">
 						<CardHeader className="flex flex-row items-center justify-between pb-2">
-							<CardTitle className="text-sm font-medium">{item.label}</CardTitle>
+							<CardTitle className="text-sm font-medium">
+								{item.label}
+							</CardTitle>
 							<item.icon className="h-4 w-4 text-primary" />
 						</CardHeader>
 						<CardContent>
@@ -66,7 +68,10 @@ export function UserKpiGrid({ kpis }: UserKpiGridProps) {
 				<CardContent>
 					<div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
 						{SECONDARY_KPIS.map((item) => (
-							<div key={item.key} className="rounded-lg border border-border p-3">
+							<div
+								key={item.key}
+								className="rounded-lg border border-border p-3"
+							>
 								<div className="mb-1 flex items-center justify-between gap-2">
 									<p className="text-xs text-muted-foreground">{item.label}</p>
 									<item.icon className="h-3.5 w-3.5 text-muted-foreground" />

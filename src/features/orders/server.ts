@@ -110,9 +110,7 @@ export const updateOrderLifecycle = createServerFn({ method: "POST" })
 			}
 
 			if (typeof data.totalPrice !== "number" || data.totalPrice <= 0) {
-				throw new Error(
-					"Total price is required before processing an order.",
-				);
+				throw new Error("Total price is required before processing an order.");
 			}
 
 			const updatedOrder = await prisma.order.update({

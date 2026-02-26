@@ -1,6 +1,6 @@
 import { OrderCardShell } from "@/features/orders/components/OrderCardShell";
-import type { Order } from "@/generated/prisma/client";
 import { UserOrderActionsSheet } from "@/features/orders/components/sheets/UserOrderActionsSheet";
+import type { Order } from "@/generated/prisma/client";
 
 interface OrderCardProps {
 	order: Order & { request: { title: string; description: string } | null };

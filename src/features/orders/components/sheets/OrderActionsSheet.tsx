@@ -49,7 +49,9 @@ export function OrderActionsSheet({
 			<SheetContent side="right" className="w-full sm:max-w-md">
 				<SheetHeader>
 					<SheetTitle>{title}</SheetTitle>
-					{description ? <SheetDescription>{description}</SheetDescription> : null}
+					{description ? (
+						<SheetDescription>{description}</SheetDescription>
+					) : null}
 				</SheetHeader>
 				<div className="px-6 space-y-3">{children}</div>
 				<SheetFooter className="border-t border-border">

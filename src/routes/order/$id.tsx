@@ -1,5 +1,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, useParams, useRouter } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Link,
+	useParams,
+	useRouter,
+} from "@tanstack/react-router";
 import { format } from "date-fns";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -129,14 +134,18 @@ function RouteComponent() {
 						<Button
 							variant="outline"
 							size="sm"
-							render={<Link to="/request/$id" params={{ id: order.requestId }} />}
+							render={
+								<Link to="/request/$id" params={{ id: order.requestId }} />
+							}
 						>
 							View Request Details
 						</Button>
 						<Button
 							variant="outline"
 							size="sm"
-							render={<Link to="/chat/$orderId" params={{ orderId: order.id }} />}
+							render={
+								<Link to="/chat/$orderId" params={{ orderId: order.id }} />
+							}
 						>
 							Open Chat
 						</Button>

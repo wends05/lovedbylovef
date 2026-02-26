@@ -24,7 +24,9 @@ export function AdminRecentRequests({ requests }: AdminRecentRequestsProps) {
 			</CardHeader>
 			<CardContent className="space-y-4">
 				{requests.length === 0 ? (
-					<p className="text-sm text-muted-foreground">No recent requests yet.</p>
+					<p className="text-sm text-muted-foreground">
+						No recent requests yet.
+					</p>
 				) : (
 					requests.map((request) => (
 						<div
@@ -41,7 +43,9 @@ export function AdminRecentRequests({ requests }: AdminRecentRequestsProps) {
 									{request.status}
 								</p>
 							</div>
-							<p className="text-sm font-medium line-clamp-1">{request.title}</p>
+							<p className="text-sm font-medium line-clamp-1">
+								{request.title}
+							</p>
 							<p className="text-xs text-muted-foreground">
 								{format(new Date(request.createdAt), "MMM d, yyyy")}
 							</p>
