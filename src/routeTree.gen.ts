@@ -9,53 +9,39 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SplatRouteImport } from './routes/$'
 import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
-import { Route as PublicRouteRouteImport } from './routes/_public/route'
-import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as SplatRouteImport } from './routes/$'
 import { Route as ChatRouteRouteImport } from './routes/chat/route'
-import { Route as AuthSigninRouteImport } from './routes/_auth/signin'
-import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
-import { Route as ProtectedCreateRequestRouteImport } from './routes/_protected/create-request'
-import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
-import { Route as ProtectedOrdersRouteImport } from './routes/_protected/orders'
-import { Route as ProtectedRequestsRouteImport } from './routes/_protected/requests'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as PublicRouteRouteImport } from './routes/_public/route'
+import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
-import { Route as PublicAboutRouteImport } from './routes/_public/about'
-import { Route as PublicContactRouteImport } from './routes/_public/contact'
-import { Route as PublicGalleryRouteImport } from './routes/_public/gallery'
-import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
-import { Route as AdminGalleryRouteRouteImport } from './routes/admin/gallery/route'
-import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
-import { Route as AdminRequestsRouteImport } from './routes/admin/requests'
-import { Route as ChatOrderIdRouteImport } from './routes/chat/$orderId'
-import { Route as OrderIdRouteImport } from './routes/order/$id'
 import { Route as RequestIdRouteImport } from './routes/request.$id'
+import { Route as OrderIdRouteImport } from './routes/order/$id'
+import { Route as ChatOrderIdRouteImport } from './routes/chat/$orderId'
+import { Route as AdminRequestsRouteImport } from './routes/admin/requests'
+import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
+import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
+import { Route as PublicGalleryRouteImport } from './routes/_public/gallery'
+import { Route as PublicContactRouteImport } from './routes/_public/contact'
+import { Route as ProtectedRequestsRouteImport } from './routes/_protected/requests'
+import { Route as ProtectedOrdersRouteImport } from './routes/_protected/orders'
+import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
+import { Route as ProtectedCreateRequestRouteImport } from './routes/_protected/create-request'
+import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
+import { Route as AuthSigninRouteImport } from './routes/_auth/signin'
+import { Route as AdminGalleryRouteRouteImport } from './routes/admin/gallery/route'
 import { Route as AdminGalleryIndexRouteImport } from './routes/admin/gallery/index'
 import { Route as AdminGalleryCreateRouteImport } from './routes/admin/gallery/create'
 import { Route as AdminGalleryIdEditRouteImport } from './routes/admin/gallery/$id.edit'
 
-const SplatRoute = SplatRouteImport.update({
-  id: '/$',
-  path: '/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
-  id: '/_protected',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublicRouteRoute = PublicRouteRouteImport.update({
-  id: '/_public',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRouteRoute = AdminRouteRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatRouteRoute = ChatRouteRouteImport.update({
@@ -63,64 +49,42 @@ const ChatRouteRoute = ChatRouteRouteImport.update({
   path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthSigninRoute = AuthSigninRouteImport.update({
-  id: '/signin',
-  path: '/signin',
-  getParentRoute: () => AuthRoute,
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthSignupRoute = AuthSignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => AuthRoute,
+const PublicRouteRoute = PublicRouteRouteImport.update({
+  id: '/_public',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const ProtectedCreateRequestRoute = ProtectedCreateRequestRouteImport.update({
-  id: '/create-request',
-  path: '/create-request',
-  getParentRoute: () => ProtectedRouteRoute,
-} as any)
-const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => ProtectedRouteRoute,
-} as any)
-const ProtectedOrdersRoute = ProtectedOrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
-  getParentRoute: () => ProtectedRouteRoute,
-} as any)
-const ProtectedRequestsRoute = ProtectedRequestsRouteImport.update({
-  id: '/requests',
-  path: '/requests',
-  getParentRoute: () => ProtectedRouteRoute,
+const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
+  id: '/_protected',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PublicRouteRoute,
 } as any)
-const PublicAboutRoute = PublicAboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => PublicRouteRoute,
+const RequestIdRoute = RequestIdRouteImport.update({
+  id: '/request/$id',
+  path: '/request/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const PublicContactRoute = PublicContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => PublicRouteRoute,
+const OrderIdRoute = OrderIdRouteImport.update({
+  id: '/order/$id',
+  path: '/order/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const PublicGalleryRoute = PublicGalleryRouteImport.update({
-  id: '/gallery',
-  path: '/gallery',
-  getParentRoute: () => PublicRouteRoute,
+const ChatOrderIdRoute = ChatOrderIdRouteImport.update({
+  id: '/$orderId',
+  path: '/$orderId',
+  getParentRoute: () => ChatRouteRoute,
 } as any)
-const AdminDashboardRoute = AdminDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminGalleryRouteRoute = AdminGalleryRouteRouteImport.update({
-  id: '/gallery',
-  path: '/gallery',
+const AdminRequestsRoute = AdminRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminOrdersRoute = AdminOrdersRouteImport.update({
@@ -128,25 +92,55 @@ const AdminOrdersRoute = AdminOrdersRouteImport.update({
   path: '/orders',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const AdminRequestsRoute = AdminRequestsRouteImport.update({
-  id: '/requests',
-  path: '/requests',
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const ChatOrderIdRoute = ChatOrderIdRouteImport.update({
-  id: '/$orderId',
-  path: '/$orderId',
-  getParentRoute: () => ChatRouteRoute,
+const PublicGalleryRoute = PublicGalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => PublicRouteRoute,
 } as any)
-const OrderIdRoute = OrderIdRouteImport.update({
-  id: '/order/$id',
-  path: '/order/$id',
-  getParentRoute: () => rootRouteImport,
+const PublicContactRoute = PublicContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => PublicRouteRoute,
 } as any)
-const RequestIdRoute = RequestIdRouteImport.update({
-  id: '/request/$id',
-  path: '/request/$id',
-  getParentRoute: () => rootRouteImport,
+const ProtectedRequestsRoute = ProtectedRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedOrdersRoute = ProtectedOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedCreateRequestRoute = ProtectedCreateRequestRouteImport.update({
+  id: '/create-request',
+  path: '/create-request',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const AuthSignupRoute = AuthSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthSigninRoute = AuthSigninRouteImport.update({
+  id: '/signin',
+  path: '/signin',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AdminGalleryRouteRoute = AdminGalleryRouteRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminGalleryIndexRoute = AdminGalleryIndexRouteImport.update({
   id: '/',
@@ -176,7 +170,6 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof ProtectedDashboardRoute
   '/orders': typeof ProtectedOrdersRoute
   '/requests': typeof ProtectedRequestsRoute
-  '/about': typeof PublicAboutRoute
   '/contact': typeof PublicContactRoute
   '/gallery': typeof PublicGalleryRoute
   '/admin/dashboard': typeof AdminDashboardRoute
@@ -200,7 +193,6 @@ export interface FileRoutesByTo {
   '/dashboard': typeof ProtectedDashboardRoute
   '/orders': typeof ProtectedOrdersRoute
   '/requests': typeof ProtectedRequestsRoute
-  '/about': typeof PublicAboutRoute
   '/contact': typeof PublicContactRoute
   '/gallery': typeof PublicGalleryRoute
   '/admin/dashboard': typeof AdminDashboardRoute
@@ -228,7 +220,6 @@ export interface FileRoutesById {
   '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/_protected/orders': typeof ProtectedOrdersRoute
   '/_protected/requests': typeof ProtectedRequestsRoute
-  '/_public/about': typeof PublicAboutRoute
   '/_public/contact': typeof PublicContactRoute
   '/_public/gallery': typeof PublicGalleryRoute
   '/admin/dashboard': typeof AdminDashboardRoute
@@ -256,7 +247,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/orders'
     | '/requests'
-    | '/about'
     | '/contact'
     | '/gallery'
     | '/admin/dashboard'
@@ -280,7 +270,6 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/orders'
     | '/requests'
-    | '/about'
     | '/contact'
     | '/gallery'
     | '/admin/dashboard'
@@ -307,7 +296,6 @@ export interface FileRouteTypes {
     | '/_protected/dashboard'
     | '/_protected/orders'
     | '/_protected/requests'
-    | '/_public/about'
     | '/_public/contact'
     | '/_public/gallery'
     | '/admin/dashboard'
@@ -335,13 +323,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/$': {
-      id: '/$'
-      path: '/$'
-      fullPath: '/$'
-      preLoaderRoute: typeof SplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_auth': {
       id: '/_auth'
       path: ''
@@ -349,25 +330,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_protected': {
-      id: '/_protected'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof ProtectedRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_public': {
-      id: '/_public'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof PublicRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteRouteImport
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chat': {
@@ -377,47 +344,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth/signin': {
-      id: '/_auth/signin'
-      path: '/signin'
-      fullPath: '/signin'
-      preLoaderRoute: typeof AuthSigninRouteImport
-      parentRoute: typeof AuthRoute
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_auth/signup': {
-      id: '/_auth/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof AuthSignupRouteImport
-      parentRoute: typeof AuthRoute
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_protected/create-request': {
-      id: '/_protected/create-request'
-      path: '/create-request'
-      fullPath: '/create-request'
-      preLoaderRoute: typeof ProtectedCreateRequestRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
-    '/_protected/dashboard': {
-      id: '/_protected/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof ProtectedDashboardRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
-    '/_protected/orders': {
-      id: '/_protected/orders'
-      path: '/orders'
-      fullPath: '/orders'
-      preLoaderRoute: typeof ProtectedOrdersRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
-    '/_protected/requests': {
-      id: '/_protected/requests'
-      path: '/requests'
-      fullPath: '/requests'
-      preLoaderRoute: typeof ProtectedRequestsRouteImport
-      parentRoute: typeof ProtectedRouteRoute
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtectedRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_public/': {
       id: '/_public/'
@@ -426,39 +372,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRouteRoute
     }
-    '/_public/about': {
-      id: '/_public/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof PublicAboutRouteImport
-      parentRoute: typeof PublicRouteRoute
+    '/request/$id': {
+      id: '/request/$id'
+      path: '/request/$id'
+      fullPath: '/request/$id'
+      preLoaderRoute: typeof RequestIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_public/contact': {
-      id: '/_public/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof PublicContactRouteImport
-      parentRoute: typeof PublicRouteRoute
+    '/order/$id': {
+      id: '/order/$id'
+      path: '/order/$id'
+      fullPath: '/order/$id'
+      preLoaderRoute: typeof OrderIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_public/gallery': {
-      id: '/_public/gallery'
-      path: '/gallery'
-      fullPath: '/gallery'
-      preLoaderRoute: typeof PublicGalleryRouteImport
-      parentRoute: typeof PublicRouteRoute
+    '/chat/$orderId': {
+      id: '/chat/$orderId'
+      path: '/$orderId'
+      fullPath: '/chat/$orderId'
+      preLoaderRoute: typeof ChatOrderIdRouteImport
+      parentRoute: typeof ChatRouteRoute
     }
-    '/admin/dashboard': {
-      id: '/admin/dashboard'
-      path: '/dashboard'
-      fullPath: '/admin/dashboard'
-      preLoaderRoute: typeof AdminDashboardRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/gallery': {
-      id: '/admin/gallery'
-      path: '/gallery'
-      fullPath: '/admin/gallery'
-      preLoaderRoute: typeof AdminGalleryRouteRouteImport
+    '/admin/requests': {
+      id: '/admin/requests'
+      path: '/requests'
+      fullPath: '/admin/requests'
+      preLoaderRoute: typeof AdminRequestsRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/orders': {
@@ -468,33 +407,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOrdersRouteImport
       parentRoute: typeof AdminRouteRoute
     }
-    '/admin/requests': {
-      id: '/admin/requests'
-      path: '/requests'
-      fullPath: '/admin/requests'
-      preLoaderRoute: typeof AdminRequestsRouteImport
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRouteRoute
     }
-    '/chat/$orderId': {
-      id: '/chat/$orderId'
-      path: '/$orderId'
-      fullPath: '/chat/$orderId'
-      preLoaderRoute: typeof ChatOrderIdRouteImport
-      parentRoute: typeof ChatRouteRoute
+    '/_public/gallery': {
+      id: '/_public/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof PublicGalleryRouteImport
+      parentRoute: typeof PublicRouteRoute
     }
-    '/order/$id': {
-      id: '/order/$id'
-      path: '/order/$id'
-      fullPath: '/order/$id'
-      preLoaderRoute: typeof OrderIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_public/contact': {
+      id: '/_public/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof PublicContactRouteImport
+      parentRoute: typeof PublicRouteRoute
     }
-    '/request/$id': {
-      id: '/request/$id'
-      path: '/request/$id'
-      fullPath: '/request/$id'
-      preLoaderRoute: typeof RequestIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_protected/requests': {
+      id: '/_protected/requests'
+      path: '/requests'
+      fullPath: '/requests'
+      preLoaderRoute: typeof ProtectedRequestsRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/orders': {
+      id: '/_protected/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof ProtectedOrdersRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/dashboard': {
+      id: '/_protected/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof ProtectedDashboardRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/create-request': {
+      id: '/_protected/create-request'
+      path: '/create-request'
+      fullPath: '/create-request'
+      preLoaderRoute: typeof ProtectedCreateRequestRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_auth/signup': {
+      id: '/_auth/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/signin': {
+      id: '/_auth/signin'
+      path: '/signin'
+      fullPath: '/signin'
+      preLoaderRoute: typeof AuthSigninRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/admin/gallery': {
+      id: '/admin/gallery'
+      path: '/gallery'
+      fullPath: '/admin/gallery'
+      preLoaderRoute: typeof AdminGalleryRouteRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/gallery/': {
       id: '/admin/gallery/'
@@ -539,14 +520,12 @@ const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
 )
 
 interface PublicRouteRouteChildren {
-  PublicAboutRoute: typeof PublicAboutRoute
   PublicContactRoute: typeof PublicContactRoute
   PublicGalleryRoute: typeof PublicGalleryRoute
   PublicIndexRoute: typeof PublicIndexRoute
 }
 
 const PublicRouteRouteChildren: PublicRouteRouteChildren = {
-  PublicAboutRoute: PublicAboutRoute,
   PublicContactRoute: PublicContactRoute,
   PublicGalleryRoute: PublicGalleryRoute,
   PublicIndexRoute: PublicIndexRoute,
