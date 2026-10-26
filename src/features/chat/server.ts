@@ -117,207 +117,199 @@ const getChatAccessContextByChatId = createServerOnlyFn(
 export const getChatData = createServerFn()
 	.middleware([authMiddleware])
 	.validator(GetChatDataSchema)
-	.handler(
-		createServerOnlyFn(async ({ data }) => {
-			const [accessContext, authContext] = await Promise.all([
-				getChatAccessContextByOrderId(data.orderId),
-				getCurrentUserAuthContext(),
-			]);
+	.handler(async ({ data }) => {
+		const [accessContext, authContext] = await Promise.all([
+			getChatAccessContextByOrderId(data.orderId),
+			getCurrentUserAuthContext(),
+		]);
 
-			if (!accessContext) {
-				return null;
-			}
+		if (!accessContext) {
+			return null;
+		}
 
-			if (
-				isForbidden({
-					currentUserId: authContext.userId,
-					currentUserRole: authContext.role,
-					accessContext,
-				})
-			) {
-				throw new Error(FORBIDDEN_ERROR_MESSAGE);
-			}
+		if (
+			isForbidden({
+				currentUserId: authContext.userId,
+				currentUserRole: authContext.role,
+				accessContext,
+			})
+		) {
+			throw new Error(FORBIDDEN_ERROR_MESSAGE);
+		}
 
-			const chatData = await prisma.orderChat.findUnique({
-				where: {
-					orderId: data.orderId,
-				},
-				include: {
-					order: {
-						select: {
-							id: true,
-							requestId: true,
-							requestorId: true,
-							status: true,
-							totalPrice: true,
-							orderChat: {
-								select: {
-									id: true,
-								},
+		const chatData = await prisma.orderChat.findUnique({
+			where: {
+				orderId: data.orderId,
+			},
+			include: {
+				order: {
+					select: {
+						id: true,
+						requestId: true,
+						requestorId: true,
+						status: true,
+						totalPrice: true,
+						orderChat: {
+							select: {
+								id: true,
 							},
-							request: {
-								select: {
-									title: true,
-								},
+						},
+						request: {
+							select: {
+								title: true,
 							},
 						},
 					},
-					user: {
-						select: {
-							id: true,
-							name: true,
-							email: true,
-						},
+				},
+				user: {
+					select: {
+						id: true,
+						name: true,
+						email: true,
 					},
 				},
-			});
-			return chatData;
-		}),
-	);
+			},
+		});
+		return chatData;
+	});
 
 export const getChatMessages = createServerFn()
 	.middleware([authMiddleware])
 	.validator(GetChatMessagesSchema)
-	.handler(
-		createServerOnlyFn(async ({ data }) => {
-			const [accessContext, authContext] = await Promise.all([
-				getChatAccessContextByChatId(data.orderChatId),
-				getCurrentUserAuthContext(),
-			]);
+	.handler(async ({ data }) => {
+		const [accessContext, authContext] = await Promise.all([
+			getChatAccessContextByChatId(data.orderChatId),
+			getCurrentUserAuthContext(),
+		]);
 
-			if (!accessContext) {
-				throw new Error("Chat not found");
-			}
+		if (!accessContext) {
+			throw new Error("Chat not found");
+		}
 
-			if (
-				isForbidden({
-					currentUserId: authContext.userId,
-					currentUserRole: authContext.role,
-					accessContext,
-				})
-			) {
-				throw new Error(FORBIDDEN_ERROR_MESSAGE);
-			}
+		if (
+			isForbidden({
+				currentUserId: authContext.userId,
+				currentUserRole: authContext.role,
+				accessContext,
+			})
+		) {
+			throw new Error(FORBIDDEN_ERROR_MESSAGE);
+		}
 
-			const messages = await prisma.chatMessage.findMany({
-				where: {
-					orderChatId: data.orderChatId,
-				},
-				include: {
-					author: {
-						select: {
-							id: true,
-							image: true,
-							name: true,
-						},
+		const messages = await prisma.chatMessage.findMany({
+			where: {
+				orderChatId: data.orderChatId,
+			},
+			include: {
+				author: {
+					select: {
+						id: true,
+						image: true,
+						name: true,
 					},
 				},
-			});
+			},
+		});
 
-			return messages;
-		}),
-	);
+		return messages;
+	});
 
 export const getChatMessagesPage = createServerFn()
 	.middleware([authMiddleware])
 	.validator(GetChatMessagesPageSchema)
-	.handler(
-		createServerOnlyFn(async ({ data }) => {
-			const [accessContext, authContext] = await Promise.all([
-				getChatAccessContextByChatId(data.orderChatId),
-				getCurrentUserAuthContext(),
-			]);
+	.handler(async ({ data }) => {
+		const [accessContext, authContext] = await Promise.all([
+			getChatAccessContextByChatId(data.orderChatId),
+			getCurrentUserAuthContext(),
+		]);
 
-			if (!accessContext) {
-				throw new Error("Chat not found");
-			}
+		if (!accessContext) {
+			throw new Error("Chat not found");
+		}
 
-			if (
-				isForbidden({
-					currentUserId: authContext.userId,
-					currentUserRole: authContext.role,
-					accessContext,
-				})
-			) {
-				throw new Error(FORBIDDEN_ERROR_MESSAGE);
-			}
+		if (
+			isForbidden({
+				currentUserId: authContext.userId,
+				currentUserRole: authContext.role,
+				accessContext,
+			})
+		) {
+			throw new Error(FORBIDDEN_ERROR_MESSAGE);
+		}
 
-			const pageSize = data.pageSize;
+		const pageSize = data.pageSize;
 
-			const messages = await prisma.chatMessage.findMany({
-				where: {
-					orderChatId: data.orderChatId,
-				},
-				orderBy: {
-					createdAt: "desc",
-				},
-				take: pageSize + 1,
-				...(data.cursor
-					? {
-							cursor: { id: data.cursor },
-							skip: 1,
-						}
-					: {}),
-				include: {
-					author: {
-						select: {
-							id: true,
-							image: true,
-							name: true,
-						},
+		const messages = await prisma.chatMessage.findMany({
+			where: {
+				orderChatId: data.orderChatId,
+			},
+			orderBy: {
+				createdAt: "desc",
+			},
+			take: pageSize + 1,
+			...(data.cursor
+				? {
+						cursor: { id: data.cursor },
+						skip: 1,
+					}
+				: {}),
+			include: {
+				author: {
+					select: {
+						id: true,
+						image: true,
+						name: true,
 					},
 				},
-			});
+			},
+		});
 
-			const hasMore = messages.length > pageSize;
-			const items = hasMore ? messages.slice(0, pageSize) : messages;
-			const nextCursor = hasMore ? items[items.length - 1]?.id : undefined;
+		const hasMore = messages.length > pageSize;
+		const items = hasMore ? messages.slice(0, pageSize) : messages;
+		const nextCursor = hasMore ? items[items.length - 1]?.id : undefined;
 
-			return {
-				items,
-				nextCursor,
-			};
-		}),
-	);
+		return {
+			items,
+			nextCursor,
+		};
+	});
 
 export const sendMessage = createServerFn()
 	.middleware([authMiddleware])
 	.validator(SendMessageSchema)
-	.handler(
-		createServerOnlyFn(async ({ data }) => {
-			const [accessContext, authContext] = await Promise.all([
-				getChatAccessContextByChatId(data.orderChatId),
-				getCurrentUserAuthContext(),
-			]);
+	.handler(async ({ data }) => {
+		const [accessContext, authContext] = await Promise.all([
+			getChatAccessContextByChatId(data.orderChatId),
+			getCurrentUserAuthContext(),
+		]);
 
-			if (!accessContext) {
-				throw new Error("Chat not found");
-			}
+		if (!accessContext) {
+			throw new Error("Chat not found");
+		}
 
-			if (
-				isForbidden({
-					currentUserId: authContext.userId,
-					currentUserRole: authContext.role,
-					accessContext,
-				})
-			) {
-				throw new Error(FORBIDDEN_ERROR_MESSAGE);
-			}
+		if (
+			isForbidden({
+				currentUserId: authContext.userId,
+				currentUserRole: authContext.role,
+				accessContext,
+			})
+		) {
+			throw new Error(FORBIDDEN_ERROR_MESSAGE);
+		}
 
-			console.log(
-				"Creating message with data:",
-				data,
-				"for user:",
-				authContext.userId,
-			);
+		console.log(
+			"Creating message with data:",
+			data,
+			"for user:",
+			authContext.userId,
+		);
 
-			const message = await prisma.chatMessage.create({
-				data: {
-					content: data.content,
-					orderChatId: data.orderChatId,
-					authorId: authContext.userId,
-				},
-			});
-			return message;
-		}),
-	);
+		const message = await prisma.chatMessage.create({
+			data: {
+				content: data.content,
+				orderChatId: data.orderChatId,
+				authorId: authContext.userId,
+			},
+		});
+		return message;
+	});
