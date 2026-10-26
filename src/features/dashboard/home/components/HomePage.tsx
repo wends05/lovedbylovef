@@ -1,7 +1,4 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { dashboardQueryOptions } from "../../options";
 import { UserKpiGrid } from "./UserKpiGrid";
 import { UserRecentOrders } from "./UserRecentOrders";
@@ -18,27 +15,6 @@ export default function HomePage() {
 				<UserRecentOrders orders={data.recentOrders} />
 				<UserRecentRequests requests={data.recentRequests} />
 			</div>
-
-			<Card>
-				<CardHeader>
-					<CardTitle>Quick Actions</CardTitle>
-				</CardHeader>
-				<CardContent className="flex flex-wrap gap-2">
-					<Button
-						variant="outline"
-						size="sm"
-						render={<Link to="/create-request" />}
-					>
-						Create Request
-					</Button>
-					<Button variant="outline" size="sm" render={<Link to="/gallery" />}>
-						Browse Gallery
-					</Button>
-					<Button variant="outline" size="sm" render={<Link to="/orders" />}>
-						Go to Orders
-					</Button>
-				</CardContent>
-			</Card>
 		</div>
 	);
 }
