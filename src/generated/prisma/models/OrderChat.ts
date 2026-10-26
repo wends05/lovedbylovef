@@ -158,7 +158,7 @@ export type OrderChatGroupByOutputType = {
   _max: OrderChatMaxAggregateOutputType | null
 }
 
-type GetOrderChatGroupByPayload<T extends OrderChatGroupByArgs> = Prisma.PrismaPromise<
+export type GetOrderChatGroupByPayload<T extends OrderChatGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<OrderChatGroupByOutputType, T['by']> &
       {
@@ -1330,6 +1330,11 @@ export type OrderChatFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Skip the first `n` OrderChats.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of OrderChats.
+   */
   distinct?: Prisma.OrderChatScalarFieldEnum | Prisma.OrderChatScalarFieldEnum[]
 }
 

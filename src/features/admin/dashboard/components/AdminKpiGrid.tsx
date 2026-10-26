@@ -74,7 +74,9 @@ export function AdminKpiGrid({ kpis }: AdminKpiGridProps) {
 				</Card>
 				<Card>
 					<CardHeader className="pb-2">
-						<CardTitle className="text-sm font-medium">Total Users</CardTitle>
+						<CardTitle className="text-sm font-medium">
+							Total Customers Signed Up
+						</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<p className="text-2xl font-bold">{kpis.totalUsers}</p>

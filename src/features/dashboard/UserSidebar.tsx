@@ -1,11 +1,5 @@
-import { Link, useRouter } from "@tanstack/react-router";
-import {
-	Home,
-	LogOut,
-	MessageCircleMore,
-	Package,
-	PlusIcon,
-} from "lucide-react";
+import { Link, useRouter, useRouterState } from "@tanstack/react-router";
+import { House, LogOut, Mail, Package, PlusIcon } from "lucide-react";
 
 import {
 	Sidebar,
@@ -25,6 +19,11 @@ import { useSupabaseSession } from "@/integrations/supabase/use-session";
 export function UserSidebar() {
 	const router = useRouter();
 	const { session } = useSupabaseSession();
+	const pathname = useRouterState({
+		select: (state) => state.location.pathname,
+	});
+	const isActive = (href: string) =>
+		pathname === href || pathname.startsWith(`${href}/`);
 
 	const user = session?.user;
 	const userName =
@@ -46,17 +45,17 @@ export function UserSidebar() {
 	const navigation = [
 		{
 			title: "Dashboard",
-			icon: Home,
+			icon: House,
 			href: "/dashboard",
 		},
 		{
 			title: "Requests",
-			icon: Package,
+			icon: Mail,
 			href: "/requests",
 		},
 		{
 			title: "Orders",
-			icon: MessageCircleMore,
+			icon: Package,
 			href: "/orders",
 		},
 	];
@@ -86,6 +85,7 @@ export function UserSidebar() {
 								<SidebarMenuItem key={item.href}>
 									<SidebarMenuButton
 										className="flex gap-2"
+										isActive={isActive(item.href)}
 										render={
 											<Link to={item.href}>
 												<item.icon className="h-4 w-4 shrink-0" />
@@ -101,6 +101,7 @@ export function UserSidebar() {
 							<SidebarMenuItem>
 								<SidebarMenuButton
 									className="flex gap-2"
+									isActive={isActive("/create-request")}
 									render={
 										<Link to="/create-request">
 											<PlusIcon className="h-4 w-4 shrink-0" />

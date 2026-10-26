@@ -32,7 +32,7 @@ export const getAllCrochetsAdmin = createServerFn()
 // Get crochet by ID
 export const getCrochetById = createServerFn()
 	.middleware([adminMiddleware])
-	.inputValidator(GetCrochetByIdSchema)
+	.validator(GetCrochetByIdSchema)
 	.handler(async ({ data }) => {
 		const crochet = await prisma.crochet.findUnique({
 			where: { id: data.id },
@@ -46,7 +46,7 @@ export const getCrochetById = createServerFn()
 // Create new crochet
 export const createCrochet = createServerFn({ method: "POST" })
 	.middleware([adminMiddleware])
-	.inputValidator(CreateCrochetSchema)
+	.validator(CreateCrochetSchema)
 	.handler(async ({ data }) => {
 		const crochet = await prisma.crochet.create({
 			data: {
@@ -65,7 +65,7 @@ export const createCrochet = createServerFn({ method: "POST" })
 // Update crochet
 export const updateCrochet = createServerFn({ method: "POST" })
 	.middleware([adminMiddleware])
-	.inputValidator(UpdateCrochetSchema)
+	.validator(UpdateCrochetSchema)
 	.handler(async ({ data }) => {
 		const { id, ...updateData } = data;
 		const existingCrochet = await prisma.crochet.findUnique({
@@ -113,7 +113,7 @@ export const updateCrochet = createServerFn({ method: "POST" })
 // Delete crochet (hard delete)
 export const deleteCrochet = createServerFn({ method: "POST" })
 	.middleware([adminMiddleware])
-	.inputValidator(DeleteCrochetSchema)
+	.validator(DeleteCrochetSchema)
 	.handler(async ({ data }) => {
 		// handle deletion of the image also
 		const crochet = await prisma.crochet.findUnique({
@@ -134,7 +134,7 @@ export const deleteCrochet = createServerFn({ method: "POST" })
 // Toggle crochet visibility
 export const toggleCrochetVisibility = createServerFn({ method: "POST" })
 	.middleware([adminMiddleware])
-	.inputValidator(ToggleCrochetVisibilitySchema)
+	.validator(ToggleCrochetVisibilitySchema)
 	.handler(async ({ data }) => {
 		const crochet = await prisma.crochet.update({
 			where: { id: data.id },

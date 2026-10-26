@@ -1,4 +1,4 @@
-import { Loader2, X } from "lucide-react";
+import { LoaderCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -133,7 +133,7 @@ export function RequestEditForm({
 						<Button type="submit" disabled={isUpdating || isUploading}>
 							{isUpdating ? (
 								<>
-									<Loader2 className="w-4 h-4 mr-2 animate-spin" />
+									<LoaderCircle className="w-4 h-4 mr-2 animate-spin" />
 									Updating...
 								</>
 							) : (

@@ -9,20 +9,24 @@ import { OrderActionsSheet } from "./OrderActionsSheet";
 
 type AdminOrderActionsSheetProps = {
 	orderId: string;
+	orderTitle?: string;
 	requestId: string;
 	status: OrderStatus;
 	totalPrice: number | null;
 	showOrderLink?: boolean;
+	showRequestLink?: boolean;
 	showChatLink?: boolean;
 	triggerLabel?: string;
 };
 
 export function AdminOrderActionsSheet({
 	orderId,
+	orderTitle,
 	requestId,
 	status,
 	totalPrice,
 	showOrderLink = true,
+	showRequestLink = true,
 	showChatLink = true,
 	triggerLabel = "Actions",
 }: AdminOrderActionsSheetProps) {
@@ -40,11 +44,12 @@ export function AdminOrderActionsSheet({
 		<OrderActionsSheet
 			open={open}
 			onOpenChange={setOpen}
-			title={`#${orderId}`}
+			title={orderTitle ?? `#${orderId}`}
 			description="Manage lifecycle updates for this order."
 			orderId={orderId}
 			requestId={requestId}
 			showOrderLink={showOrderLink}
+			showRequestLink={showRequestLink}
 			showChatLink={showChatLink}
 			triggerLabel={triggerLabel}
 		>

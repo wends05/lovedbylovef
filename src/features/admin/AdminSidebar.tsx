@@ -1,6 +1,4 @@
-"use client";
-
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import {
 	GalleryHorizontalEnd,
 	LayoutDashboard,
@@ -27,6 +25,11 @@ import { useSupabaseSession } from "@/integrations/supabase/use-session";
 export function AdminSidebar() {
 	const router = useRouter();
 	const { session } = useSupabaseSession();
+	const pathname = useRouterState({
+		select: (state) => state.location.pathname,
+	});
+	const isActive = (href: string) =>
+		pathname === href || pathname.startsWith(`${href}/`);
 
 	const user = session?.user;
 	const userName =
@@ -91,6 +94,7 @@ export function AdminSidebar() {
 								<SidebarMenuItem key={item.href}>
 									<SidebarMenuButton
 										className="flex gap-2"
+										isActive={isActive(item.href)}
 										render={
 											<Link to={item.href}>
 												<item.icon className="h-4 w-4 shrink-0" />

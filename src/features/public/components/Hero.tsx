@@ -93,18 +93,6 @@ export default function Hero() {
 							</Link>
 						}
 					/>
-
-					<Button
-						variant="outline"
-						size="lg"
-						className="rounded-full px-8 py-6 text-base font-medium transition-all hover:-translate-y-0.5"
-						style={{
-							borderColor: "var(--ring)",
-							color: "var(--primary)",
-							backgroundColor: "transparent",
-						}}
-						render={<Link to="/about">Learn More</Link>}
-					/>
 				</div>
 			</div>
 

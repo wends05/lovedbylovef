@@ -10,13 +10,14 @@ export function OrderCard({ order }: OrderCardProps) {
 	return (
 		<OrderCardShell
 			orderId={order.id}
+			title={order.request?.title ?? "Custom order"}
 			createdAt={order.createdAt}
 			status={order.status}
 			totalPrice={order.totalPrice}
 			details={
-				<div>
-					<p className="text-sm font-medium">
-						{order.request?.title ?? "Custom order"}
+				<div className="space-y-1">
+					<p className="truncate font-mono text-xs text-muted-foreground">
+						Order ID: {order.id}
 					</p>
 					<p className="text-xs text-muted-foreground line-clamp-2">
 						{order.request?.description ?? "No description provided"}

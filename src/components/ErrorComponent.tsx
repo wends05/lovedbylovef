@@ -1,15 +1,14 @@
-import { Link, useRouter } from "@tanstack/react-router";
-import { AlertCircle, Home, RefreshCcw } from "lucide-react";
+import {
+	type ErrorComponentProps,
+	Link,
+	useRouter,
+} from "@tanstack/react-router";
+import { AlertCircle, House, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-interface ErrorComponentProps {
-	error: Error;
-	info?: { componentStack?: string };
-	reset?: () => void;
-}
 
 export default function ErrorComponent({ error, reset }: ErrorComponentProps) {
 	const router = useRouter();
+	const errorMessage = error instanceof Error ? error.message : undefined;
 
 	const handleReset = () => {
 		if (reset) {
@@ -56,10 +55,10 @@ export default function ErrorComponent({ error, reset }: ErrorComponentProps) {
 				</p>
 
 				{/* Error Message (if available) */}
-				{error.message && (
+				{errorMessage && (
 					<div className="mb-8 p-4 rounded-lg bg-card border border-border">
 						<p className="text-sm text-destructive font-medium">
-							{error.message}
+							{errorMessage}
 						</p>
 					</div>
 				)}
@@ -81,7 +80,7 @@ export default function ErrorComponent({ error, reset }: ErrorComponentProps) {
 							size="lg"
 							className="rounded-full border-primary text-primary hover:bg-primary/10"
 						>
-							<Home className="w-4 h-4 mr-2" />
+							<House className="w-4 h-4 mr-2" />
 							Back Home
 						</Button>
 					</Link>

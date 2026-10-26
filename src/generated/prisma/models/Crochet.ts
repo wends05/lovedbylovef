@@ -227,7 +227,7 @@ export type CrochetGroupByOutputType = {
   _max: CrochetMaxAggregateOutputType | null
 }
 
-type GetCrochetGroupByPayload<T extends CrochetGroupByArgs> = Prisma.PrismaPromise<
+export type GetCrochetGroupByPayload<T extends CrochetGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CrochetGroupByOutputType, T['by']> &
       {
@@ -1166,6 +1166,11 @@ export type CrochetFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Skip the first `n` Crochets.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Crochets.
+   */
   distinct?: Prisma.CrochetScalarFieldEnum | Prisma.CrochetScalarFieldEnum[]
 }
 

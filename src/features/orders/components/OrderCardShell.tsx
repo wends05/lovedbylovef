@@ -5,6 +5,7 @@ import type { OrderStatus } from "@/generated/prisma/enums";
 
 interface OrderCardShellProps {
 	orderId: string;
+	title?: string;
 	createdAt: Date | string;
 	status: OrderStatus;
 	totalPrice: number | null;
@@ -14,6 +15,7 @@ interface OrderCardShellProps {
 
 export function OrderCardShell({
 	orderId,
+	title,
 	createdAt,
 	status,
 	totalPrice,
@@ -23,7 +25,7 @@ export function OrderCardShell({
 	return (
 		<Card>
 			<CardHeader className="pb-3 h-full">
-				<CardTitle className="text-lg">#{orderId}</CardTitle>
+				<CardTitle className="text-lg">{title ?? `#${orderId}`}</CardTitle>
 				<p className="text-sm text-muted-foreground">
 					{format(new Date(createdAt), "MMM d, yyyy")}
 				</p>

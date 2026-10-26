@@ -6,7 +6,7 @@ import { GetUserOrdersSchema } from "./schemas/GetUserOrders";
 
 export const getUserOrders = createServerFn()
 	.middleware([authMiddleware])
-	.inputValidator(GetUserOrdersSchema)
+	.validator(GetUserOrdersSchema)
 	.handler(async ({ data }) => {
 		const supabase = getSupabaseServerClient();
 		const { data: authData } = await supabase.auth.getUser();

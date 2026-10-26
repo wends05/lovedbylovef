@@ -1,5 +1,3 @@
-"use client";
-
 import { useRouterState } from "@tanstack/react-router";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";

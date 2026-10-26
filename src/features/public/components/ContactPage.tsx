@@ -1,4 +1,4 @@
-import { Instagram } from "lucide-react";
+import InstagramIcon from "@/components/icons/InstagramIcon";
 import { Button } from "@/components/ui/button";
 
 export default function ContactPage() {
@@ -15,7 +15,7 @@ export default function ContactPage() {
 							"linear-gradient(135deg, var(--color-rose-light), var(--color-pink-soft))",
 					}}
 				>
-					<Instagram
+					<InstagramIcon
 						className="w-12 h-12"
 						style={{ color: "var(--primary)" }}
 					/>
@@ -60,7 +60,7 @@ export default function ContactPage() {
 						window.open(instagramUrl, "_blank", "noopener,noreferrer")
 					}
 				>
-					<Instagram className="w-5 h-5 mr-2" />
+					<InstagramIcon className="w-5 h-5 mr-2" />
 					Follow on Instagram
 				</Button>
 

@@ -1,21 +1,18 @@
-"use client";
-
 import { Link } from "@tanstack/react-router";
 import { Heart, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useSupabaseSession } from "@/integrations/supabase/use-session";
 
+const navLinks = [
+	{ label: "Home", to: "/" },
+	{ label: "Gallery", to: "/gallery" },
+	{ label: "Contact", to: "/contact" },
+];
+
 export default function Header() {
 	const { session } = useSupabaseSession();
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-	const navLinks = [
-		{ label: "Home", to: "/" },
-		{ label: "Gallery", to: "/gallery" },
-		{ label: "About", to: "/about" },
-		{ label: "Contact", to: "/contact" },
-	];
 
 	return (
 		<header className="sticky top-0 z-50 w-full glass-pink border-b border-border/50">

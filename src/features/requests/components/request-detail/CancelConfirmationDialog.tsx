@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -47,7 +47,7 @@ export default function CancelConfirmationDialog({
 					>
 						{isCancelling ? (
 							<>
-								<Loader2 className="w-4 h-4 mr-2 animate-spin" />
+								<LoaderCircle className="w-4 h-4 mr-2 animate-spin" />
 								Cancelling...
 							</>
 						) : (

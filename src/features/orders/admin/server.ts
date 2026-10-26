@@ -6,7 +6,7 @@ import { InitiateOrderSchema } from "./schemas/InitiateOrder";
 
 export const getAllOrders = createServerFn()
 	.middleware([adminMiddleware])
-	.inputValidator(GetOrdersQuerySchema)
+	.validator(GetOrdersQuerySchema)
 	.handler(async ({ data }) => {
 		const pageSize = data.pageSize;
 		const orders = await prisma.order.findMany({
@@ -45,7 +45,7 @@ export const getAllOrders = createServerFn()
 
 export const initiateOrder = createServerFn({ method: "POST" })
 	.middleware([adminMiddleware])
-	.inputValidator(InitiateOrderSchema)
+	.validator(InitiateOrderSchema)
 	.handler(async ({ data }) => {
 		const result = await prisma.$transaction(async (tx) => {
 			const approvedRequest = await tx.request.update({

@@ -13,7 +13,7 @@ export const DeleteStorageImageSchema = z.object({
 });
 
 export const deleteStorageImage = createServerFn({ method: "POST" })
-	.inputValidator(DeleteStorageImageSchema)
+	.validator(DeleteStorageImageSchema)
 	.handler(async ({ data }) => {
 		const supabase = getSupabaseServerClient();
 		const { data: authData } = await supabase.auth.getUser();

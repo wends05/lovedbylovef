@@ -7,7 +7,7 @@ import { UpdateOrderLifecycleSchema } from "./schemas/UpdateOrderLifecycle";
 
 export const getOrderById = createServerFn()
 	.middleware([authMiddleware])
-	.inputValidator((input: { id: string }) => input)
+	.validator((input: { id: string }) => input)
 	.handler(async ({ data }) => {
 		const supabase = getSupabaseServerClient();
 		const { data: authData } = await supabase.auth.getUser();
@@ -67,7 +67,7 @@ export const getOrderById = createServerFn()
 
 export const updateOrderLifecycle = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(UpdateOrderLifecycleSchema)
+	.validator(UpdateOrderLifecycleSchema)
 	.handler(async ({ data }) => {
 		const supabase = getSupabaseServerClient();
 		const { data: authData } = await supabase.auth.getUser();
