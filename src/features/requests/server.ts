@@ -34,7 +34,7 @@ function withImageUrl<T extends { imagePath: string | null }>(request: T) {
 }
 
 export const getUserRequests = createServerFn()
-	.inputValidator((input: GetUserRequestsInput) => input)
+	.validator((input: GetUserRequestsInput) => input)
 	.handler(async ({ data }) => {
 		const supabase = getSupabaseServerClient();
 		const { data: authData } = await supabase.auth.getUser();
@@ -82,7 +82,7 @@ export const getUserRequests = createServerFn()
 
 export const getRequestById = createServerFn()
 	.middleware([authMiddleware])
-	.inputValidator(z.object({ id: z.string() }))
+	.validator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
 		// For simplicity, we allow both admins and regular users to use the same endpoint to fetch request details,
 		// and determine permissions (edit/cancel/delete) based on the request status and user role.
@@ -128,7 +128,7 @@ export const getRequestById = createServerFn()
 	});
 
 export const cancelRequest = createServerFn({ method: "POST" })
-	.inputValidator(z.object({ id: z.string() }))
+	.validator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
 		const supabase = getSupabaseServerClient();
 		const { data: authData } = await supabase.auth.getUser();
@@ -161,7 +161,7 @@ export const cancelRequest = createServerFn({ method: "POST" })
 
 export const deleteUserRequest = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(z.object({ id: z.string() }))
+	.validator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
 		const supabase = getSupabaseServerClient();
 		const { data: authData } = await supabase.auth.getUser();
@@ -208,7 +208,7 @@ export const deleteUserRequest = createServerFn({ method: "POST" })
 
 export const submitRequest = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator(RequestFormSubmission)
+	.validator(RequestFormSubmission)
 	.handler(async ({ data }) => {
 		const supabase = getSupabaseServerClient();
 		const { data: authData } = await supabase.auth.getUser();
@@ -237,7 +237,7 @@ export const submitRequest = createServerFn({ method: "POST" })
 	});
 
 export const updateUserRequest = createServerFn({ method: "POST" })
-	.inputValidator(UpdateRequestSubmissionSchema)
+	.validator(UpdateRequestSubmissionSchema)
 	.handler(async ({ data }) => {
 		const supabase = getSupabaseServerClient();
 		const { data: authData } = await supabase.auth.getUser();
@@ -297,7 +297,7 @@ export const updateUserRequest = createServerFn({ method: "POST" })
 
 export const getAllRequests = createServerFn()
 	.middleware([adminMiddleware])
-	.inputValidator(GetRequestsQuerySchema)
+	.validator(GetRequestsQuerySchema)
 	.handler(async ({ data }) => {
 		const pageSize = data.pageSize;
 
@@ -362,7 +362,7 @@ export const getAllRequests = createServerFn()
 
 export const updateRequestStatus = createServerFn({ method: "POST" })
 	.middleware([adminMiddleware])
-	.inputValidator(UpdateRequestStatusSchema)
+	.validator(UpdateRequestStatusSchema)
 	.handler(async ({ data }) => {
 		// check if the request exists and if the request is to be approved.
 

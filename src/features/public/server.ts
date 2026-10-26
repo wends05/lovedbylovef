@@ -15,7 +15,7 @@ function withImageUrl<T extends { imagePath: string }>(crochet: T) {
 }
 
 export const getVisibleCrochets = createServerFn({ method: "GET" })
-	.inputValidator((input: GetVisibleCrochetsInput) => input)
+	.validator((input: GetVisibleCrochetsInput) => input)
 	.handler(async ({ data }) => {
 		const crochets = await prisma.crochet.findMany({
 			where: {

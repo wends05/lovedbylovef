@@ -89,7 +89,7 @@ import { createServerFn } from "@tanstack/react-start";
 import z from "zod";
 
 export const myServerFn = createServerFn()
-  .inputValidator(z.object({ id: z.string() }))
+  .validator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
     // Server-side logic
   });

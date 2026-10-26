@@ -116,7 +116,7 @@ const getChatAccessContextByChatId = createServerOnlyFn(
 
 export const getChatData = createServerFn()
 	.middleware([authMiddleware])
-	.inputValidator(GetChatDataSchema)
+	.validator(GetChatDataSchema)
 	.handler(
 		createServerOnlyFn(async ({ data }) => {
 			const [accessContext, authContext] = await Promise.all([
@@ -172,7 +172,7 @@ export const getChatData = createServerFn()
 
 export const getChatMessages = createServerFn()
 	.middleware([authMiddleware])
-	.inputValidator(GetChatMessagesSchema)
+	.validator(GetChatMessagesSchema)
 	.handler(
 		createServerOnlyFn(async ({ data }) => {
 			const [accessContext, authContext] = await Promise.all([
@@ -215,7 +215,7 @@ export const getChatMessages = createServerFn()
 
 export const getChatMessagesPage = createServerFn()
 	.middleware([authMiddleware])
-	.inputValidator(GetChatMessagesPageSchema)
+	.validator(GetChatMessagesPageSchema)
 	.handler(
 		createServerOnlyFn(async ({ data }) => {
 			const [accessContext, authContext] = await Promise.all([
@@ -277,7 +277,7 @@ export const getChatMessagesPage = createServerFn()
 
 export const sendMessage = createServerFn()
 	.middleware([authMiddleware])
-	.inputValidator(SendMessageSchema)
+	.validator(SendMessageSchema)
 	.handler(
 		createServerOnlyFn(async ({ data }) => {
 			const [accessContext, authContext] = await Promise.all([

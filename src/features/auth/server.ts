@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma-client";
 import { SignInSchema, SignUpSchema } from "./schemas/standard";
 
 export const signUpServer = createServerFn({ method: "POST" })
-	.inputValidator(SignUpSchema)
+	.validator(SignUpSchema)
 	.handler(async ({ data }) => {
 		const supabase = getSupabaseServerClient();
 		const { data: authData, error } = await supabase.auth.signUp({
@@ -49,7 +49,7 @@ export const signUpServer = createServerFn({ method: "POST" })
 	});
 
 export const signInServer = createServerFn({ method: "POST" })
-	.inputValidator(SignInSchema)
+	.validator(SignInSchema)
 	.handler(async ({ data }) => {
 		const supabase = getSupabaseServerClient();
 		const { data: authData, error } = await supabase.auth.signInWithPassword({

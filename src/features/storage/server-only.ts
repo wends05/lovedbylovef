@@ -31,7 +31,7 @@ export async function assertStorageDeleteAccess(
 		select: { role: true },
 	});
 
-	if (!user || user.role !== "ADMIN") {
+	if (user?.role !== "ADMIN") {
 		throw new Error("Unauthorized");
 	}
 }
