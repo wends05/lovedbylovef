@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { Heart, Home, Search } from "lucide-react";
+import { Heart, House, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
@@ -59,7 +59,7 @@ export default function NotFound() {
 							size="lg"
 							className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 glow-pink"
 						>
-							<Home className="w-4 h-4 mr-2" />
+							<House className="w-4 h-4 mr-2" />
 							Back Home
 						</Button>
 					</Link>
