@@ -1,6 +1,7 @@
 import { formatDistanceToNow } from "date-fns";
 import type { LucideIcon } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
+import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 
 type RequestDetailHeaderProps = {
@@ -11,6 +12,8 @@ type RequestDetailHeaderProps = {
 	statusBgColor: string;
 	StatusIcon: LucideIcon;
 	onBack: () => void;
+	submittedBy?: string;
+	actions?: ReactNode;
 };
 
 export function RequestDetailHeader({
@@ -21,6 +24,8 @@ export function RequestDetailHeader({
 	statusBgColor,
 	StatusIcon,
 	onBack,
+	submittedBy,
+	actions,
 }: RequestDetailHeaderProps) {
 	return (
 		<div className="mb-8">
@@ -33,18 +38,23 @@ export function RequestDetailHeader({
 				<div>
 					<h1 className="text-3xl font-bold text-foreground mb-2">{title}</h1>
 					<p className="text-muted-foreground">
-						Submitted{" "}
+						Submitted{submittedBy ? ` by ${submittedBy}` : ""}{" "}
 						{formatDistanceToNow(new Date(createdAt), {
 							addSuffix: true,
 						})}
 					</p>
 				</div>
 
-				<div
-					className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${statusBgColor}`}
-				>
-					<StatusIcon className={`w-5 h-5 ${statusColor}`} />
-					<span className={`font-semibold ${statusColor}`}>{statusLabel}</span>
+				<div className="flex flex-wrap items-center gap-3">
+					<div
+						className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${statusBgColor}`}
+					>
+						<StatusIcon className={`w-5 h-5 ${statusColor}`} />
+						<span className={`font-semibold ${statusColor}`}>
+							{statusLabel}
+						</span>
+					</div>
+					{actions}
 				</div>
 			</div>
 		</div>

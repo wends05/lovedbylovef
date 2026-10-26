@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { Loader2, X } from "lucide-react";
+import { LoaderCircle, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,8 @@ import {
 
 import { Separator } from "@/components/ui/separator";
 import { DeleteDialog } from "@/features/dashboard/requests/components/DeleteDialog";
+import { AdminOrderActionsSheet } from "@/features/orders/components/sheets/AdminOrderActionsSheet";
+import { UserOrderActionsSheet } from "@/features/orders/components/sheets/UserOrderActionsSheet";
 import { Route } from "@/routes/request.$id";
 import { requestsQueryOptions } from "../../options";
 import { REQUEST_STATUS_DETAIL_CONFIG } from "../../schemas/RequestOptions";
@@ -44,6 +46,8 @@ export default function RequestDetailPage() {
 		(request.status === "CANCELLED" || request.status === "REJECTED");
 	const [isEditing, setIsEditing] = useState(Boolean(search.edit) && canEdit);
 
+	const isAdmin = Boolean(request.isAdmin);
+	const role = isAdmin ? "admin" : "user";
 	const status = REQUEST_STATUS_DETAIL_CONFIG[request.status];
 	const StatusIcon = status.icon;
 
@@ -55,7 +59,7 @@ export default function RequestDetailPage() {
 			return;
 		}
 
-		router.navigate({ to: "/requests" });
+		router.navigate({ to: isAdmin ? "/admin/requests" : "/requests" });
 	};
 
 	const { form, dropzone, displayUrl, isUploading, isUpdating, clear } =
@@ -95,6 +99,28 @@ export default function RequestDetailPage() {
 				statusBgColor={status.bgColor}
 				StatusIcon={StatusIcon}
 				onBack={navigateBackToRequests}
+				submittedBy={request.user?.name ?? request.user?.email}
+				actions={
+					request.order ? (
+						request.isAdmin ? (
+							<AdminOrderActionsSheet
+								orderId={request.order.id}
+								orderTitle={request.title}
+								requestId={request.id}
+								status={request.order.status}
+								totalPrice={request.order.totalPrice}
+								showRequestLink={false}
+							/>
+						) : (
+							<UserOrderActionsSheet
+								orderId={request.order.id}
+								requestId={request.id}
+								status={request.order.status}
+								showRequestLink={false}
+							/>
+						)
+					) : null
+				}
 			/>
 
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -109,7 +135,9 @@ export default function RequestDetailPage() {
 							<CardTitle className="text-lg">Status Information</CardTitle>
 						</CardHeader>
 						<CardContent className="space-y-4">
-							<p className="text-muted-foreground">{status.description}</p>
+							<p className="text-muted-foreground">
+								{status.description[role]}
+							</p>
 
 							{request.approvedAt && (
 								<div className="text-sm">
@@ -145,7 +173,7 @@ export default function RequestDetailPage() {
 										>
 											{isCancelling ? (
 												<>
-													<Loader2 className="w-4 h-4 mr-2 animate-spin" />
+													<LoaderCircle className="w-4 h-4 mr-2 animate-spin" />
 													Cancelling...
 												</>
 											) : (
@@ -168,7 +196,7 @@ export default function RequestDetailPage() {
 									>
 										{isDeleting ? (
 											<>
-												<Loader2 className="w-4 h-4 mr-2 animate-spin" />
+												<LoaderCircle className="w-4 h-4 mr-2 animate-spin" />
 												Deleting...
 											</>
 										) : (
@@ -214,12 +242,31 @@ export default function RequestDetailPage() {
 								</CardContent>
 							</Card>
 
+							{/* Customer (admin only) */}
+							{isAdmin && request.user ? (
+								<Card>
+									<CardHeader>
+										<CardTitle className="text-lg">Customer</CardTitle>
+									</CardHeader>
+									<CardContent className="space-y-1 text-sm">
+										<p className="font-medium">{request.user.name ?? "User"}</p>
+										<p className="text-muted-foreground">
+											{request.user.email}
+										</p>
+									</CardContent>
+								</Card>
+							) : null}
+
 							{/* Admin Response */}
 							{request.adminResponse && (
 								<Card>
 									<CardHeader>
-										<CardTitle className="text-lg">Admin Response</CardTitle>
-										<CardDescription>Response from admin</CardDescription>
+										<CardTitle className="text-lg">
+											{isAdmin ? "Your response" : "Admin Response"}
+										</CardTitle>
+										<CardDescription>
+											{isAdmin ? "Sent to the customer" : "Response from admin"}
+										</CardDescription>
 									</CardHeader>
 									<CardContent>
 										<div className="bg-muted/50 rounded-lg p-4">

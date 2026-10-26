@@ -29,7 +29,7 @@ export const REQUEST_STATUS_DETAIL_CONFIG: Record<
 		color: string;
 		bgColor: string;
 		icon: LucideIcon;
-		description: string;
+		description: { user: string; admin: string };
 	}
 > = {
 	PENDING: {
@@ -37,36 +37,51 @@ export const REQUEST_STATUS_DETAIL_CONFIG: Record<
 		color: "text-yellow-600",
 		bgColor: "bg-yellow-50",
 		icon: Clock,
-		description: "Your request is waiting for admin review",
+		description: {
+			user: "Your request is waiting for admin review",
+			admin: "Waiting for your review.",
+		},
 	},
 	APPROVED: {
 		label: "Approved",
 		color: "text-green-600",
 		bgColor: "bg-green-50",
 		icon: CheckCircle,
-		description:
-			"Your request has been approved! You can proceed with your order",
+		description: {
+			user: "Your request has been approved! Chat with the owner or wait for your order to be processed.",
+			admin:
+				"Approved. You can start creating the crochet or chat with with customer.",
+		},
 	},
 	REJECTED: {
 		label: "Rejected",
 		color: "text-red-600",
 		bgColor: "bg-red-50",
 		icon: XCircle,
-		description: "Unfortunately, your request has been rejected",
+		description: {
+			user: "Your request has been rejected. Check the chat for more details.",
+			admin: "You rejected this request.",
+		},
 	},
 	COMPLETED: {
 		label: "Completed",
 		color: "text-blue-600",
 		bgColor: "bg-blue-50",
 		icon: Package,
-		description: "Your crochet order has been completed",
+		description: {
+			user: "Your crochet order has been completed",
+			admin: "This order has been completed.",
+		},
 	},
 	CANCELLED: {
 		label: "Cancelled",
 		color: "text-gray-600",
 		bgColor: "bg-gray-50",
 		icon: AlertCircle,
-		description: "This request has been cancelled and will not be processed",
+		description: {
+			user: "This request has been cancelled and will not be processed",
+			admin: "The customer cancelled this request.",
+		},
 	},
 } as const;
 

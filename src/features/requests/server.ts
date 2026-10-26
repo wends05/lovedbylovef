@@ -106,6 +106,22 @@ export const getRequestById = createServerFn()
 			where: isAdmin
 				? { id: data.id }
 				: { id: data.id, userId: authData.user.id },
+			include: {
+				order: {
+					select: {
+						id: true,
+						status: true,
+						totalPrice: true,
+						requestorId: true,
+					},
+				},
+				user: {
+					select: {
+						name: true,
+						email: true,
+					},
+				},
+			},
 		});
 
 		if (!request) {
@@ -121,9 +137,11 @@ export const getRequestById = createServerFn()
 
 		return {
 			...withImageUrl(request),
+			user: isAdmin ? request.user : null,
 			canEdit,
 			canCancel,
 			canDelete,
+			isAdmin,
 		};
 	});
 
