@@ -3,7 +3,7 @@ import {
 	Link,
 	useRouter,
 } from "@tanstack/react-router";
-import { AlertCircle, Home, RefreshCcw } from "lucide-react";
+import { AlertCircle, House, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function ErrorComponent({ error, reset }: ErrorComponentProps) {
@@ -80,7 +80,7 @@ export default function ErrorComponent({ error, reset }: ErrorComponentProps) {
 							size="lg"
 							className="rounded-full border-primary text-primary hover:bg-primary/10"
 						>
-							<Home className="w-4 h-4 mr-2" />
+							<House className="w-4 h-4 mr-2" />
 							Back Home
 						</Button>
 					</Link>
