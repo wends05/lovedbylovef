@@ -62,6 +62,7 @@ function RouteComponent() {
 				{order.isAdmin ? (
 					<AdminOrderActionsSheet
 						orderId={order.id}
+						orderTitle={order.request?.title ?? "Custom order"}
 						requestId={order.requestId}
 						status={order.status}
 						totalPrice={order.totalPrice}
@@ -80,12 +81,16 @@ function RouteComponent() {
 
 			<Card>
 				<CardHeader>
-					<CardTitle>Order #{order.id}</CardTitle>
+					<CardTitle>{order.request?.title ?? "Custom order"}</CardTitle>
 					<CardDescription>
 						Created {format(new Date(order.createdAt), "MMM d, yyyy h:mm a")}
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-2 text-sm">
+					<p>
+						Order ID:{" "}
+						<span className="font-mono text-xs font-medium">{order.id}</span>
+					</p>
 					<p>
 						Status: <span className="font-medium">{order.status}</span>
 					</p>

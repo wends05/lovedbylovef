@@ -70,6 +70,12 @@ export default function OrderChatPage({ orderId }: OrderChatPageProps) {
 	const orderStatus = chatData?.order?.status;
 	const requestId = chatData?.order?.requestId;
 	const orderTotalPrice = chatData?.order?.totalPrice ?? null;
+	const requestTitle = chatData
+		? (chatData.order.request?.title ?? "Custom order")
+		: null;
+	const chatTitle = requestTitle
+		? `Order Chat - ${requestTitle}`
+		: "Order Chat";
 	const viewerRoleLabel = isAdmin ? "Admin" : "Customer";
 	const connectionLabel = isConnected ? "Live" : "Reconnecting";
 	const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -138,7 +144,7 @@ export default function OrderChatPage({ orderId }: OrderChatPageProps) {
 						<CardAction>
 							<Button onClick={handleBack}>Back</Button>
 						</CardAction>
-						<CardTitle>Order Chat · #{orderId}</CardTitle>
+						<CardTitle>{chatTitle}</CardTitle>
 					</CardHeader>
 					<CardContent className="space-y-2">
 						<h2 className="text-lg font-semibold">Access denied</h2>
@@ -163,6 +169,7 @@ export default function OrderChatPage({ orderId }: OrderChatPageProps) {
 							isAdmin ? (
 								<AdminOrderActionsSheet
 									orderId={orderId}
+									orderTitle={requestTitle ?? undefined}
 									requestId={requestId}
 									status={orderStatus ?? OrderStatus.PENDING}
 									totalPrice={orderTotalPrice}
@@ -202,7 +209,7 @@ export default function OrderChatPage({ orderId }: OrderChatPageProps) {
 						</Badge>
 					</div>
 				</div>
-				<CardTitle className="truncate">Order Chat · #{orderId}</CardTitle>
+				<CardTitle className="truncate">{chatTitle}</CardTitle>
 			</CardHeader>
 			<CardContent className="flex min-h-0 flex-1 flex-col p-0">
 				<div

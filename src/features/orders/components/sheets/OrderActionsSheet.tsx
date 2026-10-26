@@ -19,6 +19,7 @@ type OrderActionsSheetProps = {
 	orderId: string;
 	requestId: string;
 	showOrderLink?: boolean;
+	showRequestLink?: boolean;
 	showChatLink?: boolean;
 	triggerLabel?: string;
 	disabled?: boolean;
@@ -33,6 +34,7 @@ export function OrderActionsSheet({
 	orderId,
 	requestId,
 	showOrderLink = true,
+	showRequestLink = true,
 	showChatLink = true,
 	triggerLabel = "Actions",
 	disabled = false,
@@ -64,13 +66,15 @@ export function OrderActionsSheet({
 							View Order
 						</Button>
 					) : null}
-					<Button
-						variant="outline"
-						className="w-full"
-						render={<Link to="/request/$id" params={{ id: requestId }} />}
-					>
-						View Request
-					</Button>
+					{showRequestLink ? (
+						<Button
+							variant="outline"
+							className="w-full"
+							render={<Link to="/request/$id" params={{ id: requestId }} />}
+						>
+							View Request
+						</Button>
+					) : null}
 					{showChatLink ? (
 						<Button
 							variant="outline"

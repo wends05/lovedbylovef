@@ -10,6 +10,7 @@ type UserOrderActionsSheetProps = {
 	status: OrderStatus;
 	canMarkDelivered?: boolean;
 	showOrderLink?: boolean;
+	showRequestLink?: boolean;
 	showChatLink?: boolean;
 	triggerLabel?: string;
 };
@@ -20,6 +21,7 @@ export function UserOrderActionsSheet({
 	status,
 	canMarkDelivered = true,
 	showOrderLink = true,
+	showRequestLink = true,
 	showChatLink = true,
 	triggerLabel = "Actions",
 }: UserOrderActionsSheetProps) {
@@ -36,6 +38,7 @@ export function UserOrderActionsSheet({
 			orderId={orderId}
 			requestId={requestId}
 			showOrderLink={showOrderLink}
+			showRequestLink={showRequestLink}
 			showChatLink={showChatLink}
 			triggerLabel={triggerLabel}
 		>

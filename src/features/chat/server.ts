@@ -155,6 +155,11 @@ export const getChatData = createServerFn()
 									id: true,
 								},
 							},
+							request: {
+								select: {
+									title: true,
+								},
+							},
 						},
 					},
 					user: {
