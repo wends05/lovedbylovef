@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "@/components/ui/input";
 import { useFieldContext } from "../createFormHooks";
 import { FieldWrapper } from "./FieldWrapper";
